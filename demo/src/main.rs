@@ -1,6 +1,10 @@
+use std::io::Read;
+use std::net::Ipv4Addr;
+
 use esp_idf_svc::eth;
 use esp_idf_svc::hal::spi;
 use esp_idf_svc::hal::spi::SpiDriverConfig;
+use esp_idf_svc::hal::task::block_on;
 use esp_idf_svc::sys::EspError;
 use esp_idf_svc::{
     eth::{BlockingEth, EspEth, EthDriver},
@@ -42,6 +46,10 @@ fn main() -> anyhow::Result<()> {
     let peripherals = Peripherals::take()?;
     let pins = peripherals.pins;
     let mut led = PinDriver::output(pins.gpio5)?;
+    let mut button = PinDriver::input(pins.gpio2)?;
+    button.set_pull(gpio::Pull::Up)?;
+    button.set_interrupt_type(gpio::InterruptType::NegEdge)?;
+
     let sys_loop = EspSystemEventLoop::take()?;
     let timer_service = EspTaskTimerService::new()?;
 
@@ -85,12 +93,35 @@ fn main() -> anyhow::Result<()> {
 
     ping(ip_info.subnet.gateway)?;
 
+    ping("192.168.1.2".parse().unwrap())?;
+
+    let socket =
+        std::net::UdpSocket::bind("192.168.1.186:34254").expect("couldn't bind to address");
+    socket
+        .set_read_timeout(Some(std::time::Duration::from_millis(10)))
+        .expect("set_read_timeout call failed");
+
+    let mut buf = [0; 255];
     loop {
+        if let Ok((number_of_bytes, src_addr)) = socket.recv_from(&mut buf) {
+            if number_of_bytes > 0 {
+                info!(
+                    "[{}] {:?} {:?}",
+                    number_of_bytes,
+                    src_addr,
+                    buf.take(number_of_bytes as u64)
+                );
+            }
+        }
         led.set_high().unwrap();
         // we are sleeping here to make sure the watchdog isn't triggered
-        FreeRtos::delay_ms(1000);
+
+        block_on(button.wait_for(gpio::InterruptType::NegEdge))?;
+
+        socket
+            .send_to("ESP RULEZZZ".as_bytes(), "192.168.1.2:4242")
+            .expect("couldn't send data");
 
         led.set_low().unwrap();
-        FreeRtos::delay_ms(1000);
     }
 }

@@ -1,10 +1,13 @@
+[alias]     # command aliases
+demo = "run --release --package demo --target riscv32imc-esp-espidf"
+
+[unstable]
+build-std = ["std", "panic_abort"]
+
 [target.riscv32imc-esp-espidf]
 linker = "ldproxy"
 runner = "espflash flash --monitor" # Select this runner for espflash v3.x.x
 rustflags = [ "--cfg",  "espidf_time64"] # Extending time_t for ESP IDF 5: https://github.com/esp-rs/rust/issues/110
-
-[unstable]
-build-std = ["std", "panic_abort"]
 
 [env]
 MCU="esp32c3"

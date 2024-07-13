@@ -1,3 +1,4 @@
+use esp32_nimble::BLEDevice;
 use std::io::Read;
 use std::net::Ipv4Addr;
 
@@ -91,15 +92,32 @@ fn main() -> anyhow::Result<()> {
         Result::<_, EspError>::Ok(ip_info)
     })?;
 
+    /*
     ping(ip_info.subnet.gateway)?;
-
     ping("192.168.1.2".parse().unwrap())?;
+     */
 
     let socket =
         std::net::UdpSocket::bind("192.168.1.186:34254").expect("couldn't bind to address");
     socket
         .set_read_timeout(Some(std::time::Duration::from_millis(10)))
         .expect("set_read_timeout call failed");
+
+    let a: anyhow::Result<()> = block_on(async {
+        let ble_device = BLEDevice::take();
+        let ble_scan = ble_device.get_scan();
+        ble_scan.start(10000).await?;
+
+        let bt_button = block_on(ble_scan.active_scan(true).find_device(5000, |device| {
+            device.addr().eq(&esp32_nimble::BLEAddress::new(
+                [0x7c, 0xc6, 0xb6, 0x73, 0xd7, 0x14],
+                esp32_nimble::BLEAddressType::Public,
+            ))
+        }));
+        info!("Scan end, {:?}", bt_button);
+
+        Ok(())
+    });
 
     let mut buf = [0; 255];
     loop {

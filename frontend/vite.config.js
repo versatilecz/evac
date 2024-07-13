@@ -12,8 +12,7 @@ const backend = {
 export default defineConfig({
   server: {
     proxy: {
-      '/api/barman': {...backend, ws: true},
-      '/api/report': backend
+      '/api/operator': {...backend, ws: true},
     }
   },
   plugins: [

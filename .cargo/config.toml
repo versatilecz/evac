@@ -1,5 +1,6 @@
 [alias]     # command aliases
 demo = "run --release --package demo --target riscv32imc-esp-espidf"
+server = "run --package server --target x86_64-unknown-linux-gnu"
 
 [unstable]
 build-std = ["std", "panic_abort"]

@@ -1,7 +1,6 @@
-fn main() {
-    embuild::espidf::sysenv::relay();
-    embuild::espidf::sysenv::output();
+use std::process::Command;
 
+fn main() {
     // get commit hash
     let output = Command::new("git")
         .args(["rev-parse", "HEAD"])

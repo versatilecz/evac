@@ -1,0 +1,12 @@
+{
+    "rust.rust-analyzer.releaseTag": "nightly",
+    "rust-client.rustupPath": "/usr/bin/rustup",
+    "rust.rust-analyzer.path": "/home/miksa/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rust-analyzer",
+    "rust-analyzer.procMacro.enable": true,
+    "rust-analyzer.restartServerOnConfigChange": true,
+    "rust-analyzer.linkedProjects": [
+
+    ],
+    "rust-analyzer.discoverProjectRunner": null,
+    "rust-analyzer.server.path": null
+  }

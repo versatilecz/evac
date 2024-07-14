@@ -152,33 +152,16 @@ fn main() -> anyhow::Result<()> {
                 let battery = data.get(4).unwrap_or(&0).clone();
                 let button = data.get(6).unwrap_or(&0).clone();
 
-                let msg = shared::messages::scanner::ScannerMessage::ScanResult(
-                    shared::messages::scanner::ScanDevice {
-                        mac:device.addr(),
-                        name: 
-                        battery,
-                        button: shared::messages::scanner::ButtonState::Double,
-                        data,
-                        ..Default::default()
-                    },
+                let address = u64::from_be_bytes(
+                    TryInto::<[u8; 8]>::try_into(device.addr().val().to_vec()).unwrap(),
                 );
-
-
-                pub mac: u64,
-                pub name: String,
-                pub rssi: i64,
-                pub battery: u8,
-                pub button: ButtonState,
-                pub counter: u16,
-                info!(
-                    "Scan: [address]: {:?} [rssi]: {:?} [cou]: {} [baterry]: {},[button]: {} [data]: {:?}",
-                    device.addr(),
-                    device.rssi(),
-                    counter,
-                    battery,
-                    button,
-                    data
-                );
+                let scan_device = shared::messages::scanner::ScanDevice {
+                    mac: address,
+                    button: shared::messages::scanner::ButtonState::Double,
+                    ..Default::default()
+                };
+                info!("Scan: {:?}", scan_device);
+                let msg = shared::messages::scanner::ScannerMessage::ScanResult(scan_device);
 
                 socket
                     .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")

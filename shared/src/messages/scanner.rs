@@ -16,7 +16,21 @@ pub enum ButtonState {
     Single,
     Double,
     Triple,
-    Long(u8),
+    Long,
+    Hold(u8),
+}
+
+impl From<u8> for ButtonState {
+    fn from(value: u8) -> Self {
+        match value {
+            1 => Self::Single,
+            2 => Self::Double,
+            3 => Self::Triple,
+            4 => Self::Long,
+            254 => Self::Hold(10),
+            _ => Self::Unknown,
+        }
+    }
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]

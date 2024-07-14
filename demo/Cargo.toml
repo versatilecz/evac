@@ -25,6 +25,8 @@ anyhow = "1"
 log = { version = "0.4", default-features = false }
 esp-idf-svc = { version = "0.49", features=["std", "binstart", "alloc"] }
 esp32-nimble = "0.7.0"
+shared = { path = "../shared" }
+rmp-serde = { version = "1.3.0"}
 
 [build-dependencies]
 embuild = "0.32.0"

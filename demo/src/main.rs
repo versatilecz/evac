@@ -92,8 +92,9 @@ fn main() -> anyhow::Result<()> {
         Result::<_, EspError>::Ok(ip_info)
     })?;
 
-    /*
     ping(ip_info.subnet.gateway)?;
+    /*
+
     ping("192.168.1.2".parse().unwrap())?;
      */
 
@@ -109,6 +110,10 @@ fn main() -> anyhow::Result<()> {
         let ble_scan = ble_device.get_scan();
         /* start scan for ...*/
         ble_scan.start(10000).await?;
+
+        let msg = shared::messages::scanner::ScannerMessage::ScanResult(
+            shared::messages::scanner::ScanDevice::default(),
+        );
 
         /*periodical reading */
         loop {
@@ -131,6 +136,10 @@ fn main() -> anyhow::Result<()> {
                     device.rssi(),
                     device.get_service_data_list(),
                 );
+
+                socket
+                    .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
+                    .expect("couldn't send data");
 
                 /*I (159181) demo: Scan: [address]: 7C:C6:B6:73:D7:14 [irssi]: -51 [data]: Iter([BLEServiceData { uuid: 0xfcd2, data: [68, 0, 20, 1, 100, 58, 1] }]) */
             }
@@ -155,10 +164,6 @@ fn main() -> anyhow::Result<()> {
         // we are sleeping here to make sure the watchdog isn't triggered
 
         block_on(button.wait_for(gpio::InterruptType::NegEdge))?;
-
-        socket
-            .send_to("ESP RULEZZZ".as_bytes(), "192.168.1.2:4242")
-            .expect("couldn't send data");
 
         led.set_low().unwrap();
     }

@@ -1,10 +1,17 @@
-use std::net::{Ipv4Addr, SocketAddrV4};
+use serde::{de, Deserialize, Serialize};
+use std::{
+    default,
+    net::{Ipv4Addr, SocketAddrV4},
+};
 
+#[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct Register {
     pub mac: u64,
 }
 
+#[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub enum ButtonState {
+    #[default]
     Unknown,
     Single,
     Double,
@@ -12,8 +19,9 @@ pub enum ButtonState {
     Long(u8),
 }
 
+#[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct ScanDevice {
-    pub mac: Vec<u8>,
+    pub mac: u64,
     pub name: String,
     pub rssi: i64,
     pub battery: u8,
@@ -21,7 +29,10 @@ pub struct ScanDevice {
     pub counter: u16,
 }
 
+#[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub enum ScannerMessage {
+    #[default]
+    Nope,
     Ok(uuid::Uuid),
     Error(uuid::Uuid, String),
 
@@ -35,5 +46,10 @@ pub enum ScannerMessage {
     Register(Register),
     Pong(String),
     ScanResult(ScanDevice),
-    Read(Read),
+}
+
+#[derive(Clone, Debug)]
+pub struct ScannerPacket {
+    pub socket: SocketAddrV4,
+    pub message: ScannerMessage,
 }

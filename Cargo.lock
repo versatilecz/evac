@@ -707,6 +707,8 @@ dependencies = [
  "esp-idf-svc",
  "esp32-nimble",
  "log",
+ "rmp-serde",
+ "shared",
 ]
 
 [[package]]

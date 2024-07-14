@@ -35,12 +35,12 @@ impl From<u8> for ButtonState {
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct ScanDevice {
-    pub mac: u64,
+    pub mac: Vec<u8>,
     pub name: String,
-    pub rssi: i64,
+    pub rssi: i32,
     pub battery: u8,
     pub button: ButtonState,
-    pub counter: u16,
+    pub counter: u8,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]

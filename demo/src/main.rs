@@ -92,8 +92,6 @@ fn main() -> anyhow::Result<()> {
 
         Result::<_, EspError>::Ok(ip_info)
     })?;
-
-    ping(ip_info.subnet.gateway)?;
     /*
 
     ping("192.168.1.2".parse().unwrap())?;
@@ -110,7 +108,7 @@ fn main() -> anyhow::Result<()> {
         /* */
         let ble_scan = ble_device.get_scan();
         /* start scan for ...*/
-        ble_scan.start(10000).await?;
+        ble_scan.start(2000).await?;
 
         /*periodical reading */
         loop {
@@ -152,12 +150,15 @@ fn main() -> anyhow::Result<()> {
                 let battery = data.get(4).unwrap_or(&0).clone();
                 let button = data.get(6).unwrap_or(&0).clone();
 
-                let address = u64::from_be_bytes(
-                    TryInto::<[u8; 8]>::try_into(device.addr().val().to_vec()).unwrap(),
-                );
+                let address = device.addr().val().to_vec();
+
                 let scan_device = shared::messages::scanner::ScanDevice {
                     mac: address,
-                    button: shared::messages::scanner::ButtonState::Double,
+                    button: shared::messages::scanner::ButtonState::from(button),
+                    name: device.name().to_string(),
+                    rssi: device.rssi(),
+                    battery,
+                    counter,
                     ..Default::default()
                 };
                 info!("Scan: {:?}", scan_device);

@@ -105,16 +105,36 @@ fn main() -> anyhow::Result<()> {
 
     let a: anyhow::Result<()> = block_on(async {
         let ble_device = BLEDevice::take();
+        /* */
         let ble_scan = ble_device.get_scan();
+        /* start scan for ...*/
         ble_scan.start(10000).await?;
 
-        let bt_button = block_on(ble_scan.active_scan(true).find_device(5000, |device| {
-            device.addr().eq(&esp32_nimble::BLEAddress::new(
-                [0x7c, 0xc6, 0xb6, 0x73, 0xd7, 0x14],
-                esp32_nimble::BLEAddressType::Public,
-            ))
-        }));
-        info!("Scan end, {:?}", bt_button);
+        /*periodical reading */
+        loop {
+            /* reading routine for button */
+            let bt_button = block_on(ble_scan.active_scan(true).find_device(5000, |device| {
+                /* */
+                device.addr().eq(&esp32_nimble::BLEAddress::new(
+                    /*filtering output by specific MAC address */
+                    [0x7c, 0xc6, 0xb6, 0x73, 0xd7, 0x14], /*schell MAC address */
+                    /* */
+                    esp32_nimble::BLEAddressType::Public,
+                    /*copy data into structure and  */
+                ))
+            }));
+            /*print every info in button structure */
+            if let Ok(Some(device)) = bt_button {
+                info!(
+                    "Scan: [address]: {:?} [irssi]: {:?} [data]: {:?}",
+                    device.addr(),
+                    device.rssi(),
+                    device.get_service_data_list(),
+                );
+
+                /*I (159181) demo: Scan: [address]: 7C:C6:B6:73:D7:14 [irssi]: -51 [data]: Iter([BLEServiceData { uuid: 0xfcd2, data: [68, 0, 20, 1, 100, 58, 1] }]) */
+            }
+        }
 
         Ok(())
     });

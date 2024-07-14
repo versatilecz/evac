@@ -55,7 +55,8 @@ fn main() -> anyhow::Result<()> {
     let sys_loop = EspSystemEventLoop::take()?;
     let timer_service = EspTaskTimerService::new()?;
 
-    log::info!("Hello, world! kokot");
+    log::info!("BT Scenner Rev 0.1");
+
     let mut eth = eth::EspEth::wrap(eth::EthDriver::new_spi(
         spi::SpiDriver::new(
             peripherals.spi2,
@@ -96,14 +97,24 @@ fn main() -> anyhow::Result<()> {
 
     ping("192.168.1.2".parse().unwrap())?;
      */
-
     let socket =
         std::net::UdpSocket::bind("192.168.1.186:34254").expect("couldn't bind to address");
     socket
         .set_read_timeout(Some(std::time::Duration::from_millis(10)))
         .expect("set_read_timeout call failed");
 
+    let msg =
+        shared::messages::scanner::ScannerMessage::Register(shared::messages::scanner::Register {
+            mac: 123456789,
+        });
+
+    socket
+        .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
+        .expect("couldn't send data");
+
     let a: anyhow::Result<()> = block_on(async {
+        // Configure Device Security
+
         let ble_device = BLEDevice::take();
         /* */
         let ble_scan = ble_device.get_scan();
@@ -130,21 +141,6 @@ fn main() -> anyhow::Result<()> {
                     .unwrap()
                     .data()
                     .to_vec();
-                /*
-                                let counter: u16 =
-                                    ((*data.get(1).unwrap() as u16) << 8) + *data.get(2).unwrap() as u16;
-                */
-                /*
-                    let counter = u16::from_le_bytes(
-                        data.iter()
-                            .skip(1)
-                            .take(2)
-                            .cloned()
-                            .collect::<Vec<u8>>()
-                            .try_into()
-                            .unwrap(),
-                    );
-                */
 
                 let counter = data.get(2).unwrap_or(&0).clone();
                 let battery = data.get(4).unwrap_or(&0).clone();

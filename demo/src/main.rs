@@ -1,4 +1,5 @@
 use esp32_nimble::BLEDevice;
+use esp_idf_svc::hal::units::Count;
 use std::io::Read;
 use std::net::Ipv4Addr;
 
@@ -111,10 +112,6 @@ fn main() -> anyhow::Result<()> {
         /* start scan for ...*/
         ble_scan.start(10000).await?;
 
-        let msg = shared::messages::scanner::ScannerMessage::ScanResult(
-            shared::messages::scanner::ScanDevice::default(),
-        );
-
         /*periodical reading */
         loop {
             /* reading routine for button */
@@ -130,11 +127,57 @@ fn main() -> anyhow::Result<()> {
             }));
             /*print every info in button structure */
             if let Ok(Some(device)) = bt_button {
+                let data = device
+                    .get_service_data(esp32_nimble::utilities::BleUuid::from_uuid16(0xfcd2))
+                    .unwrap()
+                    .data()
+                    .to_vec();
+                /*
+                                let counter: u16 =
+                                    ((*data.get(1).unwrap() as u16) << 8) + *data.get(2).unwrap() as u16;
+                */
+                /*
+                    let counter = u16::from_le_bytes(
+                        data.iter()
+                            .skip(1)
+                            .take(2)
+                            .cloned()
+                            .collect::<Vec<u8>>()
+                            .try_into()
+                            .unwrap(),
+                    );
+                */
+
+                let counter = data.get(2).unwrap_or(&0).clone();
+                let battery = data.get(4).unwrap_or(&0).clone();
+                let button = data.get(6).unwrap_or(&0).clone();
+
+                let msg = shared::messages::scanner::ScannerMessage::ScanResult(
+                    shared::messages::scanner::ScanDevice {
+                        mac:device.addr(),
+                        name: 
+                        battery,
+                        button: shared::messages::scanner::ButtonState::Double,
+                        data,
+                        ..Default::default()
+                    },
+                );
+
+
+                pub mac: u64,
+                pub name: String,
+                pub rssi: i64,
+                pub battery: u8,
+                pub button: ButtonState,
+                pub counter: u16,
                 info!(
-                    "Scan: [address]: {:?} [irssi]: {:?} [data]: {:?}",
+                    "Scan: [address]: {:?} [rssi]: {:?} [cou]: {} [baterry]: {},[button]: {} [data]: {:?}",
                     device.addr(),
                     device.rssi(),
-                    device.get_service_data_list(),
+                    counter,
+                    battery,
+                    button,
+                    data
                 );
 
                 socket

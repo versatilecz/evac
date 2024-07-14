@@ -9,7 +9,7 @@ pub struct Scanner {
     pub uuid: uuid::Uuid,
     pub chip_id: u64,
     pub name: String,
-    pub ip: Ipv4Addr,
+    pub ip: String,
     pub port: u16,
     pub last_activity: Option<DateTime<Utc>>,
 }

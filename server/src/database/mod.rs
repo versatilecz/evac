@@ -28,7 +28,7 @@ pub trait LoadSave {
 pub struct Data {
     pub scanners: BTreeMap<uuid::Uuid, entities::Scanner>,
     pub devices: BTreeMap<uuid::Uuid, entities::Device>,
-    pub buildings: BTreeMap<uuid::Uuid, entities::Building>,
+    pub locations: BTreeMap<uuid::Uuid, entities::Location>,
     pub rooms: BTreeMap<uuid::Uuid, entities::Room>,
     pub alarms: BTreeMap<uuid::Uuid, entities::Alarm>,
 }

@@ -4,17 +4,21 @@ pub struct Register {
     pub mac: u64,
 }
 
-pub struct Read {
-    pub mac: u64,
-    pub battery: u8,
-    pub button: bool,
-    pub irssi: i64,
+pub enum ButtonState {
+    Unknown,
+    Single,
+    Double,
+    Triple,
+    Long(u8),
 }
 
 pub struct ScanDevice {
-    pub uuid: uuid::Uuid,
+    pub mac: Vec<u8>,
     pub name: String,
-    pub irssi: i64,
+    pub rssi: i64,
+    pub battery: u8,
+    pub button: ButtonState,
+    pub counter: u16,
 }
 
 pub enum ScannerMessage {

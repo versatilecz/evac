@@ -8,5 +8,7 @@
 
     ],
     "rust-analyzer.discoverProjectRunner": null,
-    "rust-analyzer.server.path": null
+    "rust-analyzer.server.path": null,
+    "rust-analyzer.procMacro.attributes.enable": true,
+    "rust-analyzer.diagnostics.disabled": ["unresolved-proc-macro"]
   }

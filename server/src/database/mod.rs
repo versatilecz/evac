@@ -36,7 +36,7 @@ pub struct Data {
 impl LoadSave for Data {}
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct Database {
     pub config: config::Server,
     pub data: Data,

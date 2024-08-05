@@ -97,23 +97,26 @@ fn main() -> anyhow::Result<()> {
 
     ping("192.168.1.2".parse().unwrap())?;
      */
-    let socket =
-        std::net::UdpSocket::bind("192.168.1.186:34254").expect("couldn't bind to address");
-    socket
-        .set_read_timeout(Some(std::time::Duration::from_millis(10)))
-        .expect("set_read_timeout call failed");
+    let mut buf = [0; 255];
+    block_on(async move {
+        let broadcast = std::net::Ipv4Addr::from_bits(
+            (ip_info.ip.to_bits() | (u32::MAX >> ip_info.subnet.mask.0)),
+        );
+        info!("Broadcast: {}", broadcast);
 
-    let msg =
-        shared::messages::scanner::ScannerMessage::Register(shared::messages::scanner::Register {
-            mac: 123456789,
-        });
+        let socket =
+            std::net::UdpSocket::bind("192.168.1.186:34254").expect("couldn't bind to address");
+        socket
+            .set_read_timeout(Some(std::time::Duration::from_millis(10)))
+            .expect("set_read_timeout call failed");
 
-    socket
-        .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
-        .expect("couldn't send data");
+        let msg = shared::messages::scanner::ScannerMessage::Register(
+            shared::messages::scanner::Register { mac: 123456789 },
+        );
 
-    let a: anyhow::Result<()> = block_on(async {
-        // Configure Device Security
+        socket
+            .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
+            .expect("couldn't send data");
 
         let ble_device = BLEDevice::take();
         /* */
@@ -124,70 +127,62 @@ fn main() -> anyhow::Result<()> {
         /*periodical reading */
         loop {
             /* reading routine for button */
-            let bt_button = block_on(ble_scan.active_scan(true).find_device(5000, |device| {
-                /* */
-                device.addr().eq(&esp32_nimble::BLEAddress::new(
-                    /*filtering output by specific MAC address */
-                    [0x7c, 0xc6, 0xb6, 0x73, 0xd7, 0x14], /*schell MAC address */
-                    /* */
-                    esp32_nimble::BLEAddressType::Public,
-                    /*copy data into structure and  */
-                ))
-            }));
-            /*print every info in button structure */
-            if let Ok(Some(device)) = bt_button {
-                let data = device
-                    .get_service_data(esp32_nimble::utilities::BleUuid::from_uuid16(0xfcd2))
-                    .unwrap()
-                    .data()
-                    .to_vec();
-
-                let counter = data.get(2).unwrap_or(&0).clone();
-                let battery = data.get(4).unwrap_or(&0).clone();
-                let button = data.get(6).unwrap_or(&0).clone();
-
-                let address = device.addr().val().to_vec();
-
-                let scan_device = shared::messages::scanner::ScanDevice {
-                    mac: address,
-                    button: shared::messages::scanner::ButtonState::from(button),
+            let sck = socket.try_clone().unwrap();
+            ble_scan
+                .active_scan(true)
+                .filter_duplicates(true)
+                .interval(100)
+                .window(99)
+                .on_result(move |scan, device|
+            {
+                let mut scan_device = shared::messages::scanner::ScanDevice {
+                    mac: device.addr().val().to_vec(),
                     name: device.name().to_string(),
                     rssi: device.rssi(),
-                    battery,
-                    counter,
                     ..Default::default()
                 };
+
+                /* fill data with adwertisement */
+                if let Some(service_data) =
+                    device.get_service_data(esp32_nimble::utilities::BleUuid::from_uuid16(0xfcd2))
+                {
+                    let data = service_data.data().to_vec();
+                    scan_device.counter = data.get(2).unwrap_or(&0).clone();
+                    scan_device.battery = data.get(4).unwrap_or(&0).clone();
+                    scan_device.button = shared::messages::scanner::ButtonState::from(
+                        data.get(6).unwrap_or(&0).clone(),
+                    );
+                }
+
                 info!("Scan: {:?}", scan_device);
                 let msg = shared::messages::scanner::ScannerMessage::ScanResult(scan_device);
 
-                socket
+                sck
                     .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
                     .expect("couldn't send data");
 
                 /*I (159181) demo: Scan: [address]: 7C:C6:B6:73:D7:14 [irssi]: -51 [data]: Iter([BLEServiceData { uuid: 0xfcd2, data: [68, 0, 20, 1, 100, 58, 1] }]) */
+            });
+            ble_scan.start(2000).await?;
+
+            if let Ok((number_of_bytes, src_addr)) = socket.recv_from(&mut buf) {
+                if number_of_bytes > 0 {
+                    info!(
+                        "[{}] {:?} {:?}",
+                        number_of_bytes,
+                        src_addr,
+                        buf.take(number_of_bytes as u64)
+                    );
+                }
             }
+            led.set_high().unwrap();
+            // we are sleeping here to make sure the watchdog isn't triggered
+
+            //block_on(button.wait_for(gpio::InterruptType::NegEdge))?;
+
+            led.set_low().unwrap();
         }
 
         Ok(())
-    });
-
-    let mut buf = [0; 255];
-    loop {
-        if let Ok((number_of_bytes, src_addr)) = socket.recv_from(&mut buf) {
-            if number_of_bytes > 0 {
-                info!(
-                    "[{}] {:?} {:?}",
-                    number_of_bytes,
-                    src_addr,
-                    buf.take(number_of_bytes as u64)
-                );
-            }
-        }
-        led.set_high().unwrap();
-        // we are sleeping here to make sure the watchdog isn't triggered
-
-        block_on(button.wait_for(gpio::InterruptType::NegEdge))?;
-
-        led.set_low().unwrap();
-    }
+    })
 }

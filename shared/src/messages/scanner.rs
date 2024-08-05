@@ -4,12 +4,12 @@ use std::{
     net::{Ipv4Addr, SocketAddrV4},
 };
 
-#[derive(Default, Clone, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct Register {
     pub mac: u64,
 }
 
-#[derive(Default, Clone, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub enum ButtonState {
     #[default]
     Unknown,
@@ -33,7 +33,7 @@ impl From<u8> for ButtonState {
     }
 }
 
-#[derive(Default, Clone, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct ScanDevice {
     pub mac: Vec<u8>,
     pub name: String,
@@ -43,7 +43,7 @@ pub struct ScanDevice {
     pub counter: u8,
 }
 
-#[derive(Default, Clone, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub enum ScannerMessage {
     #[default]
     Nope,

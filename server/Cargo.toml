@@ -23,4 +23,5 @@ async-trait = "0.1.80"
 tokio-util = { version = "0.7", features = ["codec"] }
 tokio-serde = { version = "0.9.0", features=["messagepack", "json"]}
 futures = "0.3"
+rmp-serde = { version = "1.3.0"}
 shared = { path = "../shared" }

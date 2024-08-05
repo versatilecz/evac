@@ -2656,6 +2656,7 @@ dependencies = [
  "futures-util",
  "hex",
  "rand",
+ "rmp-serde",
  "rust_decimal",
  "serde",
  "serde_json",

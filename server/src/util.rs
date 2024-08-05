@@ -10,7 +10,7 @@ where
     A: serde::de::DeserializeOwned,
 {
     let file = std::fs::File::open(path)?;
-    let json: serde_json::Value = serde_json::from_reader(file)?;
+    let json: serde_json::Value = serde_json::from_reader(file).unwrap();
     match serde_json::from_value::<A>(json) {
         Ok(value) => Ok(value),
         Err(err) => {

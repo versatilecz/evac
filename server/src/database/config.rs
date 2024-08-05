@@ -14,6 +14,7 @@ pub struct Base {
     pub query_size: usize,
     pub port_web: SocketAddrV4,
     pub port_scanner: SocketAddrV4,
+    pub port_broadcast: SocketAddrV4,
 }
 impl Default for Base {
     fn default() -> Self {
@@ -25,6 +26,7 @@ impl Default for Base {
             query_size: 16,
             port_web: SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 3030),
             port_scanner: SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 3031),
+            port_broadcast: SocketAddrV4::new(Ipv4Addr::BROADCAST, 3031),
         }
     }
 }
@@ -49,8 +51,9 @@ impl Server {
     }
 
     pub fn create(config_path: Option<String>) -> anyhow::Result<Server> {
-        let config_path = config_path
-            .unwrap_or(std::env::var("EVAC_SERVER_CONFIG").unwrap_or(String::from("config.json")));
+        let config_path = config_path.unwrap_or(
+            std::env::var("EVAC_SERVER_CONFIG").unwrap_or(String::from("../data/server.json")),
+        );
 
         tracing::info!("Loading config from: {}", config_path);
 

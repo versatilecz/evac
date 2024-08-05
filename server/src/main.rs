@@ -1,11 +1,12 @@
 pub mod context;
 pub mod database;
 pub mod scanner;
+pub mod server;
 pub mod util;
 pub mod web;
 
 use crate::database::LoadSave;
-use clap::Parser;
+use clap::{builder::Str, Parser};
 use std::collections::BTreeMap;
 
 use tracing_subscriber::prelude::*;
@@ -45,16 +46,24 @@ async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
     let config = crate::database::config::Server::create(args.config)?;
+    tracing::info!("{}", serde_json::to_string(&config).unwrap());
+    let database = crate::database::Database {
+        data: crate::database::Data::load(&config.base.data_path)?,
+        config: config.clone(),
+        version: String::new(),
+    };
+
+    let (scanner_sender, scanner_receiver) = tokio::sync::mpsc::channel(config.base.query_size);
+
     // Creation of context and control structures
     let context = crate::context::Context {
         global_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
         web_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
-        device_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
-        database: crate::database::Database::load(&config.base.data_path)?,
-        /*
-        devices: BTreeMap::new(),
-        clients: BTreeMap::new(),
-         */
+        scanner_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
+        scanner_sender,
+        database,
+        scanners: BTreeMap::new(),
+        operators: BTreeMap::new(),
     };
 
     let global_sender = context.global_broadcast.clone();
@@ -68,5 +77,44 @@ async fn main() -> anyhow::Result<()> {
     let mut sig_quit = signal(SignalKind::quit())?;
     let mut sig_term = signal(SignalKind::terminate())?;
 
-    Ok(())
+    let mut server = server::Server::new(context);
+    let server_future = tokio::task::spawn(async move { server.run().await });
+
+    // Create signals
+    let mut sig_int = signal(SignalKind::interrupt())?;
+    let mut sig_hub = signal(SignalKind::hangup())?;
+    let mut sig_quit = signal(SignalKind::quit())?;
+    let mut sig_term = signal(SignalKind::terminate())?;
+
+    loop {
+        // Reactions to signals
+        tokio::select! {
+            _ = sig_hub.recv() => {
+                global_sender.send(shared::messages::global::GlobalMessage::Reload)?;
+            }
+            _ = sig_int.recv() => {
+                global_sender.send(shared::messages::global::GlobalMessage::Stop)?;
+                break;
+            }
+            _ = sig_quit.recv() => {
+                global_sender.send(shared::messages::global::GlobalMessage::Stop)?;
+                break;
+            }
+            _ = sig_term.recv() => {
+                global_sender.send(shared::messages::global::GlobalMessage::Stop)?;
+                break;
+            }
+            /*
+            // Example tick message to broadcast
+            _ = tokio::time::sleep(std::time::Duration::from_secs(1)) => {
+                if web_sender.receiver_count() > 0 {
+                    web_sender.send(pos::server::message::Web::UserInfo(None))?;
+                } else {
+                    tracing::debug!("No connected client");
+                }
+            }
+            */
+        }
+    }
+    server_future.await?
 }

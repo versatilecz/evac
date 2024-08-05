@@ -1,0 +1,15 @@
+{
+    "base":{
+        "configPath":"data/server.json",
+        "dataPath":"data/database.json",
+        "frontendPath":"../frontend/dist",
+        "salt":"abcdef",
+        "querySize":16,
+        "portWeb":"0.0.0.0:3030",
+        "portScanner":"0.0.0.0:4242",
+        "portBroadcast":"192.168.1.255:4242"
+    },
+    "setting":{
+        "test":0
+    }
+}

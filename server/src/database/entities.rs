@@ -6,8 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Scanner {
-    pub uuid: uuid::Uuid,
-    pub chip_id: u64,
+    pub id: u64,
     pub name: String,
     pub ip: String,
     pub port: u16,

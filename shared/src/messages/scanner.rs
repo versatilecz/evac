@@ -5,8 +5,10 @@ use std::{
 };
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
-pub struct Register {
+pub struct State {
     pub mac: u64,
+    pub scanning: bool,
+    pub alarm: bool,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
@@ -51,14 +53,15 @@ pub enum ScannerMessage {
     Error(uuid::Uuid, String),
 
     Hello(SocketAddrV4),
-    Welcome,
     Ping(String),
+    Pong(String),
     ScanStart,
     ScanStop,
+    AlarmStart,
+    AlarmStop,
     Restart,
 
-    Register(Register),
-    Pong(String),
+    Register(State),
     ScanResult(ScanDevice),
 }
 

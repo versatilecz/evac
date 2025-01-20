@@ -2,6 +2,7 @@ use esp32_nimble::BLEDevice;
 use esp_idf_svc::hal::units::Count;
 use std::io::Read;
 use std::net::Ipv4Addr;
+use std::os::fd::{AsFd, AsRawFd, FromRawFd};
 
 use esp_idf_svc::eth;
 use esp_idf_svc::hal::spi;
@@ -36,6 +37,8 @@ fn ping(ip: ipv4::Ipv4Addr) -> Result<(), EspError> {
 
     Ok(())
 }
+
+static mut SOCKET: Option<std::net::UdpSocket> = None;
 
 fn main() -> anyhow::Result<()> {
     // It is necessary to call this function once. Otherwise some patches to the runtime
@@ -110,13 +113,20 @@ fn main() -> anyhow::Result<()> {
             .set_read_timeout(Some(std::time::Duration::from_millis(10)))
             .expect("set_read_timeout call failed");
 
-        let msg = shared::messages::scanner::ScannerMessage::Register(
-            shared::messages::scanner::Register { mac: 123456789 },
-        );
+        let msg =
+            shared::messages::scanner::ScannerMessage::Register(shared::messages::scanner::State {
+                mac: 123456789,
+                alarm: false,
+                scanning: false,
+            });
 
         socket
             .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
             .expect("couldn't send data");
+
+        unsafe {
+            SOCKET = Some(socket);
+        }
 
         let ble_device = BLEDevice::take();
         /* */
@@ -127,7 +137,8 @@ fn main() -> anyhow::Result<()> {
         /*periodical reading */
         loop {
             /* reading routine for button */
-            let sck = socket.try_clone().unwrap();
+            //let sck = socket.as_raw_fd();
+
             ble_scan
                 .active_scan(true)
                 .filter_duplicates(true)
@@ -142,6 +153,8 @@ fn main() -> anyhow::Result<()> {
                     ..Default::default()
                 };
 
+
+                info!("Scan: {:?}", device.get_service_data_list());
                 /* fill data with adwertisement */
                 if let Some(service_data) =
                     device.get_service_data(esp32_nimble::utilities::BleUuid::from_uuid16(0xfcd2))
@@ -157,22 +170,32 @@ fn main() -> anyhow::Result<()> {
                 info!("Scan: {:?}", scan_device);
                 let msg = shared::messages::scanner::ScannerMessage::ScanResult(scan_device);
 
-                sck
-                    .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
-                    .expect("couldn't send data");
+
+                unsafe {
+                    if let Some(sck) = &SOCKET  {
+                            sck
+                        .send_to(&rmp_serde::to_vec(&msg).unwrap(), "192.168.1.2:4242")
+                        .expect("couldn't send data");
+                    }
+                }
+
 
                 /*I (159181) demo: Scan: [address]: 7C:C6:B6:73:D7:14 [irssi]: -51 [data]: Iter([BLEServiceData { uuid: 0xfcd2, data: [68, 0, 20, 1, 100, 58, 1] }]) */
             });
             ble_scan.start(2000).await?;
 
-            if let Ok((number_of_bytes, src_addr)) = socket.recv_from(&mut buf) {
-                if number_of_bytes > 0 {
-                    info!(
-                        "[{}] {:?} {:?}",
-                        number_of_bytes,
-                        src_addr,
-                        buf.take(number_of_bytes as u64)
-                    );
+            unsafe {
+                if let Some(sck) = &SOCKET {
+                    if let Ok((number_of_bytes, src_addr)) = sck.recv_from(&mut buf) {
+                        if number_of_bytes > 0 {
+                            info!(
+                                "[{}] {:?} {:?}",
+                                number_of_bytes,
+                                src_addr,
+                                buf.take(number_of_bytes as u64)
+                            );
+                        }
+                    }
                 }
             }
             led.set_high().unwrap();

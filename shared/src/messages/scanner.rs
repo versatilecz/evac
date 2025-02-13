@@ -3,36 +3,21 @@ use std::{
     default,
     net::{Ipv4Addr, SocketAddrV4},
 };
+use uuid::Uuid;
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct State {
     pub mac: u64,
     pub scanning: bool,
     pub alarm: bool,
+    pub services: Vec<uuid::Uuid>,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
-pub enum ButtonState {
+pub enum Value {
     #[default]
-    Unknown,
-    Single,
-    Double,
-    Triple,
-    Long,
-    Hold(u8),
-}
-
-impl From<u8> for ButtonState {
-    fn from(value: u8) -> Self {
-        match value {
-            1 => Self::Single,
-            2 => Self::Double,
-            3 => Self::Triple,
-            4 => Self::Long,
-            254 => Self::Hold(10),
-            _ => Self::Unknown,
-        }
-    }
+    None,
+    U64(u64),
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
@@ -41,8 +26,7 @@ pub struct ScanDevice {
     pub name: String,
     pub rssi: i32,
     pub battery: u8,
-    pub button: ButtonState,
-    pub counter: u8,
+    pub services: Vec<(uuid::Uuid, Value)>,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
@@ -53,20 +37,24 @@ pub enum ScannerMessage {
     Error(uuid::Uuid, String),
 
     Hello(SocketAddrV4),
+    Register,
     Ping(String),
     Pong(String),
-    ScanStart,
-    ScanStop,
-    AlarmStart,
-    AlarmStop,
     Restart,
 
-    Register(State),
+    Set(State),
     ScanResult(ScanDevice),
 }
 
 #[derive(Clone, Debug)]
-pub struct ScannerPacket {
+pub struct ScannerEvent {
     pub socket: SocketAddrV4,
     pub message: ScannerMessage,
+    pub uuid: Uuid,
+}
+
+#[derive(Clone, Debug)]
+pub struct ScannerPacket {
+    pub message: ScannerMessage,
+    pub uuid: uuid::Uuid,
 }

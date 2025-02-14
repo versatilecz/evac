@@ -110,7 +110,6 @@ fn main() -> anyhow::Result<()> {
         if let Ok(mut application) = application.write() {
             application.process()?;
         }
-
         let application = application.clone();
 
         block_on(ble_scan.start(2000))?;

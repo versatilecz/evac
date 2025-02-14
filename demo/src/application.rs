@@ -1,5 +1,5 @@
-use std::any;
 use std::net::SocketAddrV4;
+use std::{any, result};
 
 use esp_idf_svc::eth::{BlockingEth, EspEth, EthDriver, SpiEth};
 use esp_idf_svc::hal::gpio::{Gpio18, Gpio19, Input, Output, PinDriver};
@@ -37,7 +37,7 @@ impl<'a> Application<'a> {
             // If there is a communication with server
             // Check for new server message (config, ping)
 
-            if let Ok((len, server_address)) = socket.recv_from(&mut buffer) {
+            while let Ok((len, server_address)) = socket.recv_from(&mut buffer) {
                 if let Ok(msg) = rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(
                     &buffer[0..len],
                 ) {

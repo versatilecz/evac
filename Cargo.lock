@@ -2914,6 +2914,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "test_server"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "rmp-serde",
+ "serde",
+ "serde_json",
+ "shared",
+]
+
+[[package]]
 name = "thiserror"
 version = "1.0.62"
 source = "registry+https://github.com/rust-lang/crates.io-index"

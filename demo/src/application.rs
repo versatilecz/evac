@@ -1,6 +1,6 @@
 use std::any;
+use std::net::SocketAddrV4;
 
-use esp32_nimble::utilities::BleUuid;
 use esp_idf_svc::eth::{BlockingEth, EspEth, EthDriver, SpiEth};
 use esp_idf_svc::hal::gpio::{Gpio18, Gpio19, Input, Output, PinDriver};
 use esp_idf_svc::hal::spi;
@@ -9,67 +9,60 @@ pub struct Application<'a> {
     //pub button: PinDriver<'a, Gpio2, Input>,
     pub buzzer: PinDriver<'a, Gpio18, Output>,
     pub led: PinDriver<'a, Gpio19, Output>,
-    pub eth: BlockingEth<EspEth<'a, SpiEth<spi::SpiDriver<'a>>>>,
+    //pub eth: BlockingEth<EspEth<'a, SpiEth<spi::SpiDriver<'a>>>>,
     pub ip: Option<std::net::Ipv4Addr>,
-    pub ip_broadcast: Option<std::net::Ipv4Addr>,
     pub server_address: Option<std::net::SocketAddr>,
     pub socket: Option<std::net::UdpSocket>,
-    pub broadcast: Option<std::net::UdpSocket>,
-    pub services: Vec<BleUuid>,
+    //pub broadcast: Option<std::net::UdpSocket>,
+    pub services: Vec<Vec<u8>>,
     pub running: bool,
     pub alarm: bool,
 }
 
+unsafe impl<'a> Sync for Application<'a> {}
+
 impl<'a> Application<'a> {
-    fn set_broadcast(&mut self) -> anyhow::Result<()> {
-        if let Some(ip_broadcast) = self.ip_broadcast {
-            let socket_addr = std::net::SocketAddrV4::new(ip_broadcast, 34254);
+    pub fn process(&mut self) -> anyhow::Result<()> {
+        let mut buffer: [u8; 1024] = [0u8; 1024];
+
+        if self.socket.is_none() {
+            let socket_addr = std::net::SocketAddrV4::new(self.ip.unwrap(), 34254);
             let mut socket = std::net::UdpSocket::bind(socket_addr)?;
             socket.set_read_timeout(Some(std::time::Duration::from_millis(10)))?;
             socket.set_broadcast(true)?;
-
-            self.broadcast = Some(socket);
-            Ok(())
-        } else {
-            Err(anyhow::anyhow!("Broadcast address is not set up"))
-        }
-    }
-    pub fn process(&mut self) -> anyhow::Result<()> {
-        // If broadcast is not set up
-        if self.broadcast.is_none() && self.ip_broadcast.is_some() {
-            self.set_broadcast()?;
-        }
-
-        if let Some(broadcast) = self.broadcast.as_ref() {
-            // If there is a communication with a broadcast
-            // Check for new server (hello package)
-            let mut buffer: [u8; 1024] = [0u8; 1024];
-            if let Ok((len, server_address)) = broadcast.recv_from(&mut buffer) {
-                self.server_address = Some(server_address);
-
-                if self.socket.is_none() {
-                    let mut socket = std::net::UdpSocket::bind(server_address)?;
-                    socket.set_read_timeout(Some(std::time::Duration::from_millis(10)))?;
-                    self.socket = Some(socket);
-                }
-
-                if len > 0 {
-                    if let Ok(msg) = rmp_serde::from_slice::<
-                        shared::messages::scanner::ScannerMessage,
-                    >(&buffer[0..len])
-                    {
-                        log::info!("{:?}", msg);
-                    }
-                }
-            } else {
-                log::error!("Problem to receive broadcast");
-                self.broadcast = None;
-            }
+            self.socket = Some(socket);
         }
 
         if let Some(socket) = self.socket.as_ref() {
             // If there is a communication with server
             // Check for new server message (config, ping)
+
+            if let Ok((len, server_address)) = socket.recv_from(&mut buffer) {
+                if let Ok(msg) = rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(
+                    &buffer[0..len],
+                ) {
+                    match msg {
+                        shared::messages::scanner::ScannerMessage::Hello => {
+                            let register_msg = shared::messages::scanner::ScannerMessage::Register;
+                            let register_data = rmp_serde::to_vec(&register_msg)?;
+                            self.server_address = Some(server_address);
+                            log::info!("{:?}", msg);
+                            socket.send_to(&register_data, server_address)?;
+                        }
+
+                        shared::messages::scanner::ScannerMessage::Set(set) => {
+                            self.alarm = set.alarm;
+                            self.running = set.scanning;
+                            self.services = set.services;
+
+                            log::info!("Setting message");
+                        }
+                        _ => {
+                            log::info!("Unexpected message: {:?}", msg);
+                        }
+                    }
+                }
+            }
         }
 
         // If we have communication with a server and we should scan
@@ -87,5 +80,17 @@ impl<'a> Application<'a> {
         }
 
         Ok(())
+    }
+
+    pub fn report(&mut self, scan_device: shared::messages::scanner::ScanDevice) {
+        log::info!("Scan: {:?}", scan_device);
+
+        if let (Some(socket), Some(server_address)) =
+            (self.socket.as_ref(), self.server_address.as_ref())
+        {
+            let msg = shared::messages::scanner::ScannerMessage::ScanResult(scan_device);
+            let data = rmp_serde::to_vec(&msg).unwrap();
+            socket.send_to(&data, server_address).unwrap();
+        }
     }
 }

@@ -1,3 +1,5 @@
+use core::num;
+use esp32_nimble::utilities::BleUuid;
 use esp32_nimble::BLEDevice;
 use esp_idf_svc::hal::units::Count;
 use std::io::Read;
@@ -25,20 +27,13 @@ use esp_idf_svc::{ipv4, ping};
 
 mod application;
 
-fn ping(ip: ipv4::Ipv4Addr) -> Result<(), EspError> {
-    log::info!("About to do some pings for {:?}", ip);
-
-    let ping_summary = ping::EspPing::default().ping(ip, &Default::default())?;
-    if ping_summary.transmitted != ping_summary.received {
-        log::warn!("Pinging IP {} resulted in timeouts", ip);
+pub fn ble_uuid_to_vec(uuid: BleUuid) -> Vec<u8> {
+    match uuid {
+        BleUuid::Uuid128(data) => data.to_vec(),
+        BleUuid::Uuid32(number) => number.to_le_bytes().to_vec(),
+        BleUuid::Uuid16(number) => number.to_le_bytes().to_vec(),
     }
-
-    log::info!("Pinging done");
-
-    Ok(())
 }
-
-static mut SOCKET: Option<std::net::UdpSocket> = None;
 
 fn main() -> anyhow::Result<()> {
     // It is necessary to call this function once. Otherwise some patches to the runtime
@@ -73,23 +68,26 @@ fn main() -> anyhow::Result<()> {
         None,
         sys_loop.clone(),
     )?)?;
+    let mut eth = eth::BlockingEth::wrap(eth, sys_loop.clone())?;
 
     let mut buzzer = PinDriver::output(pins.gpio18)?;
     buzzer.set_high();
     let mut led = PinDriver::output(pins.gpio19)?;
     led.set_high();
+
+    let ble_device = BLEDevice::take();
+    let ble_scan = ble_device.get_scan();
+
     //let button = PinDriver::input(pins.gpio2)?;
 
     let mut application = application::Application {
         buzzer,
         led,
         //  button,
-        eth: eth::BlockingEth::wrap(eth, sys_loop.clone())?,
         ip: None,
-        ip_broadcast: None,
         server_address: None,
         socket: None,
-        broadcast: None,
+        //broadcast: None,
         services: Vec::new(),
         running: false,
         alarm: false,
@@ -97,30 +95,64 @@ fn main() -> anyhow::Result<()> {
 
     log::info!("Starting eth...");
 
-    application.eth.start()?;
+    eth.start()?;
 
     log::info!("Waiting for DHCP lease...");
 
-    application.eth.wait_netif_up()?;
+    eth.wait_netif_up()?;
+
+    let ip_info = eth.eth().netif().get_ip_info()?;
+    application.ip = Some(ip_info.ip);
+    log::info!("IP address: {}", application.ip.unwrap());
+    let application = std::sync::Arc::new(std::sync::RwLock::new(application));
 
     loop {
-        // If IP address is not set
-        if application.ip.is_none() || application.ip_broadcast.is_none() {
-            let ip_info = application.eth.eth().netif().get_ip_info()?;
-
-            application.ip = Some(ip_info.ip);
-            application.ip_broadcast = Some(std::net::Ipv4Addr::from_bits(
-                (ip_info.ip.to_bits() | (u32::MAX >> ip_info.subnet.mask.0)),
-            ));
-
-            log::info!(
-                "IP address: {} broadcast: {}",
-                application.ip.unwrap(),
-                application.ip_broadcast.unwrap()
-            );
+        if let Ok(mut application) = application.write() {
+            application.process()?;
         }
 
-        application.process();
+        let application = application.clone();
+
+        block_on(ble_scan.start(2000))?;
+        ble_scan
+            .active_scan(true)
+            .filter_duplicates(true)
+            .interval(100)
+            .window(99)
+            .on_result(move |scan, device| {
+                if let Ok(mut application) = application.write() {
+                    let mut scan_device = shared::messages::scanner::ScanDevice {
+                        mac: device.addr().val().to_vec(),
+                        name: device.name().to_string(),
+                        rssi: device.rssi(),
+                        services: device
+                            .get_service_data_list()
+                            .map(|s| (ble_uuid_to_vec(s.uuid()), s.data().into()))
+                            /*
+                            .filter(|(uuid1, _)| {
+                                application
+                                    .services
+                                    .iter()
+                                    .find(|&uuid2| uuid1.eq(uuid2))
+                                    .is_some()
+                            })
+                             */
+                            .collect(),
+                    };
+
+                    /*
+                    if let Some(service_data) = device
+                        .get_service_data(esp32_nimble::utilities::BleUuid::from_uuid16(0xfcd2))
+                    {
+                        scan_device
+                            .services
+                            .push((vec![0xfc, 0xd2], service_data.data().to_vec()));
+                    }
+                     */
+
+                    application.report(scan_device);
+                }
+            });
     }
 
     // Reset application

@@ -7,10 +7,9 @@ use uuid::Uuid;
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct State {
-    pub mac: u64,
     pub scanning: bool,
     pub alarm: bool,
-    pub services: Vec<uuid::Uuid>,
+    pub services: Vec<Vec<u8>>,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
@@ -25,8 +24,7 @@ pub struct ScanDevice {
     pub mac: Vec<u8>,
     pub name: String,
     pub rssi: i32,
-    pub battery: u8,
-    pub services: Vec<(uuid::Uuid, Value)>,
+    pub services: Vec<(Vec<u8>, Vec<u8>)>,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
@@ -36,7 +34,7 @@ pub enum ScannerMessage {
     Ok(uuid::Uuid),
     Error(uuid::Uuid, String),
 
-    Hello(SocketAddrV4),
+    Hello,
     Register,
     Ping(String),
     Pong(String),

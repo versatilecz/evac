@@ -35,7 +35,9 @@ pub enum ScannerContent {
     Error(uuid::Uuid, String),
 
     Hello,
-    Register,
+    Register {
+        mac: Vec<u8>,
+    },
     Ping(String),
     Pong(String),
     Restart,

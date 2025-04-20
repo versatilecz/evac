@@ -1,11 +1,12 @@
 pub mod scanner;
 use std::ops::Add;
 
+use chrono::{Date, DateTime};
 pub use scanner::Scanner;
 
 pub struct Server {
     context: super::context::ContextWrapped,
-    scanners: std::collections::BTreeMap<std::net::SocketAddrV4, u64>,
+    scanners: std::collections::BTreeMap<std::net::SocketAddrV4, uuid::Uuid>,
 }
 impl Server {
     pub fn new(context: super::context::ContextWrapped) -> Self {
@@ -33,20 +34,34 @@ impl Server {
         }
 
         match wrapper.content {
-            shared::messages::scanner::ScannerContent::Register => {
-                let scanner = scanner::Scanner {
-                    id: self.scanners.values().max().unwrap_or(&0).add(1),
-                    socket,
-                    context: self.context.clone(),
-                    last_activity: chrono::Utc::now(),
+            shared::messages::scanner::ScannerContent::Register { mac } => {
+                let mut context = self.context.write().await;
+                let scanner = if let Some(scanner) = context
+                    .database
+                    .data
+                    .scanners
+                    .values_mut()
+                    .find(|d| mac.eq(&d.mac))
+                {
+                    scanner.clone()
+                } else {
+                    scanner::Scanner {
+                        uuid: uuid::Uuid::new_v4(),
+                        socket,
+                        context: self.context.clone(),
+                        last_activity: chrono::Utc::now(),
+                    }
                 };
+                scanner.ip = socket.ip().into();
+                scanner.port = socket.port();
+
                 self.context.write().await.scanner_set(scanner);
             }
             shared::messages::scanner::ScannerContent::ScanResult(result) => {
-                let id = 0;
-                self.scanners.insert(socket.clone(), id);
+                let uuid = uuid::Uuid::new_v4();
+                self.scanners.insert(socket.clone(), uuid);
                 let scanner = scanner::Scanner {
-                    id: id,
+                    uuid,
                     socket,
                     context: self.context.clone(),
                     last_activity: chrono::Utc::now(),
@@ -54,6 +69,17 @@ impl Server {
                 {
                     let mut context = self.context.write().await;
                     context.scanner_set(scanner);
+                    let event = crate::database::entities::Event {
+                        device: Some(uuid::Uuid::new_v4()),
+                        uuid: uuid::Uuid::new_v4(),
+                        kind: crate::database::entities::EventKind::Advertisement,
+                        timestamp: chrono::offset::Utc::now(),
+                        scanner: uuid::Uuid::new_v4(),
+                    };
+                    context
+                        .web_broadcast
+                        .send(crate::message::web::WebMessage::Event(event))
+                        .unwrap();
                 }
             }
             _ => {}

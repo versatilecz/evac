@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, os::unix::fs::chroot};
 
 use crate::{scanner, web::operator};
 
@@ -16,7 +16,7 @@ pub struct Context {
     pub scanner_sender: tokio::sync::mpsc::Sender<shared::messages::scanner::ScannerEvent>,
 
     // Device clients
-    pub scanners: BTreeMap<u64, crate::scanner::Scanner>,
+    pub scanners: BTreeMap<uuid::Uuid, crate::scanner::Scanner>,
     // Web clients
     pub operators: BTreeMap<uuid::Uuid, crate::web::Operator>,
 }
@@ -31,14 +31,15 @@ impl Context {
         self.operators.remove(uuid);
     }
 
-    pub fn scanner_set(&mut self, scanner: scanner::Scanner) {
+    pub fn scanner_set(&mut self, mut scanner: scanner::Scanner) {
         tracing::debug!("Register scanner: {} {}", scanner.socket, scanner.uuid);
+        scanner.last_activity = chrono::offset::Utc::now();
         self.scanners.insert(scanner.uuid.clone(), scanner);
     }
 
-    pub fn scanner_rm(&mut self, id: &u64) {
-        tracing::debug!("DeRegister scanner: {}", id);
-        self.scanners.remove(id);
+    pub fn scanner_rm(&mut self, uuid: &uuid::Uuid) {
+        tracing::debug!("DeRegister scanner: {}", uuid);
+        self.scanners.remove(uuid);
     }
 }
 

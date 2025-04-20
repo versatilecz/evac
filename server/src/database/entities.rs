@@ -6,10 +6,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Scanner {
-    pub id: u64,
+    pub uuid: uuid::Uuid,
     pub name: String,
     pub ip: String,
     pub port: u16,
+    pub mac: Vec<u8>,
     pub last_activity: Option<DateTime<Utc>>,
 }
 
@@ -18,7 +19,7 @@ pub struct Scanner {
 pub struct Device {
     pub uuid: uuid::Uuid,
     pub name: String,
-    pub mac: u64,
+    pub mac: Vec<u8>,
     pub enable: bool,
     pub battery: Option<u8>,
     pub last_activity: Vec<DeviceActivity>,
@@ -62,6 +63,7 @@ pub struct Event {
 #[serde(rename_all = "camelCase")]
 pub enum EventKind {
     #[default]
+    Advertisement,
     ButtonPressed,
     Operator,
 }

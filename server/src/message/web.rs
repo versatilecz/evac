@@ -12,4 +12,7 @@ pub enum WebMessage {
     Ping,
 
     Pong,
+    Config(crate::database::config::Server),
+    Data(crate::database::Data),
+    Event(crate::database::entities::Event),
 }

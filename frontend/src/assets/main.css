@@ -3,3 +3,23 @@
 #app {
   font-weight: normal;
 }
+
+body head {
+  display: block;
+  background-color: green;
+}
+nav {
+  display: flex;
+  flex: content;
+}
+nav a {
+  background-color: red;
+  padding: 10px;
+  flex-direction: row;
+  flex:auto;
+  text-align: center;
+}
+
+nav a:hover {
+  background-color: green;
+}

@@ -5,8 +5,33 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('./views/Home.vue')
+      name: 'dashboard',
+      component: () => import('./views/Dashboard.vue')
+    },
+    {
+      path: '/config',
+      name: 'config',
+      component: () => import('./views/Config.vue')
+    },
+    {
+      path: '/area',
+      name: 'area',
+      component: () => import('./views/Area.vue')
+    },
+    {
+      path: '/scanners',
+      name: 'scanners',
+      component: () => import('./views/Scanners.vue')
+    },
+    {
+      path: '/Devices',
+      name: 'devices',
+      component: () => import('./views/Devices.vue')
+    },
+    {
+      path: '/tools',
+      name: 'tools',
+      component: () => import('./views/Tools.vue')
     },
   ]
 })

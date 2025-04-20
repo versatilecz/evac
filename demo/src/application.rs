@@ -1,6 +1,7 @@
 use std::net::SocketAddrV4;
 use std::{any, result};
 
+use esp32_nimble::uuid128;
 use esp_idf_svc::eth::{BlockingEth, EspEth, EthDriver, SpiEth};
 use esp_idf_svc::hal::gpio::{Gpio18, Gpio19, Input, Output, PinDriver};
 use esp_idf_svc::hal::spi;
@@ -41,16 +42,16 @@ impl<'a> Application<'a> {
                 if let Ok(msg) = rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(
                     &buffer[0..len],
                 ) {
-                    match msg {
-                        shared::messages::scanner::ScannerMessage::Hello => {
-                            let register_msg = shared::messages::scanner::ScannerMessage::Register;
+                    match msg.content {
+                        shared::messages::scanner::ScannerContent::Hello => {
+                            let register_msg = shared::messages::scanner::ScannerContent::Register;
                             let register_data = rmp_serde::to_vec(&register_msg)?;
                             self.server_address = Some(server_address);
                             log::info!("{:?}", msg);
                             socket.send_to(&register_data, server_address)?;
                         }
 
-                        shared::messages::scanner::ScannerMessage::Set(set) => {
+                        shared::messages::scanner::ScannerContent::Set(set) => {
                             self.alarm = set.alarm;
                             self.running = set.scanning;
                             self.services = set.services;
@@ -88,7 +89,10 @@ impl<'a> Application<'a> {
         if let (Some(socket), Some(server_address)) =
             (self.socket.as_ref(), self.server_address.as_ref())
         {
-            let msg = shared::messages::scanner::ScannerMessage::ScanResult(scan_device);
+            let msg = shared::messages::scanner::ScannerMessage {
+                content: shared::messages::scanner::ScannerContent::ScanResult(scan_device),
+                uuid: uuid::Uuid::new_v4(),
+            };
             let data = rmp_serde::to_vec(&msg).unwrap();
             socket.send_to(&data, server_address).unwrap();
         }

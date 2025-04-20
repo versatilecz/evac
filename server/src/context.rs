@@ -8,12 +8,12 @@ pub struct Context {
     // All workers listen this events
     pub global_broadcast: tokio::sync::broadcast::Sender<shared::messages::global::GlobalMessage>,
     // All web clients listen this event
-    pub web_broadcast: tokio::sync::broadcast::Sender<shared::messages::web::WebMessage>,
+    pub web_broadcast: tokio::sync::broadcast::Sender<crate::message::web::WebMessage>,
     // All device client listen this event
     pub scanner_broadcast:
         tokio::sync::broadcast::Sender<shared::messages::scanner::ScannerMessage>,
 
-    pub scanner_sender: tokio::sync::mpsc::Sender<shared::messages::scanner::ScannerPacket>,
+    pub scanner_sender: tokio::sync::mpsc::Sender<shared::messages::scanner::ScannerEvent>,
 
     // Device clients
     pub scanners: BTreeMap<u64, crate::scanner::Scanner>,
@@ -32,8 +32,8 @@ impl Context {
     }
 
     pub fn scanner_set(&mut self, scanner: scanner::Scanner) {
-        tracing::debug!("Register scanner: {} {}", scanner.socket, scanner.id);
-        self.scanners.insert(scanner.id.clone(), scanner);
+        tracing::debug!("Register scanner: {} {}", scanner.socket, scanner.uuid);
+        self.scanners.insert(scanner.uuid.clone(), scanner);
     }
 
     pub fn scanner_rm(&mut self, id: &u64) {

@@ -23,14 +23,13 @@ pub trait LoadSave {
     }
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Data {
     pub scanners: BTreeMap<uuid::Uuid, entities::Scanner>,
     pub devices: BTreeMap<uuid::Uuid, entities::Device>,
     pub locations: BTreeMap<uuid::Uuid, entities::Location>,
     pub rooms: BTreeMap<uuid::Uuid, entities::Room>,
-    pub alarms: BTreeMap<uuid::Uuid, entities::Alarm>,
 }
 
 impl LoadSave for Data {}
@@ -40,6 +39,7 @@ impl LoadSave for Data {}
 pub struct Database {
     pub config: config::Server,
     pub data: Data,
+    pub events: Vec<entities::Event>,
     pub version: String,
 }
 

@@ -29,7 +29,10 @@ pub fn main() -> anyhow::Result<()> {
     socket.set_nonblocking(false)?;
     socket.set_read_timeout(Some(std::time::Duration::from_secs(10)))?;
 
-    let hello_msg = shared::messages::scanner::ScannerMessage::Hello;
+    let hello_msg = shared::messages::scanner::ScannerMessage {
+        content: shared::messages::scanner::ScannerContent::Hello,
+        uuid: uuid::Uuid::new_v4(),
+    };
     let hello_data = rmp_serde::to_vec(&hello_msg)?;
 
     println!("Send hello packet");
@@ -48,18 +51,18 @@ pub fn main() -> anyhow::Result<()> {
             if let Ok(msg) =
                 rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(&buffer[..len])
             {
-                match msg {
-                    shared::messages::scanner::ScannerMessage::Hello => {
+                match msg.content {
+                    shared::messages::scanner::ScannerContent::Hello => {
                         // No action
                     }
-                    shared::messages::scanner::ScannerMessage::Register => {
+                    shared::messages::scanner::ScannerContent::Register => {
                         if config
                             .scanners
                             .iter()
                             .find(|&ip| ip.eq(&client.ip()))
                             .is_some()
                         {
-                            let msg = shared::messages::scanner::ScannerMessage::Set(
+                            let msg = shared::messages::scanner::ScannerContent::Set(
                                 shared::messages::scanner::State {
                                     alarm: config.alarm,
                                     scanning: true,
@@ -72,7 +75,7 @@ pub fn main() -> anyhow::Result<()> {
                             print!("Unregistered device: {}", client.ip());
                         }
                     }
-                    shared::messages::scanner::ScannerMessage::ScanResult(result) => {
+                    shared::messages::scanner::ScannerContent::ScanResult(result) => {
                         if config
                             .scanners
                             .iter()

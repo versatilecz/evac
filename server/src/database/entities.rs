@@ -3,7 +3,7 @@ use std::net::Ipv4Addr;
 use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Scanner {
     pub id: u64,
@@ -13,7 +13,7 @@ pub struct Scanner {
     pub last_activity: Option<DateTime<Utc>>,
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Device {
     pub uuid: uuid::Uuid,
@@ -24,7 +24,7 @@ pub struct Device {
     pub last_activity: Vec<DeviceActivity>,
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct DeviceActivity {
     pub timestamp: DateTime<Utc>,
@@ -32,7 +32,7 @@ pub struct DeviceActivity {
     pub irssi: i64,
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Location {
     pub uuid: uuid::Uuid,
@@ -40,7 +40,7 @@ pub struct Location {
     pub rooms: Vec<uuid::Uuid>,
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Room {
     pub uuid: uuid::Uuid,
@@ -48,19 +48,19 @@ pub struct Room {
     pub points: Vec<(u64, u64)>,
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
-pub struct Alarm {
+pub struct Event {
     pub uuid: uuid::Uuid,
     pub timestamp: DateTime<Utc>,
     pub scanner: uuid::Uuid,
     pub device: Option<uuid::Uuid>,
-    pub kind: AlarmKind,
+    pub kind: EventKind,
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
-pub enum AlarmKind {
+pub enum EventKind {
     #[default]
     ButtonPressed,
     Operator,

@@ -1,9 +1,6 @@
-use std::net::SocketAddrV4;
-use tokio::sync::RwLockWriteGuard;
-
 #[derive(Debug, Clone)]
 pub struct Scanner {
-    pub id: u64,
+    pub uuid: uuid::Uuid,
     pub socket: std::net::SocketAddrV4,
     pub context: crate::context::ContextWrapped,
     pub last_activity: chrono::DateTime<chrono::Utc>,

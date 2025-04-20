@@ -1,6 +1,7 @@
 pub mod scanner;
+use std::ops::Add;
+
 pub use scanner::Scanner;
-use tokio::sync::broadcast;
 
 pub struct Server {
     context: super::context::ContextWrapped,
@@ -17,7 +18,7 @@ impl Server {
     pub async fn process(
         &mut self,
         socket: std::net::SocketAddrV4,
-        msg: shared::messages::scanner::ScannerMessage,
+        wrapper: shared::messages::scanner::ScannerMessage,
     ) -> anyhow::Result<()> {
         if let Some(id) = self.scanners.get(&socket) {
             let scanner = if let Some(scanner) = self.context.read().await.scanners.get(&id) {
@@ -27,21 +28,21 @@ impl Server {
             };
 
             if let Some(mut scanner) = scanner {
-                return scanner.process(msg).await;
+                return scanner.process(wrapper).await;
             }
         }
 
-        match msg {
-            shared::messages::scanner::ScannerMessage::Register(register) => {
+        match wrapper.content {
+            shared::messages::scanner::ScannerContent::Register => {
                 let scanner = scanner::Scanner {
-                    id: register.mac,
+                    id: self.scanners.values().max().unwrap_or(&0).add(1),
                     socket,
                     context: self.context.clone(),
                     last_activity: chrono::Utc::now(),
                 };
                 self.context.write().await.scanner_set(scanner);
             }
-            shared::messages::scanner::ScannerMessage::ScanResult(result) => {
+            shared::messages::scanner::ScannerContent::ScanResult(result) => {
                 let id = 0;
                 self.scanners.insert(socket.clone(), id);
                 let scanner = scanner::Scanner {
@@ -73,20 +74,18 @@ impl Server {
                 .clone(),
         );
         self.context.write().await.scanner_sender = scanner_sender;
-        let port = self
-            .context
-            .read()
-            .await
-            .database
-            .config
-            .base
-            .port_scanner
-            .clone();
+
+        let base = self.context.read().await.database.config.base.clone();
+
+        let (port, broadcast) = (base.port_scanner.clone(), base.port_broadcast.clone());
 
         tracing::debug!("Starting scanner");
         while let Ok(udp) = tokio::net::UdpSocket::bind(port).await {
             let mut buf = [0; 1024];
-            udp.set_broadcast(true);
+            if let Err(err) = udp.set_broadcast(true) {
+                tracing::error!("Problem to set broadcast due to: {}", err);
+            }
+
             let mut global_broadcast = self.context.read().await.global_broadcast.subscribe();
 
             tokio::select! {
@@ -99,22 +98,30 @@ impl Server {
                                 if let std::net::SocketAddr::V4(socket) = addr {
                                     self.process(socket, msg).await?;
                                 }
-
                             }
                             Err(err) => {
-                                tracing::error!("{:?}", err)
+                                tracing::error!("{:?}", err);
                             }
                         }
                     }
-                },
-                Some(msg) = scanner_receiver.recv() => {
-                    tracing::debug!("Sending message: {:?}", msg);
-                    udp.send_to(&rmp_serde::to_vec(&msg.message)?, msg.socket).await?;
                 }
+
+
+                Some(event) = scanner_receiver.recv() => {
+                    tracing::debug!("Sending message: {:?}", event);
+
+                    let data = rmp_serde::to_vec(&event.message)?;
+                    if let Some(socket) = event.socket {
+                        udp.send_to(&data, socket).await?;
+                    } else {
+                        udp.send_to(&data, broadcast).await?;
+                    }
+                },
+
                 Ok(msg) = global_broadcast.recv() => {
                     break;
                 }
-            }
+            };
         }
         tracing::debug!("Stopping scanner");
         Ok(())

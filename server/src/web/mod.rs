@@ -32,7 +32,7 @@ impl Server {
     }
 
     fn encode(
-        msg: &shared::messages::web::WebMessage,
+        msg: &crate::message::web::WebMessage,
     ) -> std::result::Result<warp::ws::Message, String> {
         if let Ok(value) = serde_json::to_string(msg) {
             Ok(warp::ws::Message::text(value))
@@ -55,9 +55,25 @@ impl Server {
             )
         };
         let (sender, mut receiver) =
-            tokio::sync::mpsc::channel::<shared::messages::web::WebMessage>(query_size);
+            tokio::sync::mpsc::channel::<crate::message::web::WebMessage>(query_size);
 
-        let mut client = operator::Operator {
+        {
+            let context = context.read().await;
+            sender
+                .send(crate::message::web::WebMessage::Config(
+                    context.database.config.clone(),
+                ))
+                .await
+                .unwrap();
+            sender
+                .send(crate::message::web::WebMessage::Data(
+                    context.database.data.clone(),
+                ))
+                .await
+                .unwrap();
+        }
+
+        let client = operator::Operator {
             uuid,
             context,
             sender,
@@ -94,7 +110,7 @@ impl Server {
                     if let Some(Ok(ws_msg)) = msg {
                         if ws_msg.is_text() {
                             let text_msg = ws_msg.to_str().unwrap();
-                            match serde_json::from_str::<shared::messages::web::WebMessage>(text_msg) {
+                            match serde_json::from_str::<crate::message::web::WebMessage>(text_msg) {
                                 Ok(message) => {
                                     if let Err(err) = client.process(message).await {
                                         tracing::error!("{}", err);
@@ -114,7 +130,7 @@ impl Server {
 
                 // Send local message to WS
                 Some(msg) = receiver.recv() => {
-                    if msg == shared::messages::web::WebMessage::Close {
+                    if msg == crate::message::web::WebMessage::Close {
                         let _ = ws_sender.close().await;
                         break;
                     }
@@ -127,7 +143,7 @@ impl Server {
 
                 // Send broadcast message to WS
                 Ok(msg) = web_receiver.recv() => {
-                    if msg == shared::messages::web::WebMessage::Close {
+                    if msg == crate::message::web::WebMessage::Close {
                         let _ = ws_sender.close().await;
                         break;
                     }

@@ -25,10 +25,12 @@ impl Server {
 
             let mut scanner = super::scanner::Server::new(self.context.clone());
             let scanner_future = tokio::spawn(async move { scanner.run().await.unwrap() });
+            let mut sleep = tokio::time::sleep(std::time::Duration::from_secs(10));
 
             loop {
                 tokio::select! {
-                    _ = tokio::time::sleep(std::time::Duration::from_secs(10)) => {
+                    _ = sleep => {
+                        sleep = tokio::time::sleep(std::time::Duration::from_secs(10));
                         self.routine().await;
                     },
                     Ok(msg) = global_receiver.recv() => {
@@ -43,7 +45,8 @@ impl Server {
                                 break 'main;
                             }
                             _ => {
-                                tracing::error!("Unexpected message")
+                                tracing::error!("Unexpected message");
+                                break;
                             }
                         }
                     }
@@ -53,21 +56,24 @@ impl Server {
             web_future.await?;
             scanner_future.await?;
         }
+
         Ok(())
     }
 
     async fn routine(&mut self) {
         let context = self.context.read().await;
-        let message = shared::messages::scanner::ScannerMessage::Hello(
-            context.database.config.base.port_scanner.clone(),
-        );
+        let message = shared::messages::scanner::ScannerMessage {
+            content: shared::messages::scanner::ScannerContent::Register,
+            uuid: uuid::Uuid::new_v4(),
+        };
 
         context
             .scanner_sender
-            .send(shared::messages::scanner::ScannerPacket {
+            .send(shared::messages::scanner::ScannerEvent {
                 message,
-                socket: context.database.config.base.port_broadcast.clone(),
+                socket: None,
             })
-            .await;
+            .await
+            .unwrap();
     }
 }

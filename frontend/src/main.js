@@ -17,6 +17,7 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
+
 const websocket = useWebSocket(`${schema}//${hostname}/api/operator`, {
     autoReconnect: true,
     retries: 3,

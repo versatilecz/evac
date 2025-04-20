@@ -1,5 +1,6 @@
 pub mod context;
 pub mod database;
+pub mod message;
 pub mod scanner;
 pub mod server;
 pub mod util;
@@ -49,6 +50,7 @@ async fn main() -> anyhow::Result<()> {
     tracing::info!("{}", serde_json::to_string(&config).unwrap());
     let database = crate::database::Database {
         data: crate::database::Data::load(&config.base.data_path)?,
+        events: Vec::new(),
         config: config.clone(),
         version: String::new(),
     };
@@ -71,12 +73,13 @@ async fn main() -> anyhow::Result<()> {
 
     let context = std::sync::Arc::new(tokio::sync::RwLock::new(context));
 
-    // Create signals
-    let mut sig_int = signal(SignalKind::interrupt())?;
-    let mut sig_hub = signal(SignalKind::hangup())?;
-    let mut sig_quit = signal(SignalKind::quit())?;
-    let mut sig_term = signal(SignalKind::terminate())?;
-
+    /*
+       // Create signals
+       let mut sig_int = signal(SignalKind::interrupt())?;
+       let mut sig_hub = signal(SignalKind::hangup())?;
+       let mut sig_quit = signal(SignalKind::quit())?;
+       let mut sig_term = signal(SignalKind::terminate())?;
+    */
     let mut server = server::Server::new(context);
     let server_future = tokio::task::spawn(async move { server.run().await });
 

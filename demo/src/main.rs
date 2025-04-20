@@ -26,6 +26,9 @@ use esp_idf_svc::{
 use esp_idf_svc::{ipv4, ping};
 
 mod application;
+mod scanner;
+
+use esp32_nimble::BLEScan;
 
 pub fn ble_uuid_to_vec(uuid: BleUuid) -> Vec<u8> {
     match uuid {
@@ -75,9 +78,6 @@ fn main() -> anyhow::Result<()> {
     let mut led = PinDriver::output(pins.gpio19)?;
     led.set_high();
 
-    let ble_device = BLEDevice::take();
-    let ble_scan = ble_device.get_scan();
-
     //let button = PinDriver::input(pins.gpio2)?;
 
     let mut application = application::Application {
@@ -104,54 +104,64 @@ fn main() -> anyhow::Result<()> {
     let ip_info = eth.eth().netif().get_ip_info()?;
     application.ip = Some(ip_info.ip);
     log::info!("IP address: {}", application.ip.unwrap());
-    let application = std::sync::Arc::new(std::sync::RwLock::new(application));
+    let ble_device = BLEDevice::take();
+    let mut ble_scan = BLEScan::new();
+
+    let mut application = std::sync::Arc::new(std::sync::RwLock::new(application));
 
     loop {
         if let Ok(mut application) = application.write() {
             application.process()?;
         }
-        let application = application.clone();
 
-        block_on(ble_scan.start(2000))?;
-        ble_scan
-            .active_scan(true)
-            .filter_duplicates(true)
-            .interval(100)
-            .window(99)
-            .on_result(move |scan, device| {
-                if let Ok(mut application) = application.write() {
-                    let mut scan_device = shared::messages::scanner::ScanDevice {
-                        mac: device.addr().val().to_vec(),
-                        name: device.name().to_string(),
-                        rssi: device.rssi(),
-                        services: device
-                            .get_service_data_list()
-                            .map(|s| (ble_uuid_to_vec(s.uuid()), s.data().into()))
-                            /*
-                            .filter(|(uuid1, _)| {
-                                application
-                                    .services
-                                    .iter()
-                                    .find(|&uuid2| uuid1.eq(uuid2))
-                                    .is_some()
-                            })
-                             */
-                            .collect(),
-                    };
+        let scan_application = application.clone();
+        block_on(
+            ble_scan
+                .active_scan(true)
+                .filter_duplicates(true)
+                .interval(100)
+                .window(99)
+                .start(&ble_device, 500, move |device, data| {
+                    if let Ok(mut application) = scan_application.write() {
+                        let mut scan_device = shared::messages::scanner::ScanDevice {
+                            mac: device.addr().as_le_bytes().to_vec(),
+                            name: data.name().unwrap_or_default().to_string(),
+                            rssi: device.rssi() as i32,
+                            services: data
+                                .service_data()
+                                .iter()
+                                .filter_map(|s| {
+                                    Some((ble_uuid_to_vec(s.uuid), s.service_data.to_vec()))
+                                })
+                                /*
+                                .filter(|(uuid1, _)| {
+                                    application
+                                        .services
+                                        .iter()
+                                        .find(|&uuid2| uuid1.eq(uuid2))
+                                        .is_some()
+                                })
+                                 */
+                                .collect(),
+                        };
 
-                    /*
-                    if let Some(service_data) = device
-                        .get_service_data(esp32_nimble::utilities::BleUuid::from_uuid16(0xfcd2))
-                    {
-                        scan_device
-                            .services
-                            .push((vec![0xfc, 0xd2], service_data.data().to_vec()));
+                        /*
+                        if let Some(service_data) = device
+                            .get_service_data(esp32_nimble::utilities::BleUuid::from_uuid16(0xfcd2))
+                        {
+                            scan_device
+                                .services
+                                .push((vec![0xfc, 0xd2], service_data.data().to_vec()));
+                        }
+                         */
+
+                        application.report(scan_device);
+                        //log::info!("Scan: {:?}", scan_device);
                     }
-                     */
 
-                    application.report(scan_device);
-                }
-            });
+                    Some(())
+                }),
+        );
     }
 
     // Reset application

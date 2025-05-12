@@ -63,7 +63,7 @@ impl Server {
     async fn routine(&mut self) {
         let context = self.context.read().await;
         let message = shared::messages::scanner::ScannerMessage {
-            content: shared::messages::scanner::ScannerContent::Register,
+            content: shared::messages::scanner::ScannerContent::Register{mac: Vec::new()},
             uuid: uuid::Uuid::new_v4(),
         };
 

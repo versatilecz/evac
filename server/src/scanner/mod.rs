@@ -43,7 +43,12 @@ impl Server {
                     .values_mut()
                     .find(|d| mac.eq(&d.mac))
                 {
-                    scanner.clone()
+                    scanner::Scanner {
+                        uuid: scanner.uuid,
+                        socket: socket.clone(),
+                        context: self.context.clone(),
+                        last_activity: chrono::offset::Utc::now(),
+                    }
                 } else {
                     scanner::Scanner {
                         uuid: uuid::Uuid::new_v4(),
@@ -52,8 +57,6 @@ impl Server {
                         last_activity: chrono::Utc::now(),
                     }
                 };
-                scanner.ip = socket.ip().into();
-                scanner.port = socket.port();
 
                 self.context.write().await.scanner_set(scanner);
             }

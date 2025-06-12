@@ -8,7 +8,11 @@ pub mod web;
 
 use crate::database::LoadSave;
 use clap::{builder::Str, Parser};
-use std::collections::BTreeMap;
+use shared::messages::scanner::ScannerEvent;
+use std::{
+    collections::BTreeMap,
+    net::{SocketAddr, ToSocketAddrs},
+};
 
 use tracing_subscriber::prelude::*;
 
@@ -54,22 +58,21 @@ async fn main() -> anyhow::Result<()> {
         config: config.clone(),
         version: String::new(),
     };
+    let broadcast = SocketAddr::V4(config.base.port_broadcast);
 
+    let global_broadcast = tokio::sync::broadcast::Sender::new(config.base.query_size);
     let (scanner_sender, scanner_receiver) = tokio::sync::mpsc::channel(config.base.query_size);
 
     // Creation of context and control structures
     let context = crate::context::Context {
-        global_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
+        global_broadcast: global_broadcast.clone(),
         web_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
-        scanner_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
         scanner_sender,
         database,
-        scanners: BTreeMap::new(),
-        operators: BTreeMap::new(),
     };
 
     let global_sender = context.global_broadcast.clone();
-    let _web_sender = context.web_broadcast.clone();
+    let web_sender = context.web_broadcast.clone();
 
     let context = std::sync::Arc::new(tokio::sync::RwLock::new(context));
 
@@ -80,8 +83,8 @@ async fn main() -> anyhow::Result<()> {
        let mut sig_quit = signal(SignalKind::quit())?;
        let mut sig_term = signal(SignalKind::terminate())?;
     */
-    let mut server = server::Server::new(context);
-    let server_future = tokio::task::spawn(async move { server.run().await });
+    let mut server = server::Server::new(context, broadcast, global_sender.clone());
+    let server_future = tokio::task::spawn(async move { server.run(scanner_receiver).await });
 
     // Create signals
     let mut sig_int = signal(SignalKind::interrupt())?;

@@ -1,158 +1,185 @@
-pub mod scanner;
-use std::ops::Add;
+use std::net::SocketAddr;
 
-use chrono::{Date, DateTime};
-pub use scanner::Scanner;
+use shared::messages::scanner::{ScannerContent, ScannerEvent};
+use tokio::{net::UdpSocket, sync::broadcast};
+use uuid::Uuid;
 
-pub struct Server {
+mod map;
+
+pub struct Scanner {
     context: super::context::ContextWrapped,
-    scanners: std::collections::BTreeMap<std::net::SocketAddrV4, uuid::Uuid>,
+    scanners: map::ScannerMap,
+    socket: Option<UdpSocket>,
+    broadcast: SocketAddr,
 }
-impl Server {
-    pub fn new(context: super::context::ContextWrapped) -> Self {
+
+impl Scanner {
+    pub fn new(context: super::context::ContextWrapped, broadcast: SocketAddr) -> Self {
         Self {
+            broadcast,
             context,
-            scanners: std::collections::BTreeMap::new(),
+            scanners: map::ScannerMap::new(),
+            socket: None,
         }
     }
 
-    pub async fn process(
-        &mut self,
-        socket: std::net::SocketAddrV4,
-        wrapper: shared::messages::scanner::ScannerMessage,
-    ) -> anyhow::Result<()> {
-        if let Some(id) = self.scanners.get(&socket) {
-            let scanner = if let Some(scanner) = self.context.read().await.scanners.get(&id) {
-                Some(scanner.clone())
-            } else {
-                None
-            };
+    pub async fn send(&self, event: ScannerEvent) -> anyhow::Result<bool> {
+        let data = rmp_serde::to_vec(&event.message)?;
 
-            if let Some(mut scanner) = scanner {
-                return scanner.process(wrapper).await;
+        if let Some(socket) = self.socket.as_ref() {
+            if let Some(uuid) = event.scanner {
+                if let Some(addr) = self.scanners.get_addr(&uuid) {
+                    return Ok(socket.send_to(&data, addr).await.is_ok());
+                }
+            } else {
+                return Ok(socket.send_to(&data, self.broadcast).await.is_ok());
             }
         }
 
-        match wrapper.content {
-            shared::messages::scanner::ScannerContent::Register { mac } => {
-                let mut context = self.context.write().await;
-                let scanner = if let Some(scanner) = context
-                    .database
-                    .data
-                    .scanners
-                    .values_mut()
-                    .find(|d| mac.eq(&d.mac))
-                {
-                    scanner::Scanner {
-                        uuid: scanner.uuid,
-                        socket: socket.clone(),
-                        context: self.context.clone(),
-                        last_activity: chrono::offset::Utc::now(),
-                    }
-                } else {
-                    scanner::Scanner {
-                        uuid: uuid::Uuid::new_v4(),
-                        socket,
-                        context: self.context.clone(),
-                        last_activity: chrono::Utc::now(),
-                    }
-                };
+        Ok(false)
+    }
 
-                self.context.write().await.scanner_set(scanner);
-            }
-            shared::messages::scanner::ScannerContent::ScanResult(result) => {
-                let uuid = uuid::Uuid::new_v4();
-                self.scanners.insert(socket.clone(), uuid);
-                let scanner = scanner::Scanner {
-                    uuid,
-                    socket,
-                    context: self.context.clone(),
-                    last_activity: chrono::Utc::now(),
-                };
-                {
-                    let mut context = self.context.write().await;
-                    context.scanner_set(scanner);
-                    let event = crate::database::entities::Event {
-                        device: Some(uuid::Uuid::new_v4()),
-                        uuid: uuid::Uuid::new_v4(),
-                        kind: crate::database::entities::EventKind::Advertisement,
-                        timestamp: chrono::offset::Utc::now(),
-                        scanner: uuid::Uuid::new_v4(),
-                    };
-                    context
-                        .web_broadcast
-                        .send(crate::message::web::WebMessage::Event(event))
-                        .unwrap();
+    pub async fn recv(&mut self, port: SocketAddr) -> anyhow::Result<bool> {
+        let mut buf = [0u8; 512];
+        if let Some(socket) = self.socket.as_ref() {
+            if let Ok((len, addr)) = socket.recv_from(&mut buf).await {
+                match rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(
+                    &buf[..len],
+                ) {
+                    Ok(msg) => {
+                        self.process_socket(addr, msg).await?;
+                        return Ok(true);
+                    }
+                    Err(err) => {
+                        tracing::error!("{:?}", err);
+                        return Ok(false);
+                    }
                 }
             }
-            _ => {}
+        } else {
+            if let Ok(udp) = tokio::net::UdpSocket::bind(port).await {
+                tracing::info!("Server is initialized...");
+                if let Err(err) = udp.set_broadcast(true) {
+                    tracing::error!("Problem to set broadcast due to: {}", err);
+                }
+                self.socket = Some(udp);
+            }
         }
-        tracing::debug!("Process ends");
-        Ok(())
+
+        return Ok(false);
     }
 
-    pub async fn run(&mut self) -> anyhow::Result<()> {
-        let (scanner_sender, mut scanner_receiver) = tokio::sync::mpsc::channel(
-            self.context
-                .read()
-                .await
+    pub async fn get_event(
+        &mut self,
+        socket: &SocketAddr,
+        msg: shared::messages::scanner::ScannerMessage,
+    ) -> Option<ScannerEvent> {
+        let ip = socket.ip().to_string();
+        let port = socket.port();
+
+        let mut context = self.context.write().await;
+
+        // Reaction to register msg
+        if let ScannerContent::Register { mac } = &msg.content {
+            // Mac exists
+            if let Some(scanner) = context
                 .database
-                .config
-                .base
-                .query_size
-                .clone(),
-        );
-        self.context.write().await.scanner_sender = scanner_sender;
+                .data
+                .scanners
+                .iter_mut()
+                .find(|s| s.1.mac.eq(mac))
+            {
+                scanner.1.last_activity = Some(chrono::offset::Utc::now());
+                scanner.1.ip = ip;
+                scanner.1.port = port;
 
-        let base = self.context.read().await.database.config.base.clone();
+                return Some(ScannerEvent {
+                    message: msg,
+                    scanner: Some(scanner.0.clone()),
+                });
+            } else {
+                // Mac dost not exists
+                let uuid = uuid::Uuid::new_v4();
+                context.database.data.scanners.insert(
+                    uuid,
+                    crate::database::entities::Scanner {
+                        uuid,
+                        ip: ip.clone(),
+                        port: port.clone(),
+                        mac: mac.clone(),
+                        name: format!("Scanner: {}", hex::encode(mac)),
+                        last_activity: Some(chrono::offset::Utc::now()),
+                    },
+                );
 
-        let (port, broadcast) = (base.port_scanner.clone(), base.port_broadcast.clone());
-
-        tracing::debug!("Starting scanner");
-        while let Ok(udp) = tokio::net::UdpSocket::bind(port).await {
-            let mut buf = [0; 1024];
-            if let Err(err) = udp.set_broadcast(true) {
-                tracing::error!("Problem to set broadcast due to: {}", err);
+                return Some(ScannerEvent {
+                    scanner: Some(uuid),
+                    message: msg,
+                });
             }
+        }
 
-            let mut global_broadcast = self.context.read().await.global_broadcast.subscribe();
+        // Find device by socket pair
+        if let Some(scanner) = context
+            .database
+            .data
+            .scanners
+            .iter_mut()
+            .find(|s| s.1.ip == ip && s.1.port == port)
+        {
+            scanner.1.last_activity = Some(chrono::offset::Utc::now());
+            scanner.1.ip = ip;
+            scanner.1.port = port;
 
-            tokio::select! {
-                data = udp.recv_from(&mut buf) => {
-                    if let Ok((len, addr)) = data {
-                        match rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(
-                            &buf[..len],
-                        ) {
-                            Ok(msg) => {
-                                if let std::net::SocketAddr::V4(socket) = addr {
-                                    self.process(socket, msg).await?;
-                                }
-                            }
-                            Err(err) => {
-                                tracing::error!("{:?}", err);
-                            }
+            return Some(ScannerEvent {
+                message: msg,
+                scanner: Some(scanner.0.clone()),
+            });
+        }
+
+        // Unknown device
+        None
+    }
+
+    pub async fn process_socket(
+        &mut self,
+        socket: std::net::SocketAddr,
+        msg: shared::messages::scanner::ScannerMessage,
+    ) -> anyhow::Result<()> {
+        if let Some(event) = self.get_event(&socket, msg).await {
+            match event.message.content {
+                shared::messages::scanner::ScannerContent::Register { mac } => {
+                    tracing::debug!("Received register message: {:?}", mac);
+                }
+                shared::messages::scanner::ScannerContent::ScanResult(result) => {
+                    tracing::debug!("Received scan result message: {:?}", result);
+                    /*
+                    if let Some(scanner_uuid) = self.scanners.get(&socket) {
+                        let mut context = self.context.write().await;
+
+                        if let Some(scanner) = context.scanners.get(scanner_uuid).cloned() {
+                            context.scanner_set(scanner.clone());
+
+                            let event = crate::database::entities::Event {
+                                device: Some(uuid::Uuid::new_v4()),
+                                uuid: uuid::Uuid::new_v4(),
+                                kind: crate::database::entities::EventKind::Advertisement,
+                                timestamp: chrono::offset::Utc::now(),
+                                scanner: uuid::Uuid::new_v4(),
+                            };
+                            context
+                                .web_broadcast
+                                .send(crate::message::web::WebMessage::Event(event))
+                                .unwrap();
+
+                            tracing::debug!("Procesing scan results from scanner");
                         }
                     }
+                     */
                 }
-
-
-                Some(event) = scanner_receiver.recv() => {
-                    tracing::debug!("Sending message: {:?}", event);
-
-                    let data = rmp_serde::to_vec(&event.message)?;
-                    if let Some(socket) = event.socket {
-                        udp.send_to(&data, socket).await?;
-                    } else {
-                        udp.send_to(&data, broadcast).await?;
-                    }
-                },
-
-                Ok(msg) = global_broadcast.recv() => {
-                    break;
-                }
-            };
+                _ => {}
+            }
         }
-        tracing::debug!("Stopping scanner");
         Ok(())
     }
 }

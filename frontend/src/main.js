@@ -8,6 +8,8 @@ import App from './App.vue'
 import router from './router'
 
 import { useMainStore } from '@/stores/mainStore'
+import { useConfigStore } from '@/stores/configStore'
+import { useDataStore } from '@/stores/dataStore'
 
 const schema = window.location.protocol.replace('http', 'ws')
 const hostname = window.location.host
@@ -30,5 +32,7 @@ const websocket = useWebSocket(`${schema}//${hostname}/api/operator`, {
   app.provide('$websocket', websocket)
 
 useMainStore()
+useConfigStore()
+useDataStore()
 
 app.mount('#app')

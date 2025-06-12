@@ -5,6 +5,7 @@ use esp32_nimble::uuid128;
 use esp_idf_svc::eth::{BlockingEth, EspEth, EthDriver, SpiEth};
 use esp_idf_svc::hal::gpio::{Gpio18, Gpio19, Input, Output, PinDriver};
 use esp_idf_svc::hal::spi;
+use shared::messages::scanner::ScannerMessage;
 
 pub struct Application<'a> {
     //pub button: PinDriver<'a, Gpio2, Input>,
@@ -16,6 +17,7 @@ pub struct Application<'a> {
     pub socket: Option<std::net::UdpSocket>,
     //pub broadcast: Option<std::net::UdpSocket>,
     pub services: Vec<Vec<u8>>,
+    pub mac: Vec<u8>,
     pub running: bool,
     pub alarm: bool,
 }
@@ -27,7 +29,7 @@ impl<'a> Application<'a> {
         let mut buffer: [u8; 1024] = [0u8; 1024];
 
         if self.socket.is_none() {
-            let socket_addr = std::net::SocketAddrV4::new(self.ip.unwrap(), 34254);
+            let socket_addr = std::net::SocketAddrV4::new(self.ip.unwrap(), 4242);
             let mut socket = std::net::UdpSocket::bind(socket_addr)?;
             socket.set_read_timeout(Some(std::time::Duration::from_millis(10)))?;
             socket.set_broadcast(true)?;
@@ -42,12 +44,22 @@ impl<'a> Application<'a> {
                 if let Ok(msg) = rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(
                     &buffer[0..len],
                 ) {
+                    log::info!("Received message: {:?}", msg);
+
                     match msg.content {
                         shared::messages::scanner::ScannerContent::Hello => {
-                            let register_msg = shared::messages::scanner::ScannerContent::Register;
-                            let register_data = rmp_serde::to_vec(&register_msg)?;
+                            let register_msg =
+                                shared::messages::scanner::ScannerContent::Register {
+                                    mac: self.mac.clone(),
+                                };
+                            let msg = ScannerMessage {
+                                uuid: uuid::Uuid::new_v4(),
+                                content: register_msg,
+                            };
+                            let register_data = rmp_serde::to_vec(&msg)?;
                             self.server_address = Some(server_address);
                             log::info!("{:?}", msg);
+
                             socket.send_to(&register_data, server_address)?;
                         }
 
@@ -84,7 +96,7 @@ impl<'a> Application<'a> {
     }
 
     pub fn report(&mut self, scan_device: shared::messages::scanner::ScanDevice) {
-        log::info!("Scan: {:?}", scan_device);
+        //log::info!("Scan: {:?}", scan_device);
 
         if let (Some(socket), Some(server_address)) =
             (self.socket.as_ref(), self.server_address.as_ref())

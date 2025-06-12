@@ -44,3 +44,5 @@ pub struct Database {
 }
 
 impl LoadSave for Database {}
+
+impl Database {}

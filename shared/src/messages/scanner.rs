@@ -46,7 +46,7 @@ pub enum ScannerContent {
     ScanResult(ScanDevice),
 }
 
-#[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
+#[derive(Default, Debug, Clone, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct ScannerMessage {
     pub content: ScannerContent,
     pub uuid: uuid::Uuid,
@@ -54,6 +54,6 @@ pub struct ScannerMessage {
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct ScannerEvent {
-    pub socket: Option<SocketAddrV4>,
+    pub scanner: Option<uuid::Uuid>,
     pub message: ScannerMessage,
 }

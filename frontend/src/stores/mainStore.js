@@ -18,8 +18,10 @@ export const useMainStore = defineStore('main', () => {
     websocket.data,
     (val) => {
       const msg = JSON.parse(val)
-      if (msg.tag in register) {
-        register[msg.tag](msg.content)
+      for(let tag in msg) {
+        if(tag in register) {
+          register[tag](msg[tag])
+        }
       }
     },
     { lazy: true }

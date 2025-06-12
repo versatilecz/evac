@@ -79,9 +79,6 @@ impl Server {
             sender,
         };
 
-        // Register client to context
-        client.context.write().await.operator_set(client.clone());
-
         loop {
             tokio::select! {
                 // Global message processing
@@ -158,9 +155,6 @@ impl Server {
         }
 
         tracing::debug!("Client is deth");
-
-        // Deregister client from context
-        client.context.write().await.operator_rm(&client.uuid);
     }
 
     pub fn websocket_route(

@@ -1,45 +1,36 @@
-use std::{collections::BTreeMap, os::unix::fs::chroot};
+use std::{collections::BTreeMap, net::SocketAddr, os::unix::fs::chroot};
 
-use crate::{scanner, web::operator};
+use shared::messages::{global::GlobalMessage, scanner::ScannerEvent};
+
+use crate::{database, message::web::WebMessage};
 
 #[derive(Debug)]
 pub struct Context {
+    pub global_broadcast: tokio::sync::broadcast::Sender<GlobalMessage>,
+    pub web_broadcast: tokio::sync::broadcast::Sender<WebMessage>,
+    pub scanner_sender: tokio::sync::mpsc::Sender<ScannerEvent>,
     pub database: crate::database::Database,
-    // All workers listen this events
-    pub global_broadcast: tokio::sync::broadcast::Sender<shared::messages::global::GlobalMessage>,
-    // All web clients listen this event
-    pub web_broadcast: tokio::sync::broadcast::Sender<crate::message::web::WebMessage>,
-    // All device client listen this event
-    pub scanner_broadcast:
-        tokio::sync::broadcast::Sender<shared::messages::scanner::ScannerMessage>,
-
-    pub scanner_sender: tokio::sync::mpsc::Sender<shared::messages::scanner::ScannerEvent>,
-
-    // Device clients
-    pub scanners: BTreeMap<uuid::Uuid, crate::scanner::Scanner>,
-    // Web clients
-    pub operators: BTreeMap<uuid::Uuid, crate::web::Operator>,
 }
 impl Context {
-    pub fn operator_set(&mut self, operator: super::web::Operator) {
-        tracing::debug!("Register WS client: {}", operator.uuid);
-        self.operators.insert(operator.uuid, operator);
-    }
-
-    pub fn operator_rm(&mut self, uuid: &uuid::Uuid) {
-        tracing::debug!("DeRegister WS client: {}", uuid);
-        self.operators.remove(uuid);
-    }
-
-    pub fn scanner_set(&mut self, mut scanner: scanner::Scanner) {
-        tracing::debug!("Register scanner: {} {}", scanner.socket, scanner.uuid);
-        scanner.last_activity = chrono::offset::Utc::now();
-        self.scanners.insert(scanner.uuid.clone(), scanner);
-    }
-
-    pub fn scanner_rm(&mut self, uuid: &uuid::Uuid) {
-        tracing::debug!("DeRegister scanner: {}", uuid);
-        self.scanners.remove(uuid);
+    pub fn scanner_set(&mut self, uuid: uuid::Uuid, socket: SocketAddr, mac: Vec<u8>) {
+        let now = chrono::offset::Utc::now();
+        if let Some(scanner) = self.database.data.scanners.get_mut(&uuid) {
+            scanner.mac = mac;
+            scanner.ip = socket.ip().to_string();
+            scanner.last_activity = Some(now);
+        } else {
+            self.database.data.scanners.insert(
+                uuid,
+                crate::database::entities::Scanner {
+                    ip: socket.ip().to_string(),
+                    port: socket.port().into(),
+                    last_activity: Some(now),
+                    uuid: uuid,
+                    name: format!("Scanner: {}", hex::encode(&mac)),
+                    mac: mac,
+                },
+            );
+        }
     }
 }
 

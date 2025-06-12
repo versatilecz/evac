@@ -91,6 +91,7 @@ fn main() -> anyhow::Result<()> {
         services: Vec::new(),
         running: false,
         alarm: false,
+        mac: Vec::new(),
     };
 
     log::info!("Starting eth...");
@@ -103,10 +104,10 @@ fn main() -> anyhow::Result<()> {
 
     let ip_info = eth.eth().netif().get_ip_info()?;
     application.ip = Some(ip_info.ip);
+    application.mac = eth.eth().netif().get_mac().unwrap().to_vec();
     log::info!("IP address: {}", application.ip.unwrap());
     let ble_device = BLEDevice::take();
     let mut ble_scan = BLEScan::new();
-
     let mut application = std::sync::Arc::new(std::sync::RwLock::new(application));
 
     loop {
@@ -114,12 +115,13 @@ fn main() -> anyhow::Result<()> {
             application.process()?;
         }
 
+        /*
         let scan_application = application.clone();
         block_on(
             ble_scan
                 .active_scan(true)
                 .filter_duplicates(true)
-                .interval(100)
+                .interval(1000)
                 .window(99)
                 .start(&ble_device, 500, move |device, data| {
                     if let Ok(mut application) = scan_application.write() {
@@ -162,6 +164,7 @@ fn main() -> anyhow::Result<()> {
                     Some(())
                 }),
         );
+        */
     }
 
     // Reset application

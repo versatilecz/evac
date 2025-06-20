@@ -26,6 +26,7 @@ impl Context {
                     port: socket.port().into(),
                     last_activity: Some(now),
                     uuid: uuid,
+                    room: None,
                     name: format!("Scanner: {}", hex::encode(&mac)),
                     mac: mac,
                 },

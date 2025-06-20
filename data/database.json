@@ -1,1 +1,204 @@
-{}
+{
+  "devices": {
+    "11cb519b-ea9c-473b-a00b-ccd6be885bb1": {
+      "battery": null,
+      "enable": true,
+      "lastActivity": [],
+      "mac": [
+        2,
+        3,
+        4
+      ],
+      "name": "Device2",
+      "uuid": "7d9a0cd4-8478-4bb0-ae8a-35dc711b60b8"
+    },
+    "7d9a0cd4-8478-4bb0-ae8a-35dc711b60b8": {
+      "battery": null,
+      "enable": true,
+      "lastActivity": [],
+      "mac": [
+        1,
+        3,
+        4
+      ],
+      "name": "Device1",
+      "uuid": "7d9a0cd4-8478-4bb0-ae8a-35dc711b60b8"
+    }
+  },
+  "locations": {
+    "0eaa8051-7e98-478a-a0c5-f88790200d12": {
+      "name": "Location1",
+      "rooms": [
+        "c26ffb7f-7c47-4978-831a-ee0f3ea58263"
+      ],
+      "uuid": "0eaa8051-7e98-478a-a0c5-f88790200d12"
+    },
+    "c7d93d89-6fb0-4d41-a28d-0cb0ec1b1f81": {
+      "name": "Location2",
+      "rooms": [
+        "c26ffb7f-7c47-4978-831a-ee0f3ea58263"
+      ],
+      "uuid": "c7d93d89-6fb0-4d41-a28d-0cb0ec1b1f81"
+    }
+  },
+  "rooms": {
+    "57087c16-b955-43cf-ae2a-87aeed92d29d": {
+      "location": "c7d93d89-6fb0-4d41-a28d-0cb0ec1b1f81",
+      "name": "Room3",
+      "points": [
+        [
+          1,
+          1
+        ]
+      ],
+      "uuid": "57087c16-b955-43cf-ae2a-87aeed92d29d"
+    },
+    "c26ffb7f-7c47-4978-831a-ee0f3ea58263": {
+      "location": "0eaa8051-7e98-478a-a0c5-f88790200d12",
+      "name": "Room1",
+      "points": [
+        [
+          1,
+          1
+        ]
+      ],
+      "uuid": "c26ffb7f-7c47-4978-831a-ee0f3ea58263"
+    },
+    "d91ccd6a-a4d0-46b4-8e8d-5cc89e79c678": {
+      "location": "0eaa8051-7e98-478a-a0c5-f88790200d12",
+      "name": "Room2",
+      "points": [
+        [
+          1,
+          1
+        ]
+      ],
+      "uuid": "d91ccd6a-a4d0-46b4-8e8d-5cc89e79c678"
+    },
+    "e61cd96d-3591-4181-9a91-b83b1aaa245e": {
+      "location": "c7d93d89-6fb0-4d41-a28d-0cb0ec1b1f81",
+      "name": "Room4",
+      "points": [
+        [
+          1,
+          1
+        ]
+      ],
+      "uuid": "e61cd96d-3591-4181-9a91-b83b1aaa245e"
+    }
+  },
+  "scanners": {
+    "4a1f09de-1785-44a5-ad15-cd4af37204dd": {
+      "ip": "192.168.1.7",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        7,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 7",
+      "port": 5465,
+      "room": "e61cd96d-3591-4181-9a91-b83b1aaa245e",
+      "uuid": "4a1f09de-1785-44a5-ad15-cd4af37204dd"
+    },
+    "50ebb8af-8f7a-46dc-bb78-568dbe8a8383": {
+      "ip": "192.168.1.6",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        6,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 6",
+      "port": 5465,
+      "room": "57087c16-b955-43cf-ae2a-87aeed92d29d",
+      "uuid": "50ebb8af-8f7a-46dc-bb78-568dbe8a8383"
+    },
+    "6ad42202-2910-42b4-9d95-7b947f3b270c": {
+      "ip": "192.168.11.4",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        4,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 4",
+      "port": 5465,
+      "room": "d91ccd6a-a4d0-46b4-8e8d-5cc89e79c678",
+      "uuid": "6ad42202-2910-42b4-9d95-7b947f3b270c"
+    },
+    "6ca6af95-6bbf-4848-9896-79d29b782093": {
+      "ip": "192.168.11.3",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        3,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 3",
+      "port": 5465,
+      "room": "d91ccd6a-a4d0-46b4-8e8d-5cc89e79c678",
+      "uuid": "6ca6af95-6bbf-4848-9896-79d29b782093"
+    },
+    "86adf2bb-494f-4b78-881f-90682488d28d": {
+      "ip": "192.168.11.2",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        2,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 2",
+      "port": 5465,
+      "room": "c26ffb7f-7c47-4978-831a-ee0f3ea58263",
+      "uuid": "86adf2bb-494f-4b78-881f-90682488d28d"
+    },
+    "b766c9e9-cc8d-4e11-ba5d-fc10c763d229": {
+      "ip": "192.168.1.5",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        5,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 5",
+      "port": 5465,
+      "room": "57087c16-b955-43cf-ae2a-87aeed92d29d",
+      "uuid": "b766c9e9-cc8d-4e11-ba5d-fc10c763d229"
+    },
+    "c8218751-8c8a-4395-8524-107311005dd2": {
+      "ip": "192.168.11.1",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 1",
+      "port": 5465,
+      "room": "c26ffb7f-7c47-4978-831a-ee0f3ea58263",
+      "uuid": "c8218751-8c8a-4395-8524-107311005dd2"
+    },
+    "ccb9f31e-cd66-48b7-a7e4-c1c004e96595": {
+      "ip": "192.168.1.8",
+      "lastActivity": "2025-06-20T13:47:43.214810528Z",
+      "mac": [
+        8,
+        2,
+        3,
+        4
+      ],
+      "name": "Scanner 8",
+      "port": 5465,
+      "room": "e61cd96d-3591-4181-9a91-b83b1aaa245e",
+      "uuid": "ccb9f31e-cd66-48b7-a7e4-c1c004e96595"
+    }
+  }
+}

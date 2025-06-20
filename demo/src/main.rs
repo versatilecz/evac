@@ -115,7 +115,6 @@ fn main() -> anyhow::Result<()> {
             application.process()?;
         }
 
-        /*
         let scan_application = application.clone();
         block_on(
             ble_scan
@@ -164,7 +163,6 @@ fn main() -> anyhow::Result<()> {
                     Some(())
                 }),
         );
-        */
     }
 
     // Reset application

@@ -9,7 +9,10 @@ import router from './router'
 
 import { useMainStore } from '@/stores/mainStore'
 import { useConfigStore } from '@/stores/configStore'
-import { useDataStore } from '@/stores/dataStore'
+import { useLocationStore } from '@/stores/locationStore'
+import { useRoomStore } from '@/stores/roomStore'
+import { useScannerStore } from '@/stores/scannerStore'
+import { useDeviceStore } from '@/stores/deviceStore'
 
 const schema = window.location.protocol.replace('http', 'ws')
 const hostname = window.location.host
@@ -33,6 +36,9 @@ const websocket = useWebSocket(`${schema}//${hostname}/api/operator`, {
 
 useMainStore()
 useConfigStore()
-useDataStore()
+useLocationStore()
+useRoomStore()
+useScannerStore()
+useDeviceStore()
 
 app.mount('#app')

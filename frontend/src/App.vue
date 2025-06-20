@@ -16,7 +16,6 @@ import { RouterLink, RouterView } from 'vue-router'
           <RouterLink to="/scanners">Scanners</RouterLink>
           <RouterLink to="/devices">Devices</RouterLink>
           <RouterLink to="/tools">Tools</RouterLink>
-
     </nav>
   </head>
 

@@ -107,6 +107,7 @@ impl Scanner {
                         ip: ip.clone(),
                         port: port.clone(),
                         mac: mac.clone(),
+                        room: None,
                         name: format!("Scanner: {}", hex::encode(mac)),
                         last_activity: Some(chrono::offset::Utc::now()),
                     },

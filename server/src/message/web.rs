@@ -13,6 +13,30 @@ pub enum WebMessage {
 
     Pong,
     Config(crate::database::config::Server),
-    Data(crate::database::Data),
-    Event(crate::database::entities::Event),
+
+    LocationList(Vec<crate::database::entities::Location>),
+    LocationSet(crate::database::entities::Location),
+    LocationDetail(crate::database::entities::Location),
+    LocationRemove(uuid::Uuid),
+    LocationRemoved(uuid::Uuid),
+
+    RoomList(Vec<crate::database::entities::Room>),
+    RoomSet(crate::database::entities::Room),
+    RoomDetail(crate::database::entities::Room),
+    RoomRemove(uuid::Uuid),
+    RoomRemoved(uuid::Uuid),
+
+    ScannerList(Vec<crate::database::entities::Scanner>),
+    ScannerSet(crate::database::entities::Scanner),
+    ScannerDetail(crate::database::entities::Scanner),
+    ScannerRemove(uuid::Uuid),
+    ScannerRemoved(uuid::Uuid),
+
+    DeviceList(Vec<crate::database::entities::Device>),
+    DeviceSet(crate::database::entities::Device),
+    DeviceDetail(crate::database::entities::Device),
+    DeviceRemove(uuid::Uuid),
+    DeviceRemoved(uuid::Uuid),
+
+    Events(Vec<crate::database::entities::Event>),
 }

@@ -51,13 +51,16 @@ async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
     let config = crate::database::config::Server::create(args.config)?;
+    let data_path = config.base.data_path.clone();
     tracing::info!("{}", serde_json::to_string(&config).unwrap());
     let database = crate::database::Database {
-        data: crate::database::Data::load(&config.base.data_path)?,
+        data: crate::database::Data::load(&data_path).unwrap_or_default(),
         events: Vec::new(),
         config: config.clone(),
         version: String::new(),
     };
+    database.data.save(&data_path).unwrap();
+
     let broadcast = SocketAddr::V4(config.base.port_broadcast);
 
     let global_broadcast = tokio::sync::broadcast::Sender::new(config.base.query_size);

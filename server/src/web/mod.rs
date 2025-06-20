@@ -65,9 +65,31 @@ impl Server {
                 ))
                 .await
                 .unwrap();
+
             sender
-                .send(crate::message::web::WebMessage::Data(
-                    context.database.data.clone(),
+                .send(crate::message::web::WebMessage::LocationList(
+                    context.database.data.locations.values().cloned().collect(),
+                ))
+                .await
+                .unwrap();
+
+            sender
+                .send(crate::message::web::WebMessage::RoomList(
+                    context.database.data.rooms.values().cloned().collect(),
+                ))
+                .await
+                .unwrap();
+
+            sender
+                .send(crate::message::web::WebMessage::ScannerList(
+                    context.database.data.scanners.values().cloned().collect(),
+                ))
+                .await
+                .unwrap();
+
+            sender
+                .send(crate::message::web::WebMessage::DeviceList(
+                    context.database.data.devices.values().cloned().collect(),
                 ))
                 .await
                 .unwrap();

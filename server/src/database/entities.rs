@@ -11,6 +11,7 @@ pub struct Scanner {
     pub ip: String,
     pub port: u16,
     pub mac: Vec<u8>,
+    pub room: Option<uuid::Uuid>,
     pub last_activity: Option<DateTime<Utc>>,
 }
 
@@ -46,6 +47,7 @@ pub struct Location {
 pub struct Room {
     pub uuid: uuid::Uuid,
     pub name: String,
+    pub location: uuid::Uuid,
     pub points: Vec<(u64, u64)>,
 }
 

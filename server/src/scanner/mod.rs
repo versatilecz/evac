@@ -183,9 +183,10 @@ impl Scanner {
                         .database
                         .data
                         .devices
-                        .values()
+                        .values_mut()
                         .find(|d| d.mac == result.mac)
                     {
+                        device.last_activity = now;
                         device.uuid.clone()
                     } else {
                         let uuid = uuid::Uuid::new_v4();

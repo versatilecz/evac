@@ -1,11 +1,16 @@
-use std::net::SocketAddr;
+use core::time;
+use std::{net::SocketAddr, time::Duration};
 
+use serde_json::ser;
 use shared::messages::scanner::{self, ScannerContent, ScannerEvent};
 use tokio::{net::UdpSocket, sync::broadcast};
 use tracing::event;
 use uuid::{timestamp::context, Uuid};
 
-use crate::database::{entities::DeviceActivity, LoadSave};
+use crate::{
+    database::{entities::DeviceActivity, LoadSave},
+    message::web::{self, WebMessage},
+};
 
 mod map;
 
@@ -58,6 +63,8 @@ impl Scanner {
                         return Ok(false);
                     }
                 }
+            } else {
+                tokio::time::sleep(Duration::MAX).await;
             }
         } else {
             if let Ok(udp) = tokio::net::UdpSocket::bind(port).await {
@@ -169,8 +176,6 @@ impl Scanner {
                 shared::messages::scanner::ScannerContent::ScanResult(result) => {
                     let now = chrono::offset::Utc::now();
 
-                    tracing::debug!("Received scan result message: {:?}", result);
-
                     let mut context = self.context.write().await;
                     let device_uuid = if let Some(device) = context
                         .database
@@ -199,6 +204,7 @@ impl Scanner {
                     };
 
                     let scanner_uuid = event.scanner.unwrap();
+                    let web_broadcast = context.web_broadcast.clone();
 
                     if let Some(device) = context.database.data.devices.get_mut(&device_uuid) {
                         if device.enable {
@@ -207,7 +213,7 @@ impl Scanner {
                                 .iter()
                                 .filter(|la| {
                                     la.scanner != scanner_uuid
-                                        && (now - la.timestamp).num_seconds() < 5
+                                        && (now - la.timestamp).num_seconds() < 15
                                 })
                                 .cloned()
                                 .collect();
@@ -216,7 +222,15 @@ impl Scanner {
                                 irssi: result.rssi as i64,
                                 timestamp: now,
                                 scanner: scanner_uuid,
-                            })
+                            });
+
+                            self.process_service(
+                                web_broadcast,
+                                scanner_uuid,
+                                device,
+                                result.services,
+                            )
+                            .await;
                         }
                     }
                 }
@@ -224,5 +238,34 @@ impl Scanner {
             }
         }
         Ok(())
+    }
+
+    pub async fn process_service(
+        &self,
+        web_sender: tokio::sync::broadcast::Sender<WebMessage>,
+        scanner: uuid::Uuid,
+        device: &mut crate::database::entities::Device,
+        services: Vec<(Vec<u8>, Vec<u8>)>,
+    ) {
+        for service in services {
+            match service.0[..] {
+                [210, 252] => {
+                    device.battery = Some(service.1[6]);
+
+                    if service.1[6] > 0 {
+                        web_sender.send(WebMessage::Event(crate::database::entities::Event {
+                            device: Some(device.uuid),
+                            uuid: uuid::Uuid::new_v4(),
+                            timestamp: chrono::offset::Utc::now(),
+                            scanner,
+                            kind: crate::database::entities::EventKind::ButtonPressed,
+                        }));
+                    }
+
+                    tracing::debug!("Received scan service message: {:?}", service.1);
+                }
+                _ => {}
+            }
+        }
     }
 }

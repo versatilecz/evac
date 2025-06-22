@@ -1,4 +1,6 @@
 <script setup>
+import { useMainStore } from '@/stores/mainStore';
+
 import { useLocationStore } from '@/stores/locationStore'
 import { useRoomStore } from '@/stores/roomStore'
 import { useScannerStore } from '@/stores/scannerStore'
@@ -6,6 +8,7 @@ import { useDeviceStore } from '@/stores/deviceStore'
 import { useEventStore } from '@/stores/eventStore'
 import { usePositionStore } from '@/stores/positionStore'
 
+const mainStore = useMainStore()
 const locationStore = useLocationStore()
 const roomStore = useRoomStore()
 const scannerStore = useScannerStore()
@@ -20,7 +23,6 @@ function getDevices(room) {
     const result =
     positionStore.data.filter(pos => {
         return scanners.some(scanner => {
-            console.log(scanner.room, room, scanner.uuid, pos.scanner)
             return scanner.room == room && scanner.uuid == pos.scanner
         })
     }).map(position => {
@@ -55,6 +57,14 @@ function getDevices(room) {
                 </div>
 
             </div>
+        </div>
+
+        <div>
+            <h3>Events</h3>
+            <button v-on:click="() => {eventStore.reset(); mainStore.send('Alarm', false)}">Clear</button>
+            <ul>
+                <li v-for="event in Object.values(eventStore.data)" :key="event.device">{{ deviceStore.name(event.device) }} {{ event.kind }} <button v-on:click="mainStore.send('Alarm', true)">Alarm</button></li>
+            </ul>
         </div>
 
     </div>

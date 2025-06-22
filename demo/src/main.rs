@@ -130,7 +130,7 @@ fn main() -> anyhow::Result<()> {
                 .start(&ble_device, 500, move |device, data| {
                     if let Ok(mut application) = scan_application.write() {
                         let mut scan_device = shared::messages::scanner::ScanDevice {
-                            mac: device.addr().as_le_bytes().to_vec(),
+                            mac: device.addr().as_be_bytes().to_vec(),
                             name: data
                                 .name()
                                 .map_or(String::from("Unknown device"), |d| d.to_string()),

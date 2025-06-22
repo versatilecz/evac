@@ -104,6 +104,10 @@ export function parseTime(time) {
   }
 }
 
+export function formatMac(array, reverse=false) {
+    return (reverse?[...array].reverse():array).map(n => n.toString(16)).join(':')
+}
+
 export function openDate(date, hourOpen) {
   date = new Date(date)
   hourOpen = parseTime(hourOpen)

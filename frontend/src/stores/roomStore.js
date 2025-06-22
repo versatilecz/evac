@@ -50,7 +50,7 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function remove(uuid) {
-    mainStore.send("LocationRemove", uuid)
+    mainStore.send("RoomRemove", uuid)
   }
 
   return {

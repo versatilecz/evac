@@ -1,4 +1,8 @@
-use crate::{database::entities, message::web::WebMessage};
+use crate::{
+    database::entities::{self, Device},
+    message::web::WebMessage,
+};
+use shared::messages::scanner::{ScannerEvent, ScannerMessage, State};
 use uuid::timestamp::context;
 
 #[derive(Debug, Clone)]
@@ -121,6 +125,29 @@ impl Operator {
                     .send(crate::message::web::WebMessage::DeviceRemoved(uuid))
                     .await;
 
+                Ok(())
+            }
+
+            WebMessage::Alarm(bool) => {
+                let context = self.context.read().await;
+                context
+                    .scanner_sender
+                    .send(ScannerEvent {
+                        scanner: None,
+                        message: ScannerMessage {
+                            uuid: uuid::Uuid::new_v4(),
+                            content: shared::messages::scanner::ScannerContent::Set(State {
+                                scanning: true,
+                                alarm: bool,
+                                services: Vec::new(),
+                            }),
+                        },
+                    })
+                    .await;
+
+                if bool {
+                    context.database.config.email.send(Device::default()).await;
+                }
                 Ok(())
             }
             _ => Ok(()),

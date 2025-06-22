@@ -1,6 +1,7 @@
 <script setup>
 import { useDeviceStore } from '@/stores/deviceStore'
 const deviceStore = useDeviceStore()
+import { formatMac } from '@/utils'
 </script>
 
 <template>
@@ -19,7 +20,8 @@ const deviceStore = useDeviceStore()
             <tr v-for="device of Object.values(deviceStore.data)" :key="device.uuid">
                 <td>{{ device.uuid }}</td>
                 <td><input v-model="device.name"></td>
-                <td>{{ device.mac }}</td>
+                <td>{{ formatMac(device.mac)  }}</td>
+
                 <td><input type="checkbox" v-model="device.enable"></td>
                 <td>
                     <input type="submit" value="Save" v-on:click="deviceStore.save(device)">

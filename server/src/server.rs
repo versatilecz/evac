@@ -52,7 +52,7 @@ impl Server {
             let mut sleep = Instant::now() + sleep_time;
 
             loop {
-                tracing::info!("Server loop cycle... {:?}", sleep.elapsed().is_zero());
+                //tracing::info!("Server loop cycle... {:?}", sleep.elapsed().is_zero());
 
                 tokio::select! {
                     _ = tokio::time::sleep(sleep_time) => {
@@ -60,13 +60,13 @@ impl Server {
                     },
                     // Received system message for scanner/ resend to devices
                     Some(event) = scanner_receiver.recv() => {
-                        tracing::info!("Scanner receiver");
+                        //tracing::info!("Scanner receiver");
                         self.scanner.send(event).await;
 
                     }
 
                     _ = self.scanner.recv(SocketAddr::V4(port)) => {
-                        tracing::info!("Recv cycle");
+                        //tracing::info!("Recv cycle");
                     }
 
                     Ok(msg) = global_receiver.recv() => {
@@ -129,7 +129,8 @@ impl Server {
             .devices
             .values()
             .filter_map(|d| {
-                d.last_activity
+                if d.enable {
+                    d.last_activity
                     .iter()
                     .fold(
                         None,
@@ -152,6 +153,9 @@ impl Server {
                         rssi: a.irssi,
                         timestamp: a.timestamp,
                     })
+                } else {
+                    None
+                }
             })
             .collect();
         context

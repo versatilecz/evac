@@ -31,7 +31,11 @@ export const useDeviceStore = defineStore('device', () => {
   })
 
   function name(uuid) {
-    data[uuid].name || "unknown"
+    if(uuid in data.value) {
+      return data.value[uuid].name
+    } else {
+      return "unknown"
+    }
   }
 
   function save(scanner) {
@@ -43,6 +47,14 @@ export const useDeviceStore = defineStore('device', () => {
     oldData.value[value.uuid] = deepCopy(value)
   })
 
+  mainStore.on('DeviceRemoved', (value) => {
+    delete data.value[value]
+    delete oldData.value[value]
+  })
+
+  function remove(uuid) {
+    mainStore.send("DeviceRemove", uuid)
+  }
 
   function reset() {
     console.log('Reset device store')
@@ -53,6 +65,7 @@ export const useDeviceStore = defineStore('device', () => {
     data,
     reset,
     name,
-    save
+    save,
+    remove
   }
 })

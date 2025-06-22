@@ -47,5 +47,7 @@ pub enum WebMessage {
     DeviceRemoved(uuid::Uuid),
 
     Positions(Vec<Position>),
-    Events(Vec<crate::database::entities::Event>),
+    Event(crate::database::entities::Event),
+
+    Alarm(bool),
 }

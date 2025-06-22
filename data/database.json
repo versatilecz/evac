@@ -1,26 +1,26 @@
 {
   "devices": {
-    "042efbb8-7c0f-4675-b7e8-7a969bf11615": {
+    "04a07c93-f2f9-4059-986a-146b0ca9fd7a": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:39:12.043505849Z",
+      "lastActivity": "2025-06-22T17:40:03.646558317Z",
       "mac": [
-        66,
-        24,
-        44,
-        255,
-        193,
-        227
+        94,
+        237,
+        45,
+        230,
+        230,
+        251
       ],
       "name": "Unknown device",
-      "uuid": "042efbb8-7c0f-4675-b7e8-7a969bf11615"
+      "uuid": "04a07c93-f2f9-4059-986a-146b0ca9fd7a"
     },
     "07343836-46ad-44b9-846f-940c6c6e807d": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.325155571Z",
+      "lastActivity": "2025-06-22T17:40:03.016715593Z",
       "mac": [
         48,
         48,
@@ -32,267 +32,171 @@
       "name": "Unknown device",
       "uuid": "07343836-46ad-44b9-846f-940c6c6e807d"
     },
-    "0ad9186c-c525-4f8d-a055-df1cf3d666b1": {
+    "0a749227-6481-4722-992b-480e718b181a": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.534486600Z",
+      "lastActivity": "2025-06-22T17:39:57.652698685Z",
       "mac": [
-        184,
-        6,
-        13,
-        180,
-        196,
-        37
+        88,
+        172,
+        15,
+        3,
+        190,
+        131
       ],
       "name": "Unknown device",
-      "uuid": "0ad9186c-c525-4f8d-a055-df1cf3d666b1"
+      "uuid": "0a749227-6481-4722-992b-480e718b181a"
     },
-    "1597bb28-8aa8-44f2-84f6-4c33c2fee4c1": {
+    "0ae3dd64-715c-4202-9eae-34de42fae4e6": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.591110020Z",
-      "mac": [
-        108,
-        152,
-        238,
-        10,
-        246,
-        229
-      ],
-      "name": "Unknown device",
-      "uuid": "1597bb28-8aa8-44f2-84f6-4c33c2fee4c1"
-    },
-    "1a81d9de-20fb-4980-8a1c-0f00bb12114a": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.999919776Z",
+      "lastActivity": "2025-06-22T17:40:01.329574091Z",
       "mac": [
         12,
-        184,
-        21,
+        59,
+        32,
+        137,
+        145,
+        137
+      ],
+      "name": "Unknown device",
+      "uuid": "0ae3dd64-715c-4202-9eae-34de42fae4e6"
+    },
+    "0d9e9dd3-ebde-4be3-8f4e-c0c9ef549cb7": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:02.352549159Z",
+      "mac": [
+        242,
+        237,
+        62,
+        15,
+        102,
+        252
+      ],
+      "name": "Unknown device",
+      "uuid": "0d9e9dd3-ebde-4be3-8f4e-c0c9ef549cb7"
+    },
+    "1113d6a4-1697-4673-ab58-3801b0253cc0": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:02.977740749Z",
+      "mac": [
         92,
-        167,
-        70
-      ],
-      "name": "Unknown device",
-      "uuid": "1a81d9de-20fb-4980-8a1c-0f00bb12114a"
-    },
-    "1ab2c037-d1fa-4a11-b2c3-780bc3632cd6": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:45:41.843399323Z",
-      "mac": [
-        106,
-        223,
-        220,
-        190,
-        164,
-        165
-      ],
-      "name": "Unknown device",
-      "uuid": "1ab2c037-d1fa-4a11-b2c3-780bc3632cd6"
-    },
-    "1bc578f9-8089-4bfe-acff-0b35864a87b4": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:05.037642659Z",
-      "mac": [
-        215,
-        11,
-        146,
-        56,
-        152,
-        74
-      ],
-      "name": "Unknown device",
-      "uuid": "1bc578f9-8089-4bfe-acff-0b35864a87b4"
-    },
-    "23178956-2175-413f-96f1-a4bc34e7509f": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.137383388Z",
-      "mac": [
-        4,
-        26,
-        225,
-        90,
-        128,
-        230
-      ],
-      "name": "Unknown device",
-      "uuid": "23178956-2175-413f-96f1-a4bc34e7509f"
-    },
-    "2ce59879-f69c-4819-8ea2-58a203fe892c": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:45:05.321316633Z",
-      "mac": [
-        90,
-        74,
-        170,
-        212,
-        205,
-        138
-      ],
-      "name": "Unknown device",
-      "uuid": "2ce59879-f69c-4819-8ea2-58a203fe892c"
-    },
-    "2d4dddd8-4575-4a54-bfa4-186012b5d132": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:18.396680652Z",
-      "mac": [
-        121,
-        90,
-        217,
-        8,
-        135,
-        243
-      ],
-      "name": "Unknown device",
-      "uuid": "2d4dddd8-4575-4a54-bfa4-186012b5d132"
-    },
-    "2e54ff98-3d49-43d2-97be-3d1eb1ccec93": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:43:05.853837190Z",
-      "mac": [
-        224,
-        81,
-        19,
-        112,
-        178,
-        99
-      ],
-      "name": "Unknown device",
-      "uuid": "2e54ff98-3d49-43d2-97be-3d1eb1ccec93"
-    },
-    "31278545-270a-428a-aa2b-4880d634a7c3": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:18.567450701Z",
-      "mac": [
-        236,
-        224,
-        176,
-        196,
-        104,
-        80
-      ],
-      "name": "Unknown device",
-      "uuid": "31278545-270a-428a-aa2b-4880d634a7c3"
-    },
-    "32ed6313-65ab-4e4b-8636-7b6cc88d2f29": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.429264819Z",
-      "mac": [
-        248,
-        124,
-        153,
-        81,
-        156,
-        6
-      ],
-      "name": "Unknown device",
-      "uuid": "32ed6313-65ab-4e4b-8636-7b6cc88d2f29"
-    },
-    "3774ed20-411b-40d6-bd70-8e0a055e0c7b": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.667496163Z",
-      "mac": [
+        68,
+        188,
+        31,
         52,
-        50,
+        115
+      ],
+      "name": "Unknown device",
+      "uuid": "1113d6a4-1697-4673-ab58-3801b0253cc0"
+    },
+    "19354772-fd78-4d95-8e66-c655c60b08d0": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:00.841397724Z",
+      "mac": [
+        197,
+        95,
+        129,
+        87,
+        78,
+        242
+      ],
+      "name": "Unknown device",
+      "uuid": "19354772-fd78-4d95-8e66-c655c60b08d0"
+    },
+    "262531a8-36ff-4d93-97d3-88ce2f67a80e": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:03.359381199Z",
+      "mac": [
+        73,
+        240,
+        124,
+        244,
+        130,
+        211
+      ],
+      "name": "Unknown device",
+      "uuid": "262531a8-36ff-4d93-97d3-88ce2f67a80e"
+    },
+    "311c366b-cef2-4d56-bdb7-d3f49e3f0627": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:02.442857290Z",
+      "mac": [
+        69,
+        29,
+        156,
+        83,
+        183,
+        236
+      ],
+      "name": "Unknown device",
+      "uuid": "311c366b-cef2-4d56-bdb7-d3f49e3f0627"
+    },
+    "36083fe2-115f-487e-9ddf-9150c4b996b3": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:01.256900608Z",
+      "mac": [
+        124,
         78,
         147,
-        120,
-        84
+        38,
+        13,
+        75
       ],
       "name": "Unknown device",
-      "uuid": "3774ed20-411b-40d6-bd70-8e0a055e0c7b"
+      "uuid": "36083fe2-115f-487e-9ddf-9150c4b996b3"
     },
-    "3969c084-b821-472e-8778-850ba0330f34": {
+    "3d0fae65-c7f0-47d6-96e0-5d296e0f2f9f": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:02.345872996Z",
+      "lastActivity": "2025-06-22T17:40:03.156309958Z",
       "mac": [
-        98,
-        130,
-        167,
-        59,
-        173,
-        22
+        102,
+        96,
+        153,
+        14,
+        111,
+        3
       ],
       "name": "Unknown device",
-      "uuid": "3969c084-b821-472e-8778-850ba0330f34"
+      "uuid": "3d0fae65-c7f0-47d6-96e0-5d296e0f2f9f"
     },
-    "3bca6771-1847-4a30-a5af-ad3d74fe1d1e": {
+    "3e9ff32b-6f16-489d-bfcf-8468133a3e30": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:49:45.505085977Z",
+      "lastActivity": "2025-06-22T17:39:59.162148556Z",
       "mac": [
-        18,
-        39,
-        72,
-        0,
-        231,
-        108
-      ],
-      "name": "QHM-E76C",
-      "uuid": "3bca6771-1847-4a30-a5af-ad3d74fe1d1e"
-    },
-    "3ea98978-3549-4492-a8cb-a99508224141": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:37:05.855523443Z",
-      "mac": [
-        47,
-        151,
-        61,
-        5,
-        21,
-        157
+        220,
+        191,
+        240,
+        144,
+        79,
+        82
       ],
       "name": "Unknown device",
-      "uuid": "3ea98978-3549-4492-a8cb-a99508224141"
-    },
-    "476ad9f4-eacc-4de9-b133-e9d903896b2a": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:47:04.656946394Z",
-      "mac": [
-        229,
-        250,
-        2,
-        128,
-        173,
-        98
-      ],
-      "name": "Unknown device",
-      "uuid": "476ad9f4-eacc-4de9-b133-e9d903896b2a"
+      "uuid": "3e9ff32b-6f16-489d-bfcf-8468133a3e30"
     },
     "48d9dafe-1af9-4e16-8b6b-ead0a02fa2ee": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.471004407Z",
+      "lastActivity": "2025-06-22T17:40:03.584717292Z",
       "mac": [
         92,
         73,
@@ -304,59 +208,27 @@
       "name": "Unknown device",
       "uuid": "48d9dafe-1af9-4e16-8b6b-ead0a02fa2ee"
     },
-    "493247d3-a808-4959-ac62-bcacde19cebb": {
+    "55791762-edd5-4cc8-9302-b2d5947642b8": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:14.581362219Z",
+      "lastActivity": "2025-06-22T17:40:00.243193864Z",
       "mac": [
+        194,
+        80,
         197,
-        220,
-        159,
-        254,
-        246,
-        178
-      ],
-      "name": "Unknown device",
-      "uuid": "493247d3-a808-4959-ac62-bcacde19cebb"
-    },
-    "4e849c58-94d6-4e7e-90bf-5866cd5a2cea": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:18.436829485Z",
-      "mac": [
-        124,
-        24,
-        174,
-        9,
-        150,
-        160
-      ],
-      "name": "Unknown device",
-      "uuid": "4e849c58-94d6-4e7e-90bf-5866cd5a2cea"
-    },
-    "55430cc0-0466-4571-a58f-1c7353bc11e4": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:45:48.725338581Z",
-      "mac": [
-        84,
-        59,
+        29,
         225,
-        39,
-        192,
-        252
+        94
       ],
       "name": "Unknown device",
-      "uuid": "55430cc0-0466-4571-a58f-1c7353bc11e4"
+      "uuid": "55791762-edd5-4cc8-9302-b2d5947642b8"
     },
     "56de176e-29a1-46f8-943a-e6585f02939c": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.661124351Z",
+      "lastActivity": "2025-06-22T17:40:03.209082016Z",
       "mac": [
         208,
         208,
@@ -368,203 +240,107 @@
       "name": "Unknown device",
       "uuid": "56de176e-29a1-46f8-943a-e6585f02939c"
     },
-    "57b11507-2760-4644-8d0b-4a5829fc2487": {
+    "56eb503b-62de-49d7-95b4-a9a9844b593b": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:45:45.403745Z",
+      "lastActivity": "2025-06-22T17:40:01.757949724Z",
       "mac": [
-        244,
-        80,
-        171,
-        72,
-        63,
-        156
+        61,
+        188,
+        139,
+        156,
+        238,
+        62
       ],
       "name": "Unknown device",
-      "uuid": "57b11507-2760-4644-8d0b-4a5829fc2487"
+      "uuid": "56eb503b-62de-49d7-95b4-a9a9844b593b"
     },
-    "58792bee-71a4-49ff-90f6-0c2ef7398e91": {
+    "59e748ba-1e64-4a17-9719-431491879de7": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:45:43.913912703Z",
+      "lastActivity": "2025-06-22T17:39:52.782247803Z",
       "mac": [
-        101,
-        124,
-        51,
-        244,
-        197,
-        254
-      ],
-      "name": "Unknown device",
-      "uuid": "58792bee-71a4-49ff-90f6-0c2ef7398e91"
-    },
-    "5d74a0b0-6f91-4bee-9528-7ae4880767d6": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:40:43.661267748Z",
-      "mac": [
-        98,
-        65,
-        31,
-        158,
-        221,
-        202
-      ],
-      "name": "Unknown device",
-      "uuid": "5d74a0b0-6f91-4bee-9528-7ae4880767d6"
-    },
-    "5ebccc93-a68a-46a8-a73d-e95901a67ddf": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.984456794Z",
-      "mac": [
-        119,
-        169,
-        39,
-        5,
-        25,
-        51
-      ],
-      "name": "Unknown device",
-      "uuid": "5ebccc93-a68a-46a8-a73d-e95901a67ddf"
-    },
-    "6600b81c-1d63-453e-bfed-8202bc061968": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.310223801Z",
-      "mac": [
-        204,
-        118,
-        147,
-        237,
-        35,
-        93
-      ],
-      "name": "Unknown device",
-      "uuid": "6600b81c-1d63-453e-bfed-8202bc061968"
-    },
-    "66e4a15b-0616-405c-88d4-b5a8b1b22572": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:48:53.100061719Z",
-      "mac": [
-        127,
         231,
-        187,
-        45,
         33,
-        228
-      ],
-      "name": "Unknown device",
-      "uuid": "66e4a15b-0616-405c-88d4-b5a8b1b22572"
-    },
-    "68dd2056-e7b5-41c4-9af3-ad54947d35d5": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:36:57.083986090Z",
-      "mac": [
-        10,
-        176,
-        183,
-        236,
-        46,
-        71
-      ],
-      "name": "Unknown device",
-      "uuid": "68dd2056-e7b5-41c4-9af3-ad54947d35d5"
-    },
-    "69a8a542-0528-47c4-8af3-24fd803c715f": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:45:20.068950036Z",
-      "mac": [
-        243,
-        223,
-        148,
-        189,
-        91,
-        8
-      ],
-      "name": "Unknown device",
-      "uuid": "69a8a542-0528-47c4-8af3-24fd803c715f"
-    },
-    "6bd882b6-ccdf-4198-b085-c02d57634739": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:45:51.135636113Z",
-      "mac": [
-        242,
-        60,
-        90,
         7,
-        163,
-        171
+        94,
+        164,
+        39
       ],
       "name": "Unknown device",
-      "uuid": "6bd882b6-ccdf-4198-b085-c02d57634739"
+      "uuid": "59e748ba-1e64-4a17-9719-431491879de7"
     },
-    "6ded9a8c-d434-47aa-9461-65249c138982": {
+    "5af1b5f2-9674-4940-9696-a16785233440": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:49:58.346247530Z",
+      "lastActivity": "2025-06-22T17:40:01.712624688Z",
       "mac": [
-        213,
-        199,
-        191,
-        155,
-        254,
-        60
+        95,
+        194,
+        76,
+        69,
+        211,
+        227
       ],
       "name": "Unknown device",
-      "uuid": "6ded9a8c-d434-47aa-9461-65249c138982"
+      "uuid": "5af1b5f2-9674-4940-9696-a16785233440"
     },
-    "6f438830-6457-4be2-8500-d487f9dacf0f": {
+    "601d0e41-f768-481e-a47a-4c449961bc7a": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:49:58.515664598Z",
+      "lastActivity": "2025-06-22T17:40:03.057494655Z",
       "mac": [
-        93,
-        36,
-        191,
-        128,
-        5,
-        78
+        104,
+        51,
+        220,
+        208,
+        243,
+        94
       ],
       "name": "Unknown device",
-      "uuid": "6f438830-6457-4be2-8500-d487f9dacf0f"
+      "uuid": "601d0e41-f768-481e-a47a-4c449961bc7a"
     },
-    "7234ee5b-aa90-4310-8c55-858bd6a479cb": {
+    "6410e2a0-58a8-4209-a709-6f25aa7fc148": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:42:39.105294984Z",
+      "lastActivity": "2025-06-22T17:40:03.523877156Z",
       "mac": [
-        5,
-        33,
-        122,
-        105,
-        14,
-        37
+        12,
+        184,
+        21,
+        92,
+        167,
+        70
       ],
       "name": "Unknown device",
-      "uuid": "7234ee5b-aa90-4310-8c55-858bd6a479cb"
+      "uuid": "6410e2a0-58a8-4209-a709-6f25aa7fc148"
+    },
+    "7174a64e-f6b1-4007-b038-3a0ac0bb1c7e": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:02.853069442Z",
+      "mac": [
+        13,
+        58,
+        138,
+        184,
+        176,
+        40
+      ],
+      "name": "Unknown device",
+      "uuid": "7174a64e-f6b1-4007-b038-3a0ac0bb1c7e"
     },
     "739fbf1c-7748-4b77-b800-3471eef874de": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.555988959Z",
+      "lastActivity": "2025-06-22T17:40:03.232871911Z",
       "mac": [
         52,
         183,
@@ -576,331 +352,166 @@
       "name": "Unknown device",
       "uuid": "739fbf1c-7748-4b77-b800-3471eef874de"
     },
-    "75c855a1-1017-4463-b187-25165a347561": {
+    "7b8a3c9d-eafe-48e0-b75c-a04342712e7b": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.025481216Z",
+      "lastActivity": "2025-06-22T17:40:00.596077082Z",
       "mac": [
-        0,
-        19,
-        4,
-        24,
-        4,
-        252
-      ],
-      "name": "Beurer BF700",
-      "uuid": "75c855a1-1017-4463-b187-25165a347561"
-    },
-    "7bc7f016-3612-4359-8ba9-419d2476196e": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:37:17.364884895Z",
-      "mac": [
-        28,
-        60,
+        104,
+        50,
+        177,
+        99,
         133,
-        27,
-        91,
-        195
+        104
       ],
       "name": "Unknown device",
-      "uuid": "7bc7f016-3612-4359-8ba9-419d2476196e"
+      "uuid": "7b8a3c9d-eafe-48e0-b75c-a04342712e7b"
     },
-    "839dc5e4-ecd6-4274-a138-2a27d92ecc87": {
+    "877b1942-8669-4752-b821-c76a9e30a553": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:46:12.612679319Z",
+      "lastActivity": "2025-06-22T17:39:56.281068999Z",
       "mac": [
-        33,
+        18,
+        39,
+        72,
+        0,
+        231,
+        108
+      ],
+      "name": "QHM-E76C",
+      "uuid": "877b1942-8669-4752-b821-c76a9e30a553"
+    },
+    "88aa6b37-14b3-45b2-97f4-79653aa05457": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:39:53.409285720Z",
+      "mac": [
+        84,
+        103,
+        249,
+        135,
+        217,
+        171
+      ],
+      "name": "Unknown device",
+      "uuid": "88aa6b37-14b3-45b2-97f4-79653aa05457"
+    },
+    "8fdc567c-225b-40b2-b387-2e680f38a7eb": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:03.510621008Z",
+      "mac": [
+        184,
+        6,
+        13,
+        180,
+        196,
+        37
+      ],
+      "name": "Unknown device",
+      "uuid": "8fdc567c-225b-40b2-b387-2e680f38a7eb"
+    },
+    "93e524e2-4014-4c23-898f-02c19ab6dbdd": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:39:52.202252598Z",
+      "mac": [
+        255,
+        201,
+        201,
+        172,
+        80,
+        217
+      ],
+      "name": "Unknown device",
+      "uuid": "93e524e2-4014-4c23-898f-02c19ab6dbdd"
+    },
+    "9916d365-474e-4b67-92ec-16c741246183": {
+      "activities": [
+        {
+          "irssi": -67,
+          "scanner": "b0fd3cd9-4fda-4caf-9a26-3a824d8715eb",
+          "timestamp": "2025-06-22T17:04:42.847253362Z"
+        },
+        {
+          "irssi": -79,
+          "scanner": "03b4f6a5-8ea5-4a9c-aecc-7a3fc26bad6f",
+          "timestamp": "2025-06-22T17:04:42.847269863Z"
+        }
+      ],
+      "battery": null,
+      "enable": true,
+      "lastActivity": "2025-06-22T17:04:42.847269863Z",
+      "mac": [
+        20,
+        63,
+        166,
+        65,
+        2,
+        37
+      ],
+      "name": "LE_WH-1000XM3",
+      "uuid": "9916d365-474e-4b67-92ec-16c741246183"
+    },
+    "9e11b5f8-6331-429f-9aed-6fd4f531dda6": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:01.190786611Z",
+      "mac": [
+        246,
+        144,
+        56,
+        79,
+        13,
+        168
+      ],
+      "name": "Unknown device",
+      "uuid": "9e11b5f8-6331-429f-9aed-6fd4f531dda6"
+    },
+    "a0a783bd-c6d6-4975-9d81-2fea62ee8c42": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:03.464047217Z",
+      "mac": [
+        96,
+        89,
+        230,
+        103,
         193,
-        114,
-        142,
-        15,
-        204
-      ],
-      "name": "Unknown device",
-      "uuid": "839dc5e4-ecd6-4274-a138-2a27d92ecc87"
-    },
-    "87d38456-877d-45b8-bdba-1d80e5092aff": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:17.043119170Z",
-      "mac": [
-        12,
-        109,
-        151,
-        198,
-        22,
-        17
-      ],
-      "name": "Unknown device",
-      "uuid": "87d38456-877d-45b8-bdba-1d80e5092aff"
-    },
-    "8950d351-9a96-445f-bb81-a6b9b8d5df3a": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:03.556674482Z",
-      "mac": [
-        205,
-        147,
-        120,
-        82,
-        77,
         64
       ],
       "name": "Unknown device",
-      "uuid": "8950d351-9a96-445f-bb81-a6b9b8d5df3a"
+      "uuid": "a0a783bd-c6d6-4975-9d81-2fea62ee8c42"
     },
-    "8b76f32e-1580-4af2-9ceb-a08f27271e58": {
+    "a776529c-80a1-4f5a-87a9-f9b12fdb0110": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:12.949230106Z",
+      "lastActivity": "2025-06-22T17:40:03.317502744Z",
       "mac": [
-        124,
-        125,
-        55,
-        155,
-        57,
-        51
+        12,
+        208,
+        187,
+        191,
+        226,
+        52
       ],
       "name": "Unknown device",
-      "uuid": "8b76f32e-1580-4af2-9ceb-a08f27271e58"
-    },
-    "8c97cfcb-c9d5-4c5d-bfc9-f4f9c5e5f186": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.627161661Z",
-      "mac": [
-        124,
-        175,
-        79,
-        242,
-        152,
-        226
-      ],
-      "name": "Unknown device",
-      "uuid": "8c97cfcb-c9d5-4c5d-bfc9-f4f9c5e5f186"
-    },
-    "8d1b2805-25a2-446b-9637-e88fbd4f78e3": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:48:06.319164455Z",
-      "mac": [
-        123,
-        94,
-        114,
-        61,
-        68,
-        105
-      ],
-      "name": "Unknown device",
-      "uuid": "8d1b2805-25a2-446b-9637-e88fbd4f78e3"
-    },
-    "8fd03dea-ac92-4e0e-a13a-610fd3a27185": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.363291486Z",
-      "mac": [
-        56,
-        104,
-        164,
-        32,
-        188,
-        109
-      ],
-      "name": "Unknown device",
-      "uuid": "8fd03dea-ac92-4e0e-a13a-610fd3a27185"
-    },
-    "92184bc7-71d9-4775-ac69-25a9b2869793": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:49:58.211517463Z",
-      "mac": [
-        250,
-        37,
-        149,
-        149,
-        219,
-        39
-      ],
-      "name": "Unknown device",
-      "uuid": "92184bc7-71d9-4775-ac69-25a9b2869793"
-    },
-    "96b6c15e-8bc5-4844-bdc9-92e672dd95cf": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:16.472771189Z",
-      "mac": [
-        215,
-        74,
-        37,
-        154,
-        43,
-        80
-      ],
-      "name": "Unknown device",
-      "uuid": "96b6c15e-8bc5-4844-bdc9-92e672dd95cf"
-    },
-    "97b683ec-6604-480c-bfaa-3b0b5f3fc176": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:17.672003582Z",
-      "mac": [
-        202,
-        242,
-        209,
-        158,
-        10,
-        67
-      ],
-      "name": "Unknown device",
-      "uuid": "97b683ec-6604-480c-bfaa-3b0b5f3fc176"
-    },
-    "99ef34c7-1992-453b-86b7-08e582f86c5f": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:47:08.409563065Z",
-      "mac": [
-        235,
-        101,
-        10,
-        217,
-        15,
-        141
-      ],
-      "name": "Unknown device",
-      "uuid": "99ef34c7-1992-453b-86b7-08e582f86c5f"
-    },
-    "9bc007d7-fd73-41aa-96b6-04a40d2253fc": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:49:09.338086949Z",
-      "mac": [
-        93,
-        223,
-        251,
-        55,
-        247,
-        83
-      ],
-      "name": "Unknown device",
-      "uuid": "9bc007d7-fd73-41aa-96b6-04a40d2253fc"
-    },
-    "a274f422-9d52-45bb-863b-b62aef19f2b0": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:45:41.787892194Z",
-      "mac": [
-        77,
-        54,
-        58,
-        131,
-        81,
-        236
-      ],
-      "name": "Unknown device",
-      "uuid": "a274f422-9d52-45bb-863b-b62aef19f2b0"
-    },
-    "a3705bce-61e3-4b1d-9ce6-224029f58c63": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:36:47.669347309Z",
-      "mac": [
-        6,
-        125,
-        195,
-        182,
-        32,
-        112
-      ],
-      "name": "Unknown device",
-      "uuid": "a3705bce-61e3-4b1d-9ce6-224029f58c63"
-    },
-    "a569b64a-2c52-4088-8ba4-b64fd606e80c": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:19.900122704Z",
-      "mac": [
-        33,
-        31,
-        9,
-        143,
-        185,
-        73
-      ],
-      "name": "Unknown device",
-      "uuid": "a569b64a-2c52-4088-8ba4-b64fd606e80c"
-    },
-    "a95479a5-a15e-48ad-9ea9-baff015b2d42": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:45:43.634937107Z",
-      "mac": [
-        78,
-        29,
-        44,
-        186,
-        36,
-        213
-      ],
-      "name": "Unknown device",
-      "uuid": "a95479a5-a15e-48ad-9ea9-baff015b2d42"
-    },
-    "af3e4aa7-f739-443f-862a-fae79fb95ee1": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:36:31.776132244Z",
-      "mac": [
-        92,
-        243,
-        57,
-        167,
-        162,
-        230
-      ],
-      "name": "Unknown device",
-      "uuid": "af3e4aa7-f739-443f-862a-fae79fb95ee1"
-    },
-    "b4516560-4768-4ede-be79-16f5c11735c5": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:37:05.349170121Z",
-      "mac": [
-        65,
-        59,
-        192,
-        115,
-        118,
-        18
-      ],
-      "name": "Unknown device",
-      "uuid": "b4516560-4768-4ede-be79-16f5c11735c5"
+      "uuid": "a776529c-80a1-4f5a-87a9-f9b12fdb0110"
     },
     "baa1ee8e-83d4-4f4a-975d-4c7083ded3ef": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.271833798Z",
+      "lastActivity": "2025-06-22T17:40:03.115817875Z",
       "mac": [
         128,
         138,
@@ -912,38 +523,86 @@
       "name": "Unknown device",
       "uuid": "baa1ee8e-83d4-4f4a-975d-4c7083ded3ef"
     },
-    "c61445fa-4a89-4da3-8427-6a5f6bae4e32": {
+    "bc61e3e7-5a19-42b5-9446-6179006de404": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:38:04.528771305Z",
+      "lastActivity": "2025-06-22T17:40:02.459560780Z",
       "mac": [
-        82,
-        160,
-        132,
-        207,
-        54,
-        58
+        228,
+        200,
+        6,
+        72,
+        131,
+        204
       ],
       "name": "Unknown device",
-      "uuid": "c61445fa-4a89-4da3-8427-6a5f6bae4e32"
+      "uuid": "bc61e3e7-5a19-42b5-9446-6179006de404"
+    },
+    "bc97e7e3-95ca-47c6-aceb-57985e4673a6": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:03.153113176Z",
+      "mac": [
+        74,
+        131,
+        81,
+        149,
+        85,
+        126
+      ],
+      "name": "Unknown device",
+      "uuid": "bc97e7e3-95ca-47c6-aceb-57985e4673a6"
+    },
+    "bda31d16-b79f-4589-9374-58ba3c042512": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:03.538726666Z",
+      "mac": [
+        10,
+        129,
+        233,
+        71,
+        77,
+        99
+      ],
+      "name": "Unknown device",
+      "uuid": "bda31d16-b79f-4589-9374-58ba3c042512"
+    },
+    "c34dff42-0e20-4254-bcd6-f15b792ebf03": {
+      "activities": [],
+      "battery": null,
+      "enable": false,
+      "lastActivity": "2025-06-22T17:40:01.375570478Z",
+      "mac": [
+        192,
+        225,
+        90,
+        84,
+        135,
+        180
+      ],
+      "name": "Unknown device",
+      "uuid": "c34dff42-0e20-4254-bcd6-f15b792ebf03"
     },
     "cd62ebee-17b1-4b69-b36b-6eea14e6e903": {
       "activities": [
         {
-          "irssi": -67,
+          "irssi": -53,
           "scanner": "b0fd3cd9-4fda-4caf-9a26-3a824d8715eb",
-          "timestamp": "2025-06-22T16:50:14.953858189Z"
+          "timestamp": "2025-06-22T17:40:01.459351073Z"
         },
         {
-          "irssi": -77,
+          "irssi": -73,
           "scanner": "03b4f6a5-8ea5-4a9c-aecc-7a3fc26bad6f",
-          "timestamp": "2025-06-22T16:50:17.628981080Z"
+          "timestamp": "2025-06-22T17:40:01.459431665Z"
         }
       ],
-      "battery": 95,
+      "battery": 96,
       "enable": true,
-      "lastActivity": "2025-06-22T16:50:17.628981080Z",
+      "lastActivity": "2025-06-22T17:40:01.459431665Z",
       "mac": [
         124,
         198,
@@ -955,213 +614,117 @@
       "name": "Button",
       "uuid": "cd62ebee-17b1-4b69-b36b-6eea14e6e903"
     },
-    "d3a5aaf9-b1f6-4563-8177-1f08cdf10d34": {
+    "ceff42cd-1301-43d7-8ab6-93259e3803e5": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:14.798952847Z",
+      "lastActivity": "2025-06-22T17:39:59.282973120Z",
       "mac": [
-        65,
-        170,
-        158,
-        87,
-        86,
-        41
-      ],
-      "name": "Unknown device",
-      "uuid": "d3a5aaf9-b1f6-4563-8177-1f08cdf10d34"
-    },
-    "d4dfba8b-c0f0-4ac6-ab63-76af21259f26": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:49:10.062046395Z",
-      "mac": [
-        96,
-        25,
-        181,
-        173,
-        23,
-        199
-      ],
-      "name": "Unknown device",
-      "uuid": "d4dfba8b-c0f0-4ac6-ab63-76af21259f26"
-    },
-    "da866b49-865b-4f10-bc4a-427c5df70c7d": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:38:30.321580135Z",
-      "mac": [
-        31,
-        252,
-        3,
-        112,
-        36,
-        242
-      ],
-      "name": "Unknown device",
-      "uuid": "da866b49-865b-4f10-bc4a-427c5df70c7d"
-    },
-    "ded8f827-3d92-4819-b98b-bedea31a0534": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:49:35.788412846Z",
-      "mac": [
-        86,
         114,
-        135,
-        30,
-        53,
-        20
+        93,
+        220,
+        1,
+        128,
+        173
       ],
       "name": "Unknown device",
-      "uuid": "ded8f827-3d92-4819-b98b-bedea31a0534"
+      "uuid": "ceff42cd-1301-43d7-8ab6-93259e3803e5"
     },
-    "df0a5998-c2ce-44fc-94fa-aef2e156f0aa": {
+    "d49e5d47-23b9-411f-90ae-fd3ce1b51a3c": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:49:35.945979511Z",
+      "lastActivity": "2025-06-22T17:40:03.180099993Z",
       "mac": [
-        84,
-        120,
-        87,
-        126,
-        118,
-        97
-      ],
-      "name": "Unknown device",
-      "uuid": "df0a5998-c2ce-44fc-94fa-aef2e156f0aa"
-    },
-    "e242ea50-a6d4-4fb0-9df9-e4556c91b391": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:04.537606750Z",
-      "mac": [
-        102,
-        54,
-        90,
-        35,
-        196,
+        206,
+        67,
+        74,
+        106,
+        63,
         167
       ],
       "name": "Unknown device",
-      "uuid": "e242ea50-a6d4-4fb0-9df9-e4556c91b391"
+      "uuid": "d49e5d47-23b9-411f-90ae-fd3ce1b51a3c"
     },
-    "e27551ef-16c8-4845-bd9b-7dd79041a865": {
+    "dd725955-ea37-4119-8244-562a49f30909": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:36:47.517357377Z",
+      "lastActivity": "2025-06-22T17:40:02.099913312Z",
       "mac": [
-        71,
-        167,
-        240,
-        123,
-        249,
-        116
+        204,
+        211,
+        158,
+        218,
+        191,
+        180
       ],
       "name": "Unknown device",
-      "uuid": "e27551ef-16c8-4845-bd9b-7dd79041a865"
+      "uuid": "dd725955-ea37-4119-8244-562a49f30909"
     },
-    "e4bffb63-9f20-44c4-8b41-f166f33cef3c": {
+    "e6fc6b02-69c3-47b7-8625-22164572321e": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.618115214Z",
+      "lastActivity": "2025-06-22T17:40:03.001535092Z",
       "mac": [
-        93,
-        224,
-        114,
-        246,
-        6,
-        63
+        85,
+        191,
+        0,
+        157,
+        210,
+        82
       ],
       "name": "Unknown device",
-      "uuid": "e4bffb63-9f20-44c4-8b41-f166f33cef3c"
+      "uuid": "e6fc6b02-69c3-47b7-8625-22164572321e"
     },
-    "ee89c06c-9765-4442-86f4-4229bccf1e84": {
+    "f01797c5-5837-44f2-9f23-0513c3418ba3": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:18.705674301Z",
+      "lastActivity": "2025-06-22T17:40:03.379255042Z",
       "mac": [
-        192,
-        20,
-        242,
-        60,
-        179,
-        154
+        87,
+        217,
+        208,
+        153,
+        68,
+        14
       ],
       "name": "Unknown device",
-      "uuid": "ee89c06c-9765-4442-86f4-4229bccf1e84"
+      "uuid": "f01797c5-5837-44f2-9f23-0513c3418ba3"
     },
-    "ef3f2de6-4c14-4626-bf11-def1d705f840": {
+    "f9bfc549-3868-4bec-8854-a61b1127dbe0": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:41:01.815245765Z",
+      "lastActivity": "2025-06-22T17:40:03.567316993Z",
       "mac": [
-        40,
-        100,
-        161,
-        101,
-        72,
-        152
-      ],
-      "name": "Unknown device",
-      "uuid": "ef3f2de6-4c14-4626-bf11-def1d705f840"
-    },
-    "f010e6eb-0ff2-4cb9-a415-f1aef23f4dee": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:46:36.048907935Z",
-      "mac": [
-        254,
-        50,
-        9,
-        44,
-        16,
-        24
-      ],
-      "name": "Unknown device",
-      "uuid": "f010e6eb-0ff2-4cb9-a415-f1aef23f4dee"
-    },
-    "f639be11-b335-47c6-84fe-383c0cc2704c": {
-      "activities": [],
-      "battery": null,
-      "enable": false,
-      "lastActivity": "2025-06-22T16:50:13.814307077Z",
-      "mac": [
-        232,
-        12,
-        92,
+        65,
+        185,
+        30,
         163,
-        137,
-        81
+        88,
+        4
       ],
       "name": "Unknown device",
-      "uuid": "f639be11-b335-47c6-84fe-383c0cc2704c"
+      "uuid": "f9bfc549-3868-4bec-8854-a61b1127dbe0"
     },
-    "f7fc987d-b28b-446a-a5ff-dfa8bd28a441": {
+    "ff58fc46-113b-452d-b22e-c8ec71ca3cd4": {
       "activities": [],
       "battery": null,
       "enable": false,
-      "lastActivity": "2025-06-22T16:50:20.213737214Z",
+      "lastActivity": "2025-06-22T17:39:49.601967922Z",
       "mac": [
-        33,
-        37,
-        94,
-        25,
-        73,
-        223
+        7,
+        183,
+        201,
+        50,
+        164,
+        3
       ],
       "name": "Unknown device",
-      "uuid": "f7fc987d-b28b-446a-a5ff-dfa8bd28a441"
+      "uuid": "ff58fc46-113b-452d-b22e-c8ec71ca3cd4"
     }
   },
   "locations": {
@@ -1201,7 +764,7 @@
   "scanners": {
     "03b4f6a5-8ea5-4a9c-aecc-7a3fc26bad6f": {
       "ip": "192.168.1.108",
-      "lastActivity": "2025-06-22T16:50:20.681226660Z",
+      "lastActivity": "2025-06-22T17:40:03.646571241Z",
       "mac": [
         236,
         218,
@@ -1217,7 +780,7 @@
     },
     "b0fd3cd9-4fda-4caf-9a26-3a824d8715eb": {
       "ip": "192.168.1.140",
-      "lastActivity": "2025-06-22T16:50:20.709832065Z",
+      "lastActivity": "2025-06-22T17:40:03.604953385Z",
       "mac": [
         236,
         218,

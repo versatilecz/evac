@@ -124,14 +124,14 @@ impl Server {
         tracing::info!("Sending web positions");
         let mut context = context.write().await;
         let now = chrono::offset::Utc::now();
-        let activity_diff = context.database.config.base.activity_diff * 60;
+        let activity_diff = context.database.config.base.activity_diff;
 
         context.database.data.devices = context
             .database
             .data
             .devices
             .iter()
-            .filter(|(_, v)| (now - v.last_activity).num_seconds() < activity_diff)
+            .filter(|(_, v)| v.enable || (now - v.last_activity).num_seconds() < activity_diff)
             .map(|(k, v)| (k.clone(), v.clone()))
             .collect();
 

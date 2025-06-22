@@ -23,7 +23,8 @@ pub struct Device {
     pub mac: Vec<u8>,
     pub enable: bool,
     pub battery: Option<u8>,
-    pub last_activity: Vec<DeviceActivity>,
+    pub activities: Vec<DeviceActivity>,
+    pub last_activity: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]

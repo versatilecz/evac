@@ -72,6 +72,7 @@ pub struct Base {
     pub frontend_path: String,
     pub salt: String,
     pub query_size: usize,
+    pub activity_diff: i64,
     pub port_web: SocketAddrV4,
     pub port_scanner: SocketAddrV4,
     pub port_broadcast: SocketAddrV4,
@@ -87,6 +88,7 @@ impl Default for Base {
             port_web: SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 3030),
             port_scanner: SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 3031),
             port_broadcast: SocketAddrV4::new(Ipv4Addr::BROADCAST, 3031),
+            activity_diff: 15,
         }
     }
 }

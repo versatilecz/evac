@@ -177,6 +177,8 @@ impl Scanner {
                     let now = chrono::offset::Utc::now();
 
                     let mut context = self.context.write().await;
+                    let activity_diff = context.database.config.base.activity_diff.clone();
+
                     let device_uuid = if let Some(device) = context
                         .database
                         .data
@@ -193,7 +195,8 @@ impl Scanner {
                             enable: false,
                             mac: result.mac,
                             battery: None,
-                            last_activity: Vec::new(),
+                            activities: Vec::new(),
+                            last_activity: now,
                         };
                         context.database.data.devices.insert(uuid, device.clone());
                         context
@@ -208,17 +211,17 @@ impl Scanner {
 
                     if let Some(device) = context.database.data.devices.get_mut(&device_uuid) {
                         if device.enable {
-                            device.last_activity = device
-                                .last_activity
+                            device.activities = device
+                                .activities
                                 .iter()
                                 .filter(|la| {
                                     la.scanner != scanner_uuid
-                                        && (now - la.timestamp).num_seconds() < 15
+                                        && (now - la.timestamp).num_seconds() < activity_diff
                                 })
                                 .cloned()
                                 .collect();
 
-                            device.last_activity.push(DeviceActivity {
+                            device.activities.push(DeviceActivity {
                                 irssi: result.rssi as i64,
                                 timestamp: now,
                                 scanner: scanner_uuid,
@@ -250,7 +253,7 @@ impl Scanner {
         for service in services {
             match service.0[..] {
                 [210, 252] => {
-                    device.battery = Some(service.1[6]);
+                    device.battery = Some(service.1[4]);
 
                     if service.1[6] > 0 {
                         web_sender.send(WebMessage::Event(crate::database::entities::Event {

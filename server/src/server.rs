@@ -122,7 +122,19 @@ impl Server {
 
     async fn web_routine(context: ContextWrapped) {
         tracing::info!("Sending web positions");
-        let context = context.read().await;
+        let mut context = context.write().await;
+        let now = chrono::offset::Utc::now();
+        let activity_diff = context.database.config.base.activity_diff * 60;
+
+        context.database.data.devices = context
+            .database
+            .data
+            .devices
+            .iter()
+            .filter(|(_, v)| (now - v.last_activity).num_seconds() < activity_diff)
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+
         let positions: Vec<crate::message::web::Position> = context
             .database
             .data
@@ -130,7 +142,7 @@ impl Server {
             .values()
             .filter_map(|d| {
                 if d.enable {
-                    d.last_activity
+                    d.activities
                     .iter()
                     .fold(
                         None,

@@ -11,25 +11,41 @@ export const useScannerStore = defineStore('scanner', () => {
   const oldData = ref({})
 
   mainStore.on('ScannerList', (value) => {
-    console.log(value)
-    data.value = value
+    for(let scanner of value) {
+      data.value[scanner.uuid] = scanner;
+    }
+
     oldData.value = deepCopy(value)
+    console.log(data.value)
   })
 
-  mainStore.on('scanner', (value) => {
+  mainStore.on('ScannerDetail', (value) => {
     data.value[value.uuid] = value
     oldData.value[value.uuid] = deepCopy(value)
   })
 
+  mainStore.on('ScannerRemoved', (value) => {
+    delete data.value[value]
+    delete oldData[value]
+  })
+
+  function save(scanner) {
+    mainStore.send("ScannerSet", scanner)
+  }
 
   function reset() {
     console.log('Reset scanner store')
     data.value = deepCopy(oldData.value)
   }
 
+  function remove(uuid) {
+    mainStore.send("ScannerRemove", uuid)
+  }
+
   return {
     data,
     reset,
-    print
+    remove,
+    save
   }
 })

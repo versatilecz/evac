@@ -59,7 +59,6 @@ impl Default for Data {
                     crate::database::entities::Location {
                         name: String::from("Location1"),
                         uuid: location1.clone(),
-                        rooms: vec![room1],
                     },
                 ),
                 (
@@ -67,7 +66,6 @@ impl Default for Data {
                     crate::database::entities::Location {
                         name: String::from("Location2"),
                         uuid: location2.clone(),
-                        rooms: vec![room1],
                     },
                 ),
             ]),

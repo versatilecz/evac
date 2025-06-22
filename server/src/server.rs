@@ -91,7 +91,8 @@ impl Server {
 
                 if !sleep.elapsed().is_zero() {
                     sleep = sleep + sleep_time;
-                    Self::routine(&scanner_sender).await;
+                    Self::scanner_routine(&scanner_sender).await;
+                    Self::web_routine(self.context.clone()).await;
                 }
             }
 
@@ -101,7 +102,9 @@ impl Server {
         Ok(())
     }
 
-    async fn routine(sender: &tokio::sync::mpsc::Sender<shared::messages::scanner::ScannerEvent>) {
+    async fn scanner_routine(
+        sender: &tokio::sync::mpsc::Sender<shared::messages::scanner::ScannerEvent>,
+    ) {
         tracing::info!("Sending hello");
 
         let message = shared::messages::scanner::ScannerMessage {
@@ -115,5 +118,44 @@ impl Server {
             })
             .await
             .unwrap();
+    }
+
+    async fn web_routine(context: ContextWrapped) {
+        tracing::info!("Sending web positions");
+        let context = context.read().await;
+        let positions: Vec<crate::message::web::Position> = context
+            .database
+            .data
+            .devices
+            .values()
+            .filter_map(|d| {
+                d.last_activity
+                    .iter()
+                    .fold(
+                        None,
+                        |prev: Option<crate::database::entities::DeviceActivity>,
+                         item: &crate::database::entities::DeviceActivity| {
+                            if let Some(prev) = prev {
+                                if prev.irssi > item.irssi {
+                                    Some(item.clone())
+                                } else {
+                                    Some(prev)
+                                }
+                            } else {
+                                Some(item.clone())
+                            }
+                        },
+                    )
+                    .map(|a| crate::message::web::Position {
+                        device: d.uuid,
+                        scanner: a.scanner,
+                        rssi: a.irssi,
+                        timestamp: a.timestamp,
+                    })
+            })
+            .collect();
+        context
+            .web_broadcast
+            .send(crate::message::web::WebMessage::Positions(positions));
     }
 }

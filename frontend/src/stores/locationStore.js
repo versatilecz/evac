@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { v4 as uuidv4 } from 'uuid';
 import { defineStore } from 'pinia'
 import { deepCopy } from '@/utils'
 import { useMainStore } from './mainStore'
@@ -11,25 +12,50 @@ export const useLocationStore = defineStore('location', () => {
   const oldData = ref({})
 
   mainStore.on('LocationList', (value) => {
-    console.log(value)
-    data.value = value
+     for(let location of value) {
+      data.value[location.uuid] = location;
+    }
+
     oldData.value = deepCopy(value)
+    console.log(data.value)
   })
 
-  mainStore.on('location', (value) => {
+  mainStore.on('LocationDetail', (value) => {
     data.value[value.uuid] = value
     oldData.value[value.uuid] = deepCopy(value)
   })
 
+    mainStore.on('LocationRemoved', (value) => {
+    delete data.value[value]
+    delete oldData[value]
+  })
+
+  function create(name) {
+    mainStore.send("LocationSet", {
+      uuid: uuidv4(),
+      name,
+    })
+  }
+
+  function save(scanner) {
+    mainStore.send("LocationSet", scanner)
+  }
 
   function reset() {
-    console.log('Reset location store')
+    console.log('Reset scanner store')
     data.value = deepCopy(oldData.value)
   }
+
+  function remove(uuid) {
+    mainStore.send("LocationRemove", uuid)
+  }
+
 
   return {
     data,
     reset,
-    print
+    create,
+    save,
+    remove
   }
 })

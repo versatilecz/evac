@@ -53,6 +53,11 @@ fn main() -> anyhow::Result<()> {
     let sys_loop = EspSystemEventLoop::take()?;
     let timer_service = EspTaskTimerService::new()?;
 
+    let mut mac = [0u8; 6];
+    unsafe {
+        esp_idf_svc::sys::esp_efuse_mac_get_default(mac.as_mut_ptr());
+    }
+
     let eth = eth::EspEth::wrap(eth::EthDriver::new_spi(
         spi::SpiDriver::new(
             peripherals.spi2,
@@ -67,7 +72,7 @@ fn main() -> anyhow::Result<()> {
         // Replace with DM9051 or KSZ8851SNL if you have some of these variants
         eth::SpiEthChipset::DM9051,
         20_u32.MHz().into(),
-        Some(&[0x02, 0x00, 0x00, 0x12, 0x34, 0x56]),
+        Some(&mac),
         None,
         sys_loop.clone(),
     )?)?;
@@ -91,7 +96,7 @@ fn main() -> anyhow::Result<()> {
         services: Vec::new(),
         running: false,
         alarm: false,
-        mac: Vec::new(),
+        mac: mac.to_vec(),
     };
 
     log::info!("Starting eth...");
@@ -126,7 +131,9 @@ fn main() -> anyhow::Result<()> {
                     if let Ok(mut application) = scan_application.write() {
                         let mut scan_device = shared::messages::scanner::ScanDevice {
                             mac: device.addr().as_le_bytes().to_vec(),
-                            name: data.name().unwrap_or_default().to_string(),
+                            name: data
+                                .name()
+                                .map_or(String::from("Unknown device"), |d| d.to_string()),
                             rssi: device.rssi() as i32,
                             services: data
                                 .service_data()

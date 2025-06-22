@@ -4,28 +4,52 @@ import { useRoomStore } from '@/stores/roomStore'
 import { useScannerStore } from '@/stores/scannerStore'
 import { useDeviceStore } from '@/stores/deviceStore'
 import { useEventStore } from '@/stores/eventStore'
+import { usePositionStore } from '@/stores/positionStore'
 
 const locationStore = useLocationStore()
 const roomStore = useRoomStore()
 const scannerStore = useScannerStore()
 const deviceStore = useDeviceStore()
 const eventStore = useEventStore()
+const positionStore = usePositionStore()
+
+
+
+function getDevices(room) {
+    const scanners = Object.values(scannerStore.data)
+    const result =
+    positionStore.data.filter(pos => {
+        return scanners.some(scanner => {
+            console.log(scanner.room, room, scanner.uuid, pos.scanner)
+            return scanner.room == room && scanner.uuid == pos.scanner
+        })
+    }).map(position => {
+        return {
+            uuid: deviceStore.data[position.device].uuid,
+            name: deviceStore.data[position.device].name,
+            rssi: position.rssi,
+        }
+    });
+
+    return result
+
+}
 </script>
 
 <template>
     <h2>Dashboard</h2>
     <div class="container">
         <div class="location-wrap">
-            <div class="location" v-for="location in locationStore.data" :key="location.uuid">
+            <div class="location" v-for="location of Object.values(locationStore.data)" :key="location.uuid">
                 <strong>{{ location.name }}</strong>
                 <h3>Mistnosti</h3>
                 <div class="room-wrap">
 
-                    <div class="room" v-for="room in roomStore.data.filter(room => room.location == location.uuid)" :key="room.uuid">
+                    <div class="room" v-for="room of Object.values(roomStore.data).filter(room => room.location == location.uuid)" :key="room.uuid">
                         <strong>{{ room.name }}</strong>
                         <h4>Zarizeni</h4>
                         <ul>
-                            <li class="device" v-for="device in deviceStore.data" :key="device.uuid">{{ device.name }}</li>
+                            <li class="position" v-for="position in getDevices(room.uuid) " :key="position.uuid">{{ position.name }} ({{ position.rssi }})</li>
                         </ul>
                     </div>
                 </div>

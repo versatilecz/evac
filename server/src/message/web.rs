@@ -5,6 +5,14 @@ use std::{
 };
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Position {
+    pub device: uuid::Uuid,
+    pub scanner: uuid::Uuid,
+    pub rssi: i64,
+    pub timestamp: chrono::DateTime<chrono::Utc>,
+}
+
+#[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum WebMessage {
     #[default]
     Close,
@@ -38,5 +46,6 @@ pub enum WebMessage {
     DeviceRemove(uuid::Uuid),
     DeviceRemoved(uuid::Uuid),
 
+    Positions(Vec<Position>),
     Events(Vec<crate::database::entities::Event>),
 }

@@ -39,7 +39,6 @@ pub struct DeviceActivity {
 pub struct Location {
     pub uuid: uuid::Uuid,
     pub name: String,
-    pub rooms: Vec<uuid::Uuid>,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]

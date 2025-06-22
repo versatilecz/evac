@@ -1,8 +1,11 @@
 use std::net::SocketAddr;
 
-use shared::messages::scanner::{ScannerContent, ScannerEvent};
+use shared::messages::scanner::{self, ScannerContent, ScannerEvent};
 use tokio::{net::UdpSocket, sync::broadcast};
-use uuid::Uuid;
+use tracing::event;
+use uuid::{timestamp::context, Uuid};
+
+use crate::database::{entities::DeviceActivity, LoadSave};
 
 mod map;
 
@@ -151,32 +154,71 @@ impl Scanner {
             match event.message.content {
                 shared::messages::scanner::ScannerContent::Register { mac } => {
                     tracing::debug!("Received register message: {:?}", mac);
-                }
-                shared::messages::scanner::ScannerContent::ScanResult(result) => {
-                    tracing::debug!("Received scan result message: {:?}", result);
-                    /*
-                    if let Some(scanner_uuid) = self.scanners.get(&socket) {
-                        let mut context = self.context.write().await;
+                    let context = self.context.read().await;
+                    let path = context.database.config.base.data_path.clone();
+                    context.database.data.save(&path).unwrap();
 
-                        if let Some(scanner) = context.scanners.get(scanner_uuid).cloned() {
-                            context.scanner_set(scanner.clone());
-
-                            let event = crate::database::entities::Event {
-                                device: Some(uuid::Uuid::new_v4()),
-                                uuid: uuid::Uuid::new_v4(),
-                                kind: crate::database::entities::EventKind::Advertisement,
-                                timestamp: chrono::offset::Utc::now(),
-                                scanner: uuid::Uuid::new_v4(),
-                            };
-                            context
-                                .web_broadcast
-                                .send(crate::message::web::WebMessage::Event(event))
-                                .unwrap();
-
-                            tracing::debug!("Procesing scan results from scanner");
+                    if let Some(uuid) = &event.scanner {
+                        if let Some(scanner) = context.database.data.scanners.get(uuid) {
+                            context.web_broadcast.send(
+                                crate::message::web::WebMessage::ScannerDetail(scanner.clone()),
+                            );
                         }
                     }
-                     */
+                }
+                shared::messages::scanner::ScannerContent::ScanResult(result) => {
+                    let now = chrono::offset::Utc::now();
+
+                    tracing::debug!("Received scan result message: {:?}", result);
+
+                    let mut context = self.context.write().await;
+                    let device_uuid = if let Some(device) = context
+                        .database
+                        .data
+                        .devices
+                        .values()
+                        .find(|d| d.mac == result.mac)
+                    {
+                        device.uuid.clone()
+                    } else {
+                        let uuid = uuid::Uuid::new_v4();
+                        let device = crate::database::entities::Device {
+                            uuid,
+                            name: result.name,
+                            enable: false,
+                            mac: result.mac,
+                            battery: None,
+                            last_activity: Vec::new(),
+                        };
+                        context.database.data.devices.insert(uuid, device.clone());
+                        context
+                            .web_broadcast
+                            .send(crate::message::web::WebMessage::DeviceDetail(device));
+
+                        uuid
+                    };
+
+                    let scanner_uuid = event.scanner.unwrap();
+
+                    if let Some(device) = context.database.data.devices.get_mut(&device_uuid) {
+                        if device.enable {
+                            device.last_activity = device
+                                .last_activity
+                                .iter()
+                                .filter(|la| {
+                                    la.scanner != scanner_uuid
+                                        && (now - la.timestamp).num_seconds() < 5
+                                })
+                                .cloned()
+                                .collect();
+
+                            device.last_activity.push(DeviceActivity {
+                                irssi: result.rssi as i64,
+                                timestamp: now,
+                                scanner: scanner_uuid,
+                            })
+                        }
+                    }
                 }
                 _ => {}
             }

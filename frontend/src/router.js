@@ -14,9 +14,15 @@ const router = createRouter({
       component: () => import('./views/Config.vue')
     },
     {
-      path: '/area',
-      name: 'area',
-      component: () => import('./views/Area.vue')
+      path: '/locations',
+      name: 'locations',
+      component: () => import('./views/Locations.vue')
+    },
+
+        {
+      path: '/rooms',
+      name: 'rooms',
+      component: () => import('./views/Rooms.vue')
     },
     {
       path: '/scanners',
@@ -24,7 +30,7 @@ const router = createRouter({
       component: () => import('./views/Scanners.vue')
     },
     {
-      path: '/Devices',
+      path: '/devices',
       name: 'devices',
       component: () => import('./views/Devices.vue')
     },

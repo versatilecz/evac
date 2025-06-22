@@ -11,7 +11,7 @@ export const useMainStore = defineStore('main', () => {
   }
 
   function send(tag, content) {
-    websocket.send(JSON.stringify({ tag, content }))
+    websocket.send(JSON.stringify({ [tag]: content }))
   }
 
   watch(

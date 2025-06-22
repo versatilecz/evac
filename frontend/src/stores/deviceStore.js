@@ -10,13 +10,35 @@ export const useDeviceStore = defineStore('device', () => {
   const data = ref({})
   const oldData = ref({})
 
+
   mainStore.on('DeviceList', (value) => {
-    console.log(value)
-    data.value = value
+     for(let location of value) {
+      data.value[location.uuid] = location;
+    }
+
     oldData.value = deepCopy(value)
+    console.log(data.value)
   })
 
-  mainStore.on('device', (value) => {
+  mainStore.on('DeviceDetail', (value) => {
+    data.value[value.uuid] = value
+    oldData.value[value.uuid] = deepCopy(value)
+  })
+
+    mainStore.on('DeviceRemoved', (value) => {
+    delete data.value[value]
+    delete oldData[value]
+  })
+
+  function name(uuid) {
+    data[uuid].name || "unknown"
+  }
+
+  function save(scanner) {
+    mainStore.send("DeviceSet", scanner)
+  }
+
+  mainStore.on('DeviceDetail', (value) => {
     data.value[value.uuid] = value
     oldData.value[value.uuid] = deepCopy(value)
   })
@@ -30,6 +52,7 @@ export const useDeviceStore = defineStore('device', () => {
   return {
     data,
     reset,
-    print
+    name,
+    save
   }
 })

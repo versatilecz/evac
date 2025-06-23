@@ -141,6 +141,7 @@ impl Server {
             .devices
             .values()
             .filter_map(|d| {
+                // If device is enabled, select the most close event
                 if d.enable {
                     d.activities
                     .iter()
@@ -159,17 +160,22 @@ impl Server {
                             }
                         },
                     )
+                    // Transform device/activity to position message
                     .map(|a| crate::message::web::Position {
                         device: d.uuid,
                         scanner: a.scanner,
                         rssi: a.irssi,
                         timestamp: a.timestamp,
                     })
-                } else {
+                }
+                // filter out the rest
+                else {
                     None
                 }
             })
             .collect();
+
+        // Notify web clients about positions
         context
             .web_broadcast
             .send(crate::message::web::WebMessage::Positions(positions));

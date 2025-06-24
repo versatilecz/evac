@@ -48,14 +48,14 @@ impl Server {
             let base = self.context.read().await.database.config.base.clone();
             let (port, broadcast) = (base.port_scanner.clone(), base.port_broadcast.clone());
 
-            let sleep_time = std::time::Duration::from_secs(5);
+            let sleep_time = std::time::Duration::from_secs(base.routine as u64);
             let mut sleep = Instant::now() + sleep_time;
 
             loop {
                 //tracing::info!("Server loop cycle... {:?}", sleep.elapsed().is_zero());
 
                 tokio::select! {
-                    _ = tokio::time::sleep(sleep_time) => {
+                    _ = tokio::time::sleep(Instant::now()-sleep) => {
 
                     },
                     // Received system message for scanner/ resend to devices

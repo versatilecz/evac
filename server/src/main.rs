@@ -60,6 +60,7 @@ async fn main() -> anyhow::Result<()> {
         version: String::new(),
     };
     database.data.save(&data_path).unwrap();
+    database.config.save();
 
     let broadcast = SocketAddr::V4(config.base.port_broadcast);
 

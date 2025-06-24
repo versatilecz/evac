@@ -40,7 +40,7 @@ impl<'a> Application<'a> {
             // If there is a communication with server
             // Check for new server message (config, ping)
 
-            while let Ok((len, server_address)) = socket.recv_from(&mut buffer) {
+            if let Ok((len, server_address)) = socket.recv_from(&mut buffer) {
                 if let Ok(msg) = rmp_serde::from_slice::<shared::messages::scanner::ScannerMessage>(
                     &buffer[0..len],
                 ) {

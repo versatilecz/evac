@@ -228,13 +228,8 @@ impl Scanner {
                                 scanner: scanner_uuid,
                             });
 
-                            self.process_service(
-                                web_broadcast,
-                                scanner_uuid,
-                                device,
-                                result.services,
-                            )
-                            .await;
+                            self.process_service(web_broadcast, scanner_uuid, device, result.data)
+                                .await;
                         }
                     }
                 }
@@ -249,27 +244,27 @@ impl Scanner {
         web_sender: tokio::sync::broadcast::Sender<WebMessage>,
         scanner: uuid::Uuid,
         device: &mut crate::database::entities::Device,
-        services: Vec<(Vec<u8>, Vec<u8>)>,
+        data: Vec<u8>,
     ) {
-        for service in services {
-            match service.0[..] {
-                [210, 252] => {
-                    device.battery = Some(service.1[4]);
+        tracing::debug!("Service data[{:?}]: {:?}", device.name, data);
 
-                    if service.1[6] > 0 {
-                        web_sender.send(WebMessage::Event(crate::database::entities::Event {
-                            device: Some(device.uuid),
-                            uuid: uuid::Uuid::new_v4(),
-                            timestamp: chrono::offset::Utc::now(),
-                            scanner,
-                            kind: crate::database::entities::EventKind::ButtonPressed,
-                        }));
-                    }
+        /*
+        match data {
+            [210252] => {
+                device.battery = Some(service.1[4]);
 
-                    tracing::debug!("Received scan service message: {:?}", service.1);
+                if data.1[6] > 0 {
+                    web_sender.send(WebMessage::Event(crate::database::entities::Event {
+                        device: Some(device.uuid),
+                        uuid: uuid::Uuid::new_v4(),
+                        timestamp: chrono::offset::Utc::now(),
+                        scanner,
+                        kind: crate::database::entities::EventKind::ButtonPressed,
+                    }));
                 }
-                _ => {}
             }
+            _ => {}
         }
+         */
     }
 }

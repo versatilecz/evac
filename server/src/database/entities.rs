@@ -19,7 +19,7 @@ pub struct Scanner {
 #[serde(rename_all = "camelCase", default)]
 pub struct Device {
     pub uuid: uuid::Uuid,
-    pub name: String,
+    pub name: Option<String>,
     pub mac: Vec<u8>,
     pub enable: bool,
     pub battery: Option<u8>,

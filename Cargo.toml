@@ -1,5 +1,5 @@
 [workspace]
-members = ["demo", "server", "shared", "test", "test_server", "esp32-nimble"]
+members = ["demo", "server", "shared"]
 resolver = "2"
 
 [profile.dev]

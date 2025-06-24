@@ -22,9 +22,9 @@ pub enum Value {
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct ScanDevice {
     pub mac: Vec<u8>,
-    pub name: String,
+    pub name: Option<String>,
     pub rssi: i32,
-    pub services: Vec<(Vec<u8>, Vec<u8>)>,
+    pub data: Vec<u8>,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]

@@ -222,7 +222,7 @@ impl Default for Data {
                     device2.clone(),
                     crate::database::entities::Device {
                         battery: None,
-                        uuid: device1.clone(),
+                        uuid: device2.clone(),
                         enable: true,
                         name: String::from("Device2"),
                         activities: Vec::new(),

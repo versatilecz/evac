@@ -217,7 +217,7 @@ impl Scanner {
                                 .iter()
                                 .filter(|la| {
                                     la.scanner != scanner_uuid
-                                        && (now - la.timestamp).num_seconds() < activity_diff
+                                        || (now - la.timestamp).num_seconds() < activity_diff
                                 })
                                 .cloned()
                                 .collect();

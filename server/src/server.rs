@@ -150,7 +150,7 @@ impl Server {
                         |prev: Option<crate::database::entities::DeviceActivity>,
                          item: &crate::database::entities::DeviceActivity| {
                             if let Some(prev) = prev {
-                                if prev.irssi > item.irssi {
+                                if prev.irssi < item.irssi {
                                     Some(item.clone())
                                 } else {
                                     Some(prev)

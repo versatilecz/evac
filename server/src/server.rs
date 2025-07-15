@@ -1,4 +1,4 @@
-use std::{net::SocketAddr, pin::pin, time::Instant};
+use std::{collections::HashMap, net::SocketAddr, pin::pin, time::Instant};
 
 use futures::channel::mpsc::Sender;
 use shared::messages::{
@@ -8,7 +8,7 @@ use shared::messages::{
 use tokio::sync::broadcast;
 use uuid::Uuid;
 
-use crate::scanner;
+use crate::{database::entities::Device, scanner};
 
 use super::context::{Context, ContextWrapped};
 pub struct Server {
@@ -48,14 +48,14 @@ impl Server {
             let base = self.context.read().await.database.config.base.clone();
             let (port, broadcast) = (base.port_scanner.clone(), base.port_broadcast.clone());
 
-            let sleep_time = std::time::Duration::from_secs(base.routine as u64);
+            let sleep_time = std::time::Duration::from_secs(5);
             let mut sleep = Instant::now() + sleep_time;
 
             loop {
                 //tracing::info!("Server loop cycle... {:?}", sleep.elapsed().is_zero());
 
                 tokio::select! {
-                    _ = tokio::time::sleep(Instant::now()-sleep) => {
+                    _ = tokio::time::sleep(sleep_time) => {
 
                     },
                     // Received system message for scanner/ resend to devices
@@ -126,14 +126,25 @@ impl Server {
         let now = chrono::offset::Utc::now();
         let activity_diff = context.database.config.base.activity_diff;
 
-        context.database.data.devices = context
-            .database
-            .data
-            .devices
+        let old = context.database.data.devices.clone();
+
+        context.database.data.devices = old
             .iter()
             .filter(|(_, v)| v.enable || (now - v.last_activity).num_seconds() < activity_diff)
             .map(|(k, v)| (k.clone(), v.clone()))
             .collect();
+
+        let removed: Vec<uuid::Uuid> = old
+            .iter()
+            .filter(|(_, v)| !v.enable && (now - v.last_activity).num_seconds() >= activity_diff)
+            .map(|(k, _)| k.clone())
+            .collect();
+
+        for remove in removed {
+            context
+                .web_broadcast
+                .send(crate::message::web::WebMessage::DeviceRemoved(remove));
+        }
 
         let positions: Vec<crate::message::web::Position> = context
             .database
@@ -150,7 +161,7 @@ impl Server {
                         |prev: Option<crate::database::entities::DeviceActivity>,
                          item: &crate::database::entities::DeviceActivity| {
                             if let Some(prev) = prev {
-                                if prev.irssi < item.irssi {
+                                if prev.irssi > item.irssi {
                                     Some(item.clone())
                                 } else {
                                     Some(prev)

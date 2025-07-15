@@ -294,7 +294,7 @@ fn main() -> anyhow::Result<()> {
     let ble_device = esp32_nimble::BLEDevice::take();
     let mut ble_scan = esp32_nimble::BLEScan::new();
 
-    ble_scan.active_scan(false); // active scanning
+    ble_scan.active_scan(true); // active scanning
     ble_scan.interval(100); // 100 * 0.625ms = 62.5ms
     ble_scan.window(80); // musí být <= interval
     ble_scan.filter_duplicates(true);
@@ -308,7 +308,6 @@ fn main() -> anyhow::Result<()> {
                     if let Ok(mut application) = scan_application.write() {
                         let mut scan_device = shared::messages::scanner::ScanDevice {
                             mac: device.addr().as_be_bytes().to_vec(),
-                            name: data.name().map(|n| n.to_string()),
                             rssi: device.rssi() as i32,
                             data: data.payload().to_vec(),
                         };

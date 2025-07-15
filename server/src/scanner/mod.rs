@@ -1,6 +1,7 @@
 use core::time;
 use std::{net::SocketAddr, time::Duration};
 
+use mail_send::mail_auth::arc::parse;
 use serde_json::ser;
 use shared::messages::scanner::{self, ScannerContent, ScannerEvent};
 use tokio::{net::UdpSocket, sync::broadcast};
@@ -13,6 +14,7 @@ use crate::{
 };
 
 mod map;
+mod parser;
 
 pub struct Scanner {
     context: super::context::ContextWrapped,
@@ -174,6 +176,7 @@ impl Scanner {
                     }
                 }
                 shared::messages::scanner::ScannerContent::ScanResult(result) => {
+                    let mut send_device = None;
                     let now = chrono::offset::Utc::now();
 
                     let mut context = self.context.write().await;
@@ -192,7 +195,7 @@ impl Scanner {
                         let uuid = uuid::Uuid::new_v4();
                         let device = crate::database::entities::Device {
                             uuid,
-                            name: result.name,
+                            name: None,
                             enable: false,
                             mac: result.mac,
                             battery: None,
@@ -200,42 +203,51 @@ impl Scanner {
                             last_activity: now,
                         };
                         context.database.data.devices.insert(uuid, device.clone());
-                        context
-                            .web_broadcast
-                            .send(crate::message::web::WebMessage::DeviceDetail(device));
-
-                        uuid
+                        send_device = Some(device.clone());
+                        device.uuid
                     };
 
                     let scanner_uuid = event.scanner.unwrap();
                     let web_broadcast = context.web_broadcast.clone();
 
                     if let Some(device) = context.database.data.devices.get_mut(&device_uuid) {
-                        if device.enable {
-                            device.activities = device
-                                .activities
-                                .iter()
-                                .filter(|la| {
-                                    la.scanner != scanner_uuid
-                                        || (now - la.timestamp).num_seconds() < activity_diff
-                                })
-                                .cloned()
-                                .collect();
+                        device.activities = device
+                            .activities
+                            .iter()
+                            .filter(|la| {
+                                la.scanner != scanner_uuid
+                                    || (now - la.timestamp).num_seconds() < activity_diff
+                            })
+                            .cloned()
+                            .collect();
 
-                            device.activities.push(DeviceActivity {
-                                irssi: result.rssi as i64,
-                                timestamp: now,
-                                scanner: scanner_uuid,
-                            });
+                        device.last_activity = now;
+                        device.activities.push(DeviceActivity {
+                            irssi: result.rssi as i64,
+                            timestamp: now,
+                            scanner: scanner_uuid,
+                        });
 
-                            self.process_service(web_broadcast, scanner_uuid, device, result.data)
-                                .await;
+                        if self
+                            .process_service(web_broadcast, scanner_uuid, device, result.data)
+                            .await
+                        {
+                            send_device = Some(device.clone());
+                        }
+                    }
+
+                    if let Some(device) = send_device {
+                        if device.name.is_some() {
+                            context
+                                .web_broadcast
+                                .send(crate::message::web::WebMessage::DeviceDetail(device));
                         }
                     }
                 }
                 _ => {}
             }
         }
+
         Ok(())
     }
 
@@ -245,26 +257,50 @@ impl Scanner {
         scanner: uuid::Uuid,
         device: &mut crate::database::entities::Device,
         data: Vec<u8>,
-    ) {
-        tracing::debug!("Service data[{:?}]: {:?}", device.name, data);
+    ) -> bool {
+        let mut result = false;
+        tracing::debug!("Service advertisement data: {:?}", data);
+        let mut parser = parser::Parser::new(data);
+        while let Some(parsed) = parser.next() {
+            tracing::debug!("Service data[{}]: {:?}", parsed.tag, parsed.data);
+            match parsed.tag {
+                8 | 9 => {
+                    if device.name.is_none() {
+                        if let Ok(name) = String::from_utf8(parsed.data) {
+                            device.name = Some(name);
+                            result = true;
+                        }
+                    }
+                }
+                22 => {
+                    if parsed.data[0..1] == [210, 252] {
+                        device.battery = Some(parsed.data[6]);
+                        result = true;
+                    }
 
-        /*
-        match data {
-            [210252] => {
-                device.battery = Some(service.1[4]);
-
-                if data.1[6] > 0 {
-                    web_sender.send(WebMessage::Event(crate::database::entities::Event {
-                        device: Some(device.uuid),
-                        uuid: uuid::Uuid::new_v4(),
-                        timestamp: chrono::offset::Utc::now(),
-                        scanner,
-                        kind: crate::database::entities::EventKind::ButtonPressed,
-                    }));
+                    if parsed.data[8] > 0 && device.enable {
+                        let kind = match parsed.data[8] {
+                            1 => crate::database::entities::EventKind::ButtonPressed,
+                            2 => crate::database::entities::EventKind::ButtonDoublePressed,
+                            3 => crate::database::entities::EventKind::ButtonTriplePressed,
+                            4 => crate::database::entities::EventKind::ButtonLongPressed,
+                            254 => crate::database::entities::EventKind::ButtonHold,
+                            _ => crate::database::entities::EventKind::Advertisement,
+                        };
+                        web_sender.send(WebMessage::Event(crate::database::entities::Event {
+                            device: Some(device.uuid),
+                            uuid: uuid::Uuid::new_v4(),
+                            timestamp: chrono::offset::Utc::now(),
+                            scanner,
+                            kind,
+                        }));
+                    }
+                }
+                _ => {
+                    tracing::info!("Unknow data[{}] {:?}", parsed.tag, parsed.data);
                 }
             }
-            _ => {}
         }
-         */
+        result
     }
 }

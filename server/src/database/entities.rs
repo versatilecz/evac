@@ -67,5 +67,9 @@ pub enum EventKind {
     #[default]
     Advertisement,
     ButtonPressed,
+    ButtonDoublePressed,
+    ButtonTriplePressed,
+    ButtonLongPressed,
+    ButtonHold,
     Operator,
 }

@@ -1,4 +1,4 @@
-use std::net::Ipv4Addr;
+use std::{collections::BTreeMap, net::Ipv4Addr};
 
 use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -23,7 +23,7 @@ pub struct Device {
     pub mac: Vec<u8>,
     pub enable: bool,
     pub battery: Option<u8>,
-    pub activities: Vec<DeviceActivity>,
+    pub activities: BTreeMap<uuid::Uuid, DeviceActivity>,
     pub last_activity: chrono::DateTime<chrono::Utc>,
 }
 
@@ -31,7 +31,7 @@ pub struct Device {
 #[serde(rename_all = "camelCase", default)]
 pub struct DeviceActivity {
     pub timestamp: DateTime<Utc>,
-    pub scanner: uuid::Uuid,
+    pub scanner_uuid: uuid::Uuid,
     pub irssi: i64,
 }
 

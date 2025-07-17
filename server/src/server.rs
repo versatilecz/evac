@@ -1,4 +1,9 @@
-use std::{collections::HashMap, net::SocketAddr, pin::pin, time::Instant};
+use std::{
+    collections::{BTreeMap, HashMap},
+    net::SocketAddr,
+    pin::pin,
+    time::Instant,
+};
 
 use futures::channel::mpsc::Sender;
 use shared::messages::{
@@ -116,8 +121,7 @@ impl Server {
                 message,
                 scanner: None,
             })
-            .await
-            .unwrap();
+            .await;
     }
 
     async fn web_routine(context: ContextWrapped) {
@@ -146,6 +150,17 @@ impl Server {
                 .send(crate::message::web::WebMessage::DeviceRemoved(remove));
         }
 
+        for device in context.database.data.devices.values_mut() {
+            device.activities =
+                BTreeMap::from_iter(device.activities.iter().filter_map(|(uuid, a)| {
+                    if (a.timestamp - now).num_seconds() < activity_diff {
+                        Some((uuid.clone(), a.clone()))
+                    } else {
+                        None
+                    }
+                }));
+        }
+
         let positions: Vec<crate::message::web::Position> = context
             .database
             .data
@@ -155,13 +170,13 @@ impl Server {
                 // If device is enabled, select the most close event
                 if d.enable {
                     d.activities
-                    .iter()
+                    .values()
                     .fold(
                         None,
                         |prev: Option<crate::database::entities::DeviceActivity>,
                          item: &crate::database::entities::DeviceActivity| {
                             if let Some(prev) = prev {
-                                if prev.irssi > item.irssi {
+                                if prev.irssi < item.irssi {
                                     Some(item.clone())
                                 } else {
                                     Some(prev)
@@ -174,7 +189,7 @@ impl Server {
                     // Transform device/activity to position message
                     .map(|a| crate::message::web::Position {
                         device: d.uuid,
-                        scanner: a.scanner,
+                        scanner: a.scanner_uuid,
                         rssi: a.irssi,
                         timestamp: a.timestamp,
                     })

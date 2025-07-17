@@ -5,18 +5,18 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template id="app">
   <head>
-    <h1>Evac system location</h1>
+    <h1>Evakuační system</h1>
 
     <nav>
-          <RouterLink to="/">Dashboard</RouterLink>
+          <RouterLink to="/">Přehled</RouterLink>
 
-          <RouterLink to="/config">Config</RouterLink>
+          <RouterLink to="/config">Nastavení</RouterLink>
 
-          <RouterLink to="/locations">Locations</RouterLink>
-          <RouterLink to="/rooms">Rooms</RouterLink>
-          <RouterLink to="/scanners">Scanners</RouterLink>
-          <RouterLink to="/devices">Devices</RouterLink>
-          <RouterLink to="/tools">Tools</RouterLink>
+          <RouterLink to="/locations">Lokace</RouterLink>
+          <RouterLink to="/rooms">Místnosti</RouterLink>
+          <RouterLink to="/scanners">Skenery</RouterLink>
+          <RouterLink to="/devices">Zařízení</RouterLink>
+          <RouterLink to="/tools">Nástroje</RouterLink>
     </nav>
   </head>
 

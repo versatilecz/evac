@@ -165,7 +165,7 @@ impl Scanner {
                     tracing::debug!("Received register message: {:?}", mac);
                     let context = self.context.read().await;
                     let path = context.database.config.base.data_path.clone();
-                    context.database.data.save(&path).unwrap();
+                    //context.database.data.save(&path).unwrap();
 
                     if let Some(uuid) = &event.scanner {
                         if let Some(scanner) = context.database.data.scanners.get(uuid) {
@@ -277,13 +277,9 @@ impl Scanner {
                     }
                 }
                 22 => {
-                    if parsed.data.len() >= 8 {
-                        if parsed.data[0..1] == [210, 252] {
-                            device.battery = Some(parsed.data[6]);
-                            result = true;
-                        }
-
-                        tracing::error!("Data received: {:?}", parsed.data);
+                    if parsed.data[0..2] == [210, 252] {
+                        device.battery = Some(parsed.data[6]);
+                        result = true;
 
                         if parsed.data[8] > 0 && device.enable {
                             let kind = match parsed.data[8] {
@@ -294,16 +290,16 @@ impl Scanner {
                                 254 => crate::database::entities::EventKind::ButtonHold,
                                 _ => crate::database::entities::EventKind::Advertisement,
                             };
-                            web_sender
-                                .send(WebMessage::Event(crate::database::entities::Event {
-                                    device: Some(device.uuid),
-                                    uuid: uuid::Uuid::new_v4(),
-                                    timestamp: chrono::offset::Utc::now(),
-                                    scanner,
-                                    kind,
-                                }))
-                                .unwrap();
+                            web_sender.send(WebMessage::Event(crate::database::entities::Event {
+                                device: Some(device.uuid),
+                                uuid: uuid::Uuid::new_v4(),
+                                timestamp: chrono::offset::Utc::now(),
+                                scanner,
+                                kind,
+                            }));
                         }
+
+                        tracing::info!("Data received: {:?}, device: {:?}", parsed.data, device);
                     }
                 }
                 _ => {

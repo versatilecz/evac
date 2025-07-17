@@ -18,7 +18,7 @@ const positionStore = usePositionStore()
 
 
 
-function getDevices(room) {
+function getLocationDevices(room) {
     const scanners = Object.values(scannerStore.data)
     const result =
     positionStore.data.filter(pos => {
@@ -36,31 +36,41 @@ function getDevices(room) {
     return result
 
 }
+
+function getUnlocatedDevices() {
+    return Object.values(deviceStore.data).filter(device => {
+        return !positionStore.data.some(position => position.device == device.uuid || !device.enable)
+    })
+
+}
 </script>
 
 <template>
-    <h2>Dashboard</h2>
+    <h2>Přehled zařízení</h2>
     <div class="container">
         <div class="location-wrap">
             <div class="location" v-for="location of Object.values(locationStore.data)" :key="location.uuid">
                 <strong>{{ location.name }}</strong>
-                <h3>Mistnosti</h3>
                 <div class="room-wrap">
 
                     <div class="room" v-for="room of Object.values(roomStore.data).filter(room => room.location == location.uuid)" :key="room.uuid">
                         <strong>{{ room.name }}</strong>
-                        <h4>Zarizeni</h4>
                         <ul>
-                            <li class="position" v-for="position in getDevices(room.uuid) " :key="position.uuid">{{ position.name }} ({{ position.rssi }})</li>
+                            <li class="position" v-for="position in getLocationDevices(room.uuid) " :key="position.uuid">{{ position.name }} ({{ position.rssi }})</li>
                         </ul>
                     </div>
                 </div>
-
+            </div>
+            <div class="room">
+                <strong>Mimo systém</strong>
+                <ul>
+                    <li class="position" v-for="position in getUnlocatedDevices() " :key="position.uuid">{{ position.name }} ({{ position.rssi }})</li>
+                </ul>
             </div>
         </div>
 
         <div>
-            <h3>Events</h3>
+            <h3>Události</h3>
             <button v-on:click="() => {eventStore.reset(); mainStore.send('Alarm', false)}">Clear</button>
             <ul>
                 <li v-for="event in Object.values(eventStore.data)" :key="event.device">{{ deviceStore.name(event.device) }} {{ event.kind }} <button v-on:click="mainStore.send('Alarm', true)">Alarm</button></li>

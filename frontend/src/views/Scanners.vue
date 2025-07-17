@@ -12,11 +12,11 @@ const scannerStore = useScannerStore()
         <thead>
             <tr>
                 <th>Uuid</th>
-                <th>Name</th>
+                <th>Název</th>
                 <th>Mac</th>
                 <th>Ip</th>
-                <th>Room</th>
-                <th>Last activity</th>
+                <th>Místnost</th>
+                <th>Poslední aktivita</th>
             </tr>
         </thead>
 

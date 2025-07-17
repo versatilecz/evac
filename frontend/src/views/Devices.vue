@@ -21,11 +21,11 @@ const devices = computed(() => Object.values(deviceStore.data).filter(d => all.v
         <thead>
             <tr>
                 <th>Uuid</th>
-                <th>Name</th>
+                <th>Název</th>
                 <th>Mac</th>
-                <th>Battery</th>
-                <th>Last activity</th>
-                <th>Enable</th>
+                <th>Baterie</th>
+                <th>Poslední aktivita</th>
+                <th>Povoleno</th>
             </tr>
         </thead>
 

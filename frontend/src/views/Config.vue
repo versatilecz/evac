@@ -6,9 +6,9 @@ const configStore = useConfigStore()
 
 <template>
     <div class="container">
-        <h2>Config</h2>
+        <h2>Nastavení</h2>
 
-        <h3>Base</h3>
+        <h3>Základní</h3>
         <table>
             <tr>
                 <th>Config path</th>

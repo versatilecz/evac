@@ -199,7 +199,7 @@ impl Scanner {
                             enable: false,
                             mac: result.mac,
                             battery: None,
-                            activities: BTreeMap::new(),
+                            activities: Vec::new(),
                             last_activity: now,
                         };
                         context.database.data.devices.insert(uuid, device.clone());
@@ -211,25 +211,19 @@ impl Scanner {
                     let web_broadcast = context.web_broadcast.clone();
 
                     if let Some(device) = context.database.data.devices.get_mut(&device_uuid) {
-                        device.activities = BTreeMap::from_iter(
-                            device.activities.iter().filter_map(|(uuid, a)| {
-                                if (now - a.timestamp).num_seconds() < activity_diff {
-                                    Some((uuid.clone(), a.clone()))
-                                } else {
-                                    None
-                                }
-                            }),
-                        );
+                        device.activities = device
+                            .activities
+                            .iter()
+                            .filter(|a| (now - a.timestamp).num_seconds() < activity_diff)
+                            .cloned()
+                            .collect();
 
                         device.last_activity = now;
-                        device.activities.insert(
-                            scanner_uuid,
-                            DeviceActivity {
-                                irssi: result.rssi as i64,
-                                timestamp: now,
-                                scanner_uuid: scanner_uuid,
-                            },
-                        );
+                        device.activities.push(DeviceActivity {
+                            irssi: result.rssi as i64,
+                            timestamp: now,
+                            scanner_uuid: scanner_uuid,
+                        });
 
                         if self
                             .process_service(web_broadcast, scanner_uuid, device, result.data)

@@ -23,7 +23,7 @@ pub struct Device {
     pub mac: Vec<u8>,
     pub enable: bool,
     pub battery: Option<u8>,
-    pub activities: BTreeMap<uuid::Uuid, DeviceActivity>,
+    pub activities: Vec<DeviceActivity>,
     pub last_activity: chrono::DateTime<chrono::Utc>,
 }
 

@@ -151,14 +151,12 @@ impl Server {
         }
 
         for device in context.database.data.devices.values_mut() {
-            device.activities =
-                BTreeMap::from_iter(device.activities.iter().filter_map(|(uuid, a)| {
-                    if (a.timestamp - now).num_seconds() < activity_diff {
-                        Some((uuid.clone(), a.clone()))
-                    } else {
-                        None
-                    }
-                }));
+            device.activities = device
+                .activities
+                .iter()
+                .filter(|a| (a.timestamp - now).num_seconds() < activity_diff)
+                .cloned()
+                .collect();
         }
 
         let positions: Vec<crate::message::web::Position> = context
@@ -170,7 +168,7 @@ impl Server {
                 // If device is enabled, select the most close event
                 if d.enable {
                     d.activities
-                    .values()
+                    .iter()
                     .fold(
                         None,
                         |prev: Option<crate::database::entities::DeviceActivity>,

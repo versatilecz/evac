@@ -214,7 +214,10 @@ impl Scanner {
                         device.activities = device
                             .activities
                             .iter()
-                            .filter(|a| (now - a.timestamp).num_seconds() < activity_diff)
+                            .filter(|a| {
+                                (now - a.timestamp).num_seconds() < activity_diff
+                                    && a.scanner_uuid != scanner_uuid
+                            })
                             .cloned()
                             .collect();
 

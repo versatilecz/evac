@@ -21,22 +21,20 @@ impl Iterator for Parser {
         // Get length from data
         if let Some(length) = self.data.get(self.position) {
             // Get tag from data
-            if 0.eq(length) {
+            if 0.eq(length) || self.position + (*length as usize) >= self.data.len() {
                 return None;
             }
 
             if let Some(tag) = self.data.get(self.position + 1) {
                 // If the array size is OK, return the chunk
-                if self.position + (*length as usize) + 1 < self.data.len() {
-                    let result = ParserData {
-                        tag: (*tag),
-                        data: self.data[self.position + 2..self.position + (*length as usize) + 1]
-                            .to_vec(),
-                    };
+                let result = ParserData {
+                    tag: self.data[self.position + 1],
+                    data: self.data[self.position + 2..self.position + 1 + (*length as usize)]
+                        .to_vec(),
+                };
 
-                    self.position += *length as usize + 1;
-                    return Some(result);
-                }
+                self.position += *length as usize + 1;
+                return Some(result);
             }
         }
         return None;

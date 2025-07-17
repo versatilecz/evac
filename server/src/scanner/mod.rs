@@ -259,7 +259,11 @@ impl Scanner {
         data: Vec<u8>,
     ) -> bool {
         let mut result = false;
-        tracing::debug!("Service advertisement data: {:?}", data);
+        tracing::debug!(
+            "Service advertisement data: {}: {:?}",
+            hex::encode(&device.mac),
+            data
+        );
         let mut parser = parser::Parser::new(data);
         while let Some(parsed) = parser.next() {
             tracing::debug!("Service data[{}]: {:?}", parsed.tag, parsed.data);
@@ -273,27 +277,33 @@ impl Scanner {
                     }
                 }
                 22 => {
-                    if parsed.data[0..1] == [210, 252] {
-                        device.battery = Some(parsed.data[6]);
-                        result = true;
-                    }
+                    if parsed.data.len() >= 8 {
+                        if parsed.data[0..1] == [210, 252] {
+                            device.battery = Some(parsed.data[6]);
+                            result = true;
+                        }
 
-                    if parsed.data[8] > 0 && device.enable {
-                        let kind = match parsed.data[8] {
-                            1 => crate::database::entities::EventKind::ButtonPressed,
-                            2 => crate::database::entities::EventKind::ButtonDoublePressed,
-                            3 => crate::database::entities::EventKind::ButtonTriplePressed,
-                            4 => crate::database::entities::EventKind::ButtonLongPressed,
-                            254 => crate::database::entities::EventKind::ButtonHold,
-                            _ => crate::database::entities::EventKind::Advertisement,
-                        };
-                        web_sender.send(WebMessage::Event(crate::database::entities::Event {
-                            device: Some(device.uuid),
-                            uuid: uuid::Uuid::new_v4(),
-                            timestamp: chrono::offset::Utc::now(),
-                            scanner,
-                            kind,
-                        }));
+                        tracing::error!("Data received: {:?}", parsed.data);
+
+                        if parsed.data[8] > 0 && device.enable {
+                            let kind = match parsed.data[8] {
+                                1 => crate::database::entities::EventKind::ButtonPressed,
+                                2 => crate::database::entities::EventKind::ButtonDoublePressed,
+                                3 => crate::database::entities::EventKind::ButtonTriplePressed,
+                                4 => crate::database::entities::EventKind::ButtonLongPressed,
+                                254 => crate::database::entities::EventKind::ButtonHold,
+                                _ => crate::database::entities::EventKind::Advertisement,
+                            };
+                            web_sender
+                                .send(WebMessage::Event(crate::database::entities::Event {
+                                    device: Some(device.uuid),
+                                    uuid: uuid::Uuid::new_v4(),
+                                    timestamp: chrono::offset::Utc::now(),
+                                    scanner,
+                                    kind,
+                                }))
+                                .unwrap();
+                        }
                     }
                 }
                 _ => {

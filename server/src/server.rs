@@ -154,7 +154,7 @@ impl Server {
             device.activities = device
                 .activities
                 .iter()
-                .filter(|a| (a.timestamp - now).num_seconds() < activity_diff)
+                .filter(|a| (now - a.timestamp).num_seconds() < activity_diff)
                 .cloned()
                 .collect();
         }

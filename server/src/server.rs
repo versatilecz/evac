@@ -130,78 +130,31 @@ impl Server {
         let now = chrono::offset::Utc::now();
         let activity_diff = context.database.config.base.activity_diff;
 
-        let old = context.database.data.devices.clone();
-
-        context.database.data.devices = old
-            .iter()
-            .filter(|(_, v)| v.enable || (now - v.last_activity).num_seconds() < activity_diff)
-            .map(|(k, v)| (k.clone(), v.clone()))
-            .collect();
-
-        let removed: Vec<uuid::Uuid> = old
-            .iter()
-            .filter(|(_, v)| !v.enable && (now - v.last_activity).num_seconds() >= activity_diff)
-            .map(|(k, _)| k.clone())
-            .collect();
-
-        for remove in removed {
-            context
-                .web_broadcast
-                .send(crate::message::web::WebMessage::DeviceRemoved(remove));
-        }
-
-        for device in context.database.data.devices.values_mut() {
-            device.activities = device
-                .activities
-                .iter()
-                .filter(|a| (now - a.timestamp).num_seconds() < activity_diff)
-                .cloned()
-                .collect();
-        }
-
-        let positions: Vec<crate::message::web::Position> = context
+        // Remove old devices
+        let removed: Vec<uuid::Uuid> = context
             .database
             .data
             .devices
-            .values()
-            .filter_map(|d| {
-                // If device is enabled, select the most close event
-                if d.enable {
-                    d.activities
-                    .iter()
-                    .fold(
-                        None,
-                        |prev: Option<crate::database::entities::DeviceActivity>,
-                         item: &crate::database::entities::DeviceActivity| {
-                            if let Some(prev) = prev {
-                                if prev.irssi < item.irssi {
-                                    Some(item.clone())
-                                } else {
-                                    Some(prev)
-                                }
-                            } else {
-                                Some(item.clone())
-                            }
-                        },
-                    )
-                    // Transform device/activity to position message
-                    .map(|a| crate::message::web::Position {
-                        device: d.uuid,
-                        scanner: a.scanner_uuid,
-                        rssi: a.irssi,
-                        timestamp: a.timestamp,
-                    })
-                }
-                // filter out the rest
-                else {
+            .iter()
+            .filter_map(|(uuid, device)| {
+                if !device.enabled && (now - device.last_activity).num_seconds() > activity_diff {
+                    Some(uuid.clone())
+                } else {
                     None
                 }
             })
             .collect();
 
-        // Notify web clients about positions
-        context
-            .web_broadcast
-            .send(crate::message::web::WebMessage::Positions(positions));
+        for remove in removed {
+            // Remove from database
+            context.database.data.devices.remove(&remove);
+            // Notify web client
+            context
+                .web_broadcast
+                .send(crate::message::web::WebMessage::DeviceRemoved(remove));
+        }
+
+        // Clear old values from database
+        context.database.activities.clear(activity_diff);
     }
 }

@@ -6,7 +6,7 @@ pub mod server;
 pub mod util;
 pub mod web;
 
-use crate::database::LoadSave;
+use crate::database::{entities::Activities, LoadSave};
 use clap::{builder::Str, Parser};
 use shared::messages::scanner::ScannerEvent;
 use std::{
@@ -49,18 +49,18 @@ async fn main() -> anyhow::Result<()> {
     );
 
     let args = Args::parse();
-
     let config = crate::database::config::Server::create(args.config)?;
     let data_path = config.base.data_path.clone();
     tracing::info!("{}", serde_json::to_string(&config).unwrap());
     let database = crate::database::Database {
         data: crate::database::Data::load(&data_path).unwrap_or_default(),
-        events: Vec::new(),
+        events: BTreeMap::new(),
+        activities: Activities::new(),
         config: config.clone(),
         version: String::new(),
     };
-    database.data.save(&data_path).unwrap();
-    database.config.save();
+    database.data.save(&data_path)?;
+    database.config.save()?;
 
     let broadcast = SocketAddr::V4(config.base.port_broadcast);
 
@@ -73,6 +73,7 @@ async fn main() -> anyhow::Result<()> {
         web_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
         scanner_sender,
         database,
+        alarm: None,
     };
 
     let global_sender = context.global_broadcast.clone();

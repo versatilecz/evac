@@ -1,9 +1,11 @@
-import { inject, watch } from 'vue'
+import { inject, watch, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useMainStore = defineStore('main', () => {
   const websocket = inject('$websocket')
   const register = {}
+  const activeAlarm = ref(null);
+  const backups = ref({});
 
   function on(tag, callback) {
     console.log('Register: ', tag)
@@ -13,6 +15,42 @@ export const useMainStore = defineStore('main', () => {
   function send(tag, content) {
     websocket.send(JSON.stringify({ [tag]: content }))
   }
+
+  function alarm(device, scanner, location, room, subject, html, text, buzzer, led) {
+    send("Alarm", {
+      device,
+      scanner,
+      location,
+      room,
+      subject,
+      html,
+      text,
+      buzzer, led
+    })
+  }
+
+  on("BackupList", (value) => {
+    for(let backup of value) {
+      backups.value[backup] = backup
+    }
+  })
+
+  on("Backup", (value) => {
+      backups.value[value] = value
+  })
+
+  on("BackupRemove", (value) => {
+      delete backups.value[value]
+  })
+
+  on("Alarm", (value) => {
+    activeAlarm.value = value
+  })
+
+  on("AlarmStop", () => {
+    console.log("Alarm dismissed")
+    activeAlarm.value = null
+  })
 
   watch(
     websocket.data,
@@ -30,6 +68,9 @@ export const useMainStore = defineStore('main', () => {
 
   return {
     on,
-    send
+    send,
+    alarm,
+    backups,
+    activeAlarm
   }
 })

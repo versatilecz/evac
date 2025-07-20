@@ -10,8 +10,10 @@ pub struct Context {
     pub web_broadcast: tokio::sync::broadcast::Sender<WebMessage>,
     pub scanner_sender: tokio::sync::mpsc::Sender<ScannerEvent>,
     pub database: crate::database::Database,
+    pub alarm: Option<crate::message::web::Alarm>,
 }
 impl Context {
+    /*
     pub fn scanner_set(&mut self, uuid: uuid::Uuid, socket: SocketAddr, mac: Vec<u8>) {
         let now = chrono::offset::Utc::now();
         if let Some(scanner) = self.database.data.scanners.get_mut(&uuid) {
@@ -33,6 +35,7 @@ impl Context {
             );
         }
     }
+     */
 }
 
 pub type ContextWrapped = std::sync::Arc<tokio::sync::RwLock<Context>>;

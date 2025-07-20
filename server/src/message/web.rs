@@ -5,11 +5,24 @@ use std::{
 };
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
-pub struct Position {
+pub struct Activity {
     pub device: uuid::Uuid,
     pub scanner: uuid::Uuid,
     pub rssi: i64,
     pub timestamp: chrono::DateTime<chrono::Utc>,
+}
+
+#[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Alarm {
+    pub device: String,
+    pub scanner: String,
+    pub location: String,
+    pub room: String,
+    pub subject: String,
+    pub html: String,
+    pub text: String,
+    pub buzzer: bool,
+    pub led: bool,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -46,8 +59,36 @@ pub enum WebMessage {
     DeviceRemove(uuid::Uuid),
     DeviceRemoved(uuid::Uuid),
 
-    Positions(Vec<Position>),
-    Event(crate::database::entities::Event),
+    Activity(Activity),
+    ActivityList(Vec<Activity>),
 
-    Alarm(bool),
+    Event(crate::database::entities::Event),
+    EventList(Vec<crate::database::entities::Event>),
+    EventRemove(uuid::Uuid),
+    EventRemoved(uuid::Uuid),
+
+    AlarmList(Vec<crate::database::entities::Alarm>),
+    AlarmSet(crate::database::entities::Alarm),
+    AlarmDetail(crate::database::entities::Alarm),
+    AlarmRemove(uuid::Uuid),
+    AlarmRemoved(uuid::Uuid),
+    Alarm(Alarm),
+    AlarmStop(bool),
+
+    Email {
+        subject: String,
+        html: String,
+        text: String,
+    },
+
+    EmailList(Vec<crate::database::entities::Email>),
+    EmailSet(crate::database::entities::Email),
+    EmailDetail(crate::database::entities::Email),
+    EmailRemove(uuid::Uuid),
+    EmailRemoved(uuid::Uuid),
+
+    BackupList(Vec<String>),
+    BackupRemove(String),
+    Backup(String),
+    Restore(String),
 }

@@ -271,10 +271,9 @@ fn main() -> anyhow::Result<()> {
         server_address: None,
         socket: None,
         //broadcast: None,
-        services: Vec::new(),
         running: false,
-        alarm: false,
         mac: mac.to_vec(),
+        scan: false,
     };
 
     log::info!("Starting eth...");
@@ -300,12 +299,17 @@ fn main() -> anyhow::Result<()> {
     ble_scan.filter_duplicates(true);
     let scan_application = application.clone();
     std::thread::spawn(move || {
+        let mut scan = false;
         loop {
+            ble_scan.active_scan(scan);
+
             block_on(ble_scan.start(
                 ble_device,
                 1000, // 0 == scan forever
                 |device, data| -> Option<()> {
                     if let Ok(mut application) = scan_application.write() {
+                        scan = application.scan;
+
                         let mut scan_device = shared::messages::scanner::ScanDevice {
                             mac: device.addr().as_be_bytes().to_vec(),
                             rssi: device.rssi() as i32,

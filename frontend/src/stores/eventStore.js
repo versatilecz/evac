@@ -8,9 +8,19 @@ export const useEventStore = defineStore('event', () => {
 
   const data = ref({})
 
-  mainStore.on('Event', (value) => {
-    console.log(value)
-    data.value[value.device] = value;
+  mainStore.on('EventList', (eventList) => {
+    for(let event of eventList) {
+      data.value[event.uuid] = event
+    }
+
+  })
+
+  mainStore.on('Event', (event) => {
+    data.value[event.uuid] = event;
+  })
+
+  mainStore.on('EventRemoved', (uuid) => {
+    delete data.value[uuid];
   })
 
 

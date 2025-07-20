@@ -6,7 +6,8 @@ import { useRoomStore } from '@/stores/roomStore'
 import { useScannerStore } from '@/stores/scannerStore'
 import { useDeviceStore } from '@/stores/deviceStore'
 import { useEventStore } from '@/stores/eventStore'
-import { usePositionStore } from '@/stores/positionStore'
+import { useActivityStore } from '@/stores/activityStore'
+import AlarmSelect from '@/component/AlarmSelect.vue';
 
 const mainStore = useMainStore()
 const locationStore = useLocationStore()
@@ -14,34 +15,31 @@ const roomStore = useRoomStore()
 const scannerStore = useScannerStore()
 const deviceStore = useDeviceStore()
 const eventStore = useEventStore()
-const positionStore = usePositionStore()
+const activityStore = useActivityStore()
 
 
 
 function getLocationDevices(room) {
     const scanners = Object.values(scannerStore.data)
     const result =
-    positionStore.data.filter(pos => {
+    Object.values(activityStore.data).filter(activity => {
         return scanners.some(scanner => {
-            return scanner.room == room && scanner.uuid == pos.scanner
+            return scanner.room == room && scanner.uuid == activity.scanner
         })
-    }).map(position => {
+    }).map(activity => {
         return {
-            uuid: deviceStore.data[position.device].uuid,
-            name: deviceStore.data[position.device].name,
-            rssi: position.rssi,
+            uuid: deviceStore.data[activity.device].uuid,
+            name: deviceStore.data[activity.device].name,
+            rssi: activity.rssi,
         }
-    });
+    })
 
     return result
 
 }
 
 function getUnlocatedDevices() {
-    return Object.values(deviceStore.data).filter(device => {
-        return !positionStore.data.some(position => position.device == device.uuid || !device.enable)
-    })
-
+    return Object.values(deviceStore.data).filter(device => !(device.uuid in activityStore.data) && device.enabled)
 }
 </script>
 
@@ -56,7 +54,7 @@ function getUnlocatedDevices() {
                     <div class="room" v-for="room of Object.values(roomStore.data).filter(room => room.location == location.uuid)" :key="room.uuid">
                         <strong>{{ room.name }}</strong>
                         <ul>
-                            <li class="position" v-for="position in getLocationDevices(room.uuid) " :key="position.uuid">{{ position.name }} ({{ position.rssi }})</li>
+                            <li class="position" v-for="position in getLocationDevices(room.uuid) " :key="position.uuid">{{ position.name }}&nbsp;({{ position.rssi }})</li>
                         </ul>
                     </div>
                 </div>
@@ -64,17 +62,52 @@ function getUnlocatedDevices() {
             <div class="room">
                 <strong>Mimo systém</strong>
                 <ul>
-                    <li class="position" v-for="position in getUnlocatedDevices() " :key="position.uuid">{{ position.name }} ({{ position.rssi }})</li>
+                    <li class="position" v-for="position in getUnlocatedDevices() " :key="position.uuid">{{ position.name }}</li>
                 </ul>
             </div>
         </div>
 
+        <div v-if="mainStore.activeAlarm !== null">
+            <h3>Alarm</h3>
+            <button v-on:click="() => {mainStore.send('AlarmStop', true)}">Alarm stop</button>
+        </div>
+
         <div>
             <h3>Události</h3>
-            <button v-on:click="() => {eventStore.reset(); mainStore.send('Alarm', false)}">Clear</button>
-            <ul>
-                <li v-for="event in Object.values(eventStore.data)" :key="event.device">{{ deviceStore.name(event.device) }} {{ event.kind }} <button v-on:click="mainStore.send('Alarm', true)">Alarm</button></li>
-            </ul>
+            <table>
+                <tr>
+                    <th>Zařízeni</th>
+                    <th>Událost</th>
+                    <th>Scanner</th>
+                    <th>Místnost</th>
+                    <th>Lokace</th>
+                    <th>Alarm</th>
+                    <th>Smazat</th>
+                </tr>
+                <tr v-for="event in Object.values(eventStore.data)" :key="event.device">
+                    <td>{{ deviceStore.name(event.device) }}</td>
+                    <td>{{ event.kind }}</td>
+                    <td>{{ scannerStore.name(event.scanner) }}</td>
+                    <td>{{ scannerStore.room(event.scanner) }}</td>
+                    <td>{{ scannerStore.location(event.scanner) }}</td>
+                    <td>
+                        <AlarmSelect v-model="event.alarm"></AlarmSelect>
+                        <button v-if="event.alarm" v-on:click="mainStore.alarm(
+                            deviceStore.name(event.device),
+                            scannerStore.name(event.scanner),
+                            scannerStore.location(event.scanner),
+                            scannerStore.room(event.scanner),
+                            event.alarm.subject,
+                            event.alarm.html,
+                            event.alarm.text,
+                            event.alarm.buzzer,
+                            event.alarm.led)">Spustit</button>
+                    </td>
+                    <td>
+                        <button v-on:click="mainStore.send('EventRemove', event.uuid)">Smazat</button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
     </div>

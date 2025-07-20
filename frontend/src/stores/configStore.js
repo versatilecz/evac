@@ -2,9 +2,11 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { deepCopy } from '@/utils'
 import { useMainStore } from './mainStore'
+import { useActivityStore } from './activityStore'
 
 export const useConfigStore = defineStore('config', () => {
   const mainStore = useMainStore()
+  const activityStore = useActivityStore()
 
   const init = {
     base: {},
@@ -16,6 +18,7 @@ export const useConfigStore = defineStore('config', () => {
   mainStore.on('Config', (value) => {
     data.value = value
     oldData.value = deepCopy(value)
+    activityStore.setActivityDiff(data.value.base.activityDiff)
   })
 
   function set() {

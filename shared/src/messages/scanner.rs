@@ -7,9 +7,9 @@ use uuid::Uuid;
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct State {
-    pub scanning: bool,
-    pub alarm: bool,
-    pub services: Vec<Vec<u8>>,
+    pub scan: Option<bool>,
+    pub led: Option<bool>,
+    pub buzzer: Option<bool>,
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]

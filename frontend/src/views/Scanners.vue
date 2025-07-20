@@ -17,6 +17,9 @@ const scannerStore = useScannerStore()
                 <th>Ip</th>
                 <th>Místnost</th>
                 <th>Poslední aktivita</th>
+                <th>Bzučát</th>
+                <th>Led</th>
+                <th>Scan</th>
             </tr>
         </thead>
 
@@ -28,6 +31,9 @@ const scannerStore = useScannerStore()
                 <td>{{ scanner.ip }}</td>
                 <td><RoomSelect v-model="scanner.room" @change="scannerStore.save(scanner)"></RoomSelect></td>
                 <td>{{ formatDate(scanner.lastActivity, 'short', 'short') }}</td>
+                <td><input type="checkbox" v-model="scanner.buzzer" v-on:change="scannerStore.save(scanner)"></td>
+                <td><input type="checkbox" v-model="scanner.led" v-on:change="scannerStore.save(scanner)"></td>
+                <td><input type="checkbox" v-model="scanner.scan" v-on:change="scannerStore.save(scanner)"></td>
                 <td>
                     <input type="submit" value="Save" v-on:click="scannerStore.save(scanner)">
                     <input type="submit" value="Remove" v-on:click="scannerStore.remove(scanner.uuid)">

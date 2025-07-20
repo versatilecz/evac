@@ -16,10 +16,9 @@ pub struct Application<'a> {
     pub server_address: Option<std::net::SocketAddr>,
     pub socket: Option<std::net::UdpSocket>,
     //pub broadcast: Option<std::net::UdpSocket>,
-    pub services: Vec<Vec<u8>>,
     pub mac: Vec<u8>,
     pub running: bool,
-    pub alarm: bool,
+    pub scan: bool,
 }
 
 unsafe impl<'a> Sync for Application<'a> {}
@@ -64,9 +63,25 @@ impl<'a> Application<'a> {
                         }
 
                         shared::messages::scanner::ScannerContent::Set(set) => {
-                            self.alarm = set.alarm;
-                            self.running = set.scanning;
-                            self.services = set.services;
+                            if let Some(buzzer) = set.buzzer {
+                                if buzzer {
+                                    self.buzzer.set_high();
+                                } else {
+                                    self.buzzer.set_low();
+                                }
+                            }
+
+                            if let Some(led) = set.led {
+                                if led {
+                                    self.led.set_high();
+                                } else {
+                                    self.led.set_low();
+                                }
+                            }
+
+                            if let Some(scan) = set.scan {
+                                self.scan = scan;
+                            }
 
                             log::info!("Setting message");
                         }
@@ -76,20 +91,6 @@ impl<'a> Application<'a> {
                     }
                 }
             }
-        }
-
-        // If we have communication with a server and we should scan
-        if self.running && self.socket.is_some() {
-            // bluetooth scan
-        }
-
-        // Alarm
-        if self.alarm {
-            self.buzzer.set_high();
-            self.led.set_high();
-        } else {
-            self.buzzer.set_low();
-            self.led.set_low();
         }
 
         Ok(())

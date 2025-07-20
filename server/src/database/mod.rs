@@ -2,7 +2,9 @@ use anyhow::Context;
 use chrono::{DateTime, Utc};
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
+
+use crate::database::entities::{Activities, Alarm, EventKind};
 
 pub mod config;
 pub mod entities;
@@ -30,6 +32,10 @@ pub struct Data {
     pub devices: BTreeMap<uuid::Uuid, entities::Device>,
     pub locations: BTreeMap<uuid::Uuid, entities::Location>,
     pub rooms: BTreeMap<uuid::Uuid, entities::Room>,
+    pub alarms: BTreeMap<uuid::Uuid, Alarm>,
+    pub emails: BTreeMap<uuid::Uuid, entities::Email>,
+
+    pub backups: HashSet<String>,
 }
 
 impl Default for Data {
@@ -116,8 +122,9 @@ impl Default for Data {
                         uuid: scanner1.clone(),
                         name: String::from("Scanner 1"),
                         mac: vec![1, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room1),
+                        ..Default::default()
                     },
                 ),
                 (
@@ -128,8 +135,9 @@ impl Default for Data {
                         uuid: scanner2.clone(),
                         name: String::from("Scanner 2"),
                         mac: vec![2, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room1),
+                        ..Default::default()
                     },
                 ),
                 (
@@ -140,8 +148,9 @@ impl Default for Data {
                         uuid: scanner3.clone(),
                         name: String::from("Scanner 3"),
                         mac: vec![3, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room2),
+                        ..Default::default()
                     },
                 ),
                 (
@@ -152,8 +161,9 @@ impl Default for Data {
                         uuid: scanner4.clone(),
                         name: String::from("Scanner 4"),
                         mac: vec![4, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room2),
+                        ..Default::default()
                     },
                 ),
                 (
@@ -164,8 +174,9 @@ impl Default for Data {
                         uuid: scanner5.clone(),
                         name: String::from("Scanner 5"),
                         mac: vec![5, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room3),
+                        ..Default::default()
                     },
                 ),
                 (
@@ -176,8 +187,9 @@ impl Default for Data {
                         uuid: scanner6.clone(),
                         name: String::from("Scanner 6"),
                         mac: vec![6, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room3),
+                        ..Default::default()
                     },
                 ),
                 (
@@ -188,8 +200,9 @@ impl Default for Data {
                         uuid: scanner7.clone(),
                         name: String::from("Scanner 7"),
                         mac: vec![7, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room4),
+                        ..Default::default()
                     },
                 ),
                 (
@@ -200,8 +213,9 @@ impl Default for Data {
                         uuid: scanner8.clone(),
                         name: String::from("Scanner 8"),
                         mac: vec![8, 2, 3, 4],
-                        last_activity: Some(now),
+                        last_activity: now,
                         room: Some(room4),
+                        ..Default::default()
                     },
                 ),
             ]),
@@ -211,11 +225,11 @@ impl Default for Data {
                     crate::database::entities::Device {
                         battery: None,
                         uuid: device1.clone(),
-                        enable: true,
+                        enabled: true,
                         name: Some(String::from("Device1")),
-                        activities: Vec::new(),
                         last_activity: now,
                         mac: vec![1, 3, 4],
+                        ..Default::default()
                     },
                 ),
                 (
@@ -223,14 +237,17 @@ impl Default for Data {
                     crate::database::entities::Device {
                         battery: None,
                         uuid: device2.clone(),
-                        enable: true,
+                        enabled: true,
                         name: Some(String::from("Device2")),
-                        activities: Vec::new(),
                         last_activity: now,
                         mac: vec![2, 3, 4],
+                        ..Default::default()
                     },
                 ),
             ]),
+            alarms: BTreeMap::new(),
+            emails: BTreeMap::new(),
+            backups: HashSet::new(),
         }
     }
 }
@@ -242,10 +259,21 @@ impl LoadSave for Data {}
 pub struct Database {
     pub config: config::Server,
     pub data: Data,
-    pub events: Vec<entities::Event>,
+    pub events: BTreeMap<uuid::Uuid, entities::Event>,
+    pub activities: entities::Activities,
     pub version: String,
 }
 
 impl LoadSave for Database {}
 
-impl Database {}
+impl Database {
+    pub fn backup(&mut self, path: &str) -> anyhow::Result<()> {
+        self.data.backups.insert(path.into());
+        self.data.save(path)
+    }
+
+    pub fn restore(&mut self, path: &str) -> anyhow::Result<()> {
+        self.data = Data::load(path)?;
+        Ok(())
+    }
+}

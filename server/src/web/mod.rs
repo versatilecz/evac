@@ -28,7 +28,11 @@ impl Server {
         ws: warp::ws::Ws,
         context: super::context::ContextWrapped,
     ) -> Result<impl warp::Reply> {
-        Ok(ws.on_upgrade(move |socket| Server::client_connection(socket, context)))
+        Ok(ws.on_upgrade(move |socket| async {
+            if let Err(err) = Server::client_connection(socket, context).await {
+                tracing::error!("{:?}", err);
+            }
+        }))
     }
 
     fn encode(
@@ -41,7 +45,10 @@ impl Server {
         }
     }
 
-    async fn client_connection(ws: warp::ws::WebSocket, context: super::context::ContextWrapped) {
+    async fn client_connection(
+        ws: warp::ws::WebSocket,
+        context: super::context::ContextWrapped,
+    ) -> anyhow::Result<()> {
         let uuid = uuid::Uuid::new_v4();
         tracing::debug!("Client connected: {}", uuid);
 
@@ -57,49 +64,13 @@ impl Server {
         let (sender, mut receiver) =
             tokio::sync::mpsc::channel::<crate::message::web::WebMessage>(query_size);
 
-        {
-            let context = context.read().await;
-            sender
-                .send(crate::message::web::WebMessage::Config(
-                    context.database.config.clone(),
-                ))
-                .await
-                .unwrap();
-
-            sender
-                .send(crate::message::web::WebMessage::LocationList(
-                    context.database.data.locations.values().cloned().collect(),
-                ))
-                .await
-                .unwrap();
-
-            sender
-                .send(crate::message::web::WebMessage::RoomList(
-                    context.database.data.rooms.values().cloned().collect(),
-                ))
-                .await
-                .unwrap();
-
-            sender
-                .send(crate::message::web::WebMessage::ScannerList(
-                    context.database.data.scanners.values().cloned().collect(),
-                ))
-                .await
-                .unwrap();
-
-            sender
-                .send(crate::message::web::WebMessage::DeviceList(
-                    context.database.data.devices.values().cloned().collect(),
-                ))
-                .await
-                .unwrap();
-        }
-
         let client = operator::Operator {
             uuid,
             context,
             sender,
         };
+
+        client.init().await?;
 
         loop {
             tokio::select! {
@@ -177,6 +148,8 @@ impl Server {
         }
 
         tracing::debug!("Client is deth");
+
+        Ok(())
     }
 
     pub fn websocket_route(

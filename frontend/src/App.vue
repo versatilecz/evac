@@ -15,6 +15,8 @@ import { RouterLink, RouterView } from 'vue-router'
           <RouterLink to="/locations">Lokace</RouterLink>
           <RouterLink to="/rooms">Místnosti</RouterLink>
           <RouterLink to="/scanners">Skenery</RouterLink>
+          <RouterLink to="/alarms">Alarmy</RouterLink>
+          <RouterLink to="/emails">E-Maily</RouterLink>
           <RouterLink to="/devices">Zařízení</RouterLink>
           <RouterLink to="/tools">Nástroje</RouterLink>
     </nav>

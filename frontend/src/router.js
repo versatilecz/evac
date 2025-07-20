@@ -30,6 +30,16 @@ const router = createRouter({
       component: () => import('./views/Scanners.vue')
     },
     {
+      path: '/alarms',
+      name: 'alarms',
+      component: () => import('./views/Alarms.vue')
+    },
+    {
+      path: '/emails',
+      name: 'emails',
+      component: () => import('./views/Emails.vue')
+    },
+    {
       path: '/devices',
       name: 'devices',
       component: () => import('./views/Devices.vue')

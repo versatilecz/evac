@@ -4,6 +4,7 @@ use super::LoadSave;
 use mail_send::{mail_builder::MessageBuilder, Credentials, SmtpClientBuilder};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use shared::messages::scanner;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
@@ -35,8 +36,7 @@ impl Default for Email {
 }
 
 impl Email {
-    pub async fn send(&self, device: crate::database::entities::Device) -> anyhow::Result<()> {
-        tracing::debug!("{:?}", self);
+    pub async fn send(&self, subject: String, html: String, text: String) -> anyhow::Result<()> {
         let message = MessageBuilder::new()
             .from((self.from.0.as_str(), self.from.1.as_str()))
             .to(self
@@ -44,9 +44,9 @@ impl Email {
                 .iter()
                 .map(|to| (to.0.as_str(), to.1.as_str()))
                 .collect::<Vec<(&str, &str)>>())
-            .subject("Hi!")
-            .html_body("<h1>There is a alarm in the building!</h1>")
-            .text_body("There is a alarm in the building!!");
+            .subject(subject)
+            .html_body(html)
+            .text_body(text);
 
         let credentials = Credentials::new(&self.username, &self.password);
 
@@ -54,13 +54,25 @@ impl Email {
             .implicit_tls(self.tls)
             .credentials(credentials)
             .connect()
-            .await
-            .unwrap()
+            .await?
             .send(message)
-            .await
-            .unwrap();
+            .await?;
 
         Ok(())
+    }
+
+    pub async fn send_alarm(&self, alarm: crate::message::web::Alarm) -> anyhow::Result<()> {
+        let replace = |text: &String, alarm: &crate::message::web::Alarm| {
+            text.replace("%device%", &alarm.device)
+                .replace("%scanner%", &alarm.scanner)
+                .replace("%location%", &alarm.location)
+                .replace("%room%", &alarm.room)
+        };
+
+        let html = replace(&alarm.html, &alarm);
+        let text = replace(&alarm.text, &alarm);
+
+        self.send(alarm.subject, html, text).await
     }
 }
 
@@ -89,7 +101,7 @@ impl Default for Base {
             port_web: SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 3030),
             port_scanner: SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 3031),
             port_broadcast: SocketAddrV4::new(Ipv4Addr::BROADCAST, 3031),
-            activity_diff: 5,
+            activity_diff: 15,
             routine: 5,
         }
     }

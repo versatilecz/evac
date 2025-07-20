@@ -5,7 +5,7 @@ import { formatMac, formatDate } from '@/utils'
 import { computed,ref } from 'vue';
 
 const all = ref(false);
-const devices = computed(() => Object.values(deviceStore.data).filter(d => all.value || d.enable))
+const devices = computed(() => Object.values(deviceStore.data).filter(d => all.value || d.enabled))
 </script>
 
 <template>
@@ -37,7 +37,7 @@ const devices = computed(() => Object.values(deviceStore.data).filter(d => all.v
                 <td>{{ device.battery }}%</td>
                 <td>{{ formatDate(device.lastActivity, 'short', 'short')}}</td>
 
-                <td><input type="checkbox" v-model="device.enable"></td>
+                <td><input type="checkbox" v-model="device.enabled" v-on:change="deviceStore.save(device)"></td>
                 <td>
                     <input type="submit" value="Save" v-on:click="deviceStore.save(device)">
                     <input type="submit" value="Remove" v-on:click="deviceStore.remove(device.uuid)">

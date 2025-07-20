@@ -13,6 +13,10 @@ import { useLocationStore } from '@/stores/locationStore'
 import { useRoomStore } from '@/stores/roomStore'
 import { useScannerStore } from '@/stores/scannerStore'
 import { useDeviceStore } from '@/stores/deviceStore'
+import { useActivityStore } from '@/stores/activityStore'
+import { useEventStore } from '@/stores/eventStore'
+import { useEmailStore } from './stores/emailStore'
+import { useAlarmStore } from './stores/alarmStore'
 
 const schema = window.location.protocol.replace('http', 'ws')
 const hostname = window.location.host
@@ -40,5 +44,9 @@ useLocationStore()
 useRoomStore()
 useScannerStore()
 useDeviceStore()
+useActivityStore()
+useEventStore()
+useEmailStore()
+useAlarmStore()
 
 app.mount('#app')

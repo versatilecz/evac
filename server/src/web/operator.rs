@@ -367,6 +367,7 @@ impl Operator {
                     .email
                     .send(subject, html, text)
                     .await?;
+                tracing::info!("Email has been send");
                 Ok(())
             }
 

@@ -1,5 +1,6 @@
 <script setup>
-import { useMainStore } from '@/stores/mainStore';
+import {ref} from 'vue'
+import { useMainStore } from '@/stores/mainStore'
 
 import { useLocationStore } from '@/stores/locationStore'
 import { useRoomStore } from '@/stores/roomStore'
@@ -7,7 +8,7 @@ import { useScannerStore } from '@/stores/scannerStore'
 import { useDeviceStore } from '@/stores/deviceStore'
 import { useEventStore } from '@/stores/eventStore'
 import { useActivityStore } from '@/stores/activityStore'
-import AlarmSelect from '@/component/AlarmSelect.vue';
+import AlarmSelect from '@/component/AlarmSelect.vue'
 
 const mainStore = useMainStore()
 const locationStore = useLocationStore()
@@ -16,6 +17,14 @@ const scannerStore = useScannerStore()
 const deviceStore = useDeviceStore()
 const eventStore = useEventStore()
 const activityStore = useActivityStore()
+
+const newAlarm = ref({
+    device: '',
+    scanner: '',
+    room: '',
+    location: '',
+    alarm: {}
+})
 
 
 
@@ -67,12 +76,44 @@ function getUnlocatedDevices() {
             </div>
         </div>
 
-        <div v-if="mainStore.activeAlarm !== null">
-            <h3>Alarm</h3>
+        <div v-if="mainStore.activeAlarm !== null" class="box">
+            <h3>Aktiví alarm</h3>
+            <table>
+                <tr>
+                    <th>Zařízení</th>
+                    <td>{{ mainStore.activeAlarm.device }}</td>
+                </tr>
+                <tr>
+                    <th>Skener</th>
+                    <td>{{ mainStore.activeAlarm.scanner }}</td>
+                </tr>
+                <tr>
+                    <th>Místnost</th>
+                    <td>{{ mainStore.activeAlarm.room }}</td>
+                </tr>
+                <tr>
+                    <th>Lokace</th>
+                    <td>{{ mainStore.activeAlarm.location }}</td>
+                </tr>
+                <tr>
+                    <th>Led</th>
+                    <td>{{ mainStore.activeAlarm.led }}</td>
+                </tr>
+                <tr>
+                    <th>Buzzer</th>
+                    <td>{{ mainStore.activeAlarm.buzzer }}</td>
+                </tr>
+                <tr>
+                    <th>Text</th>
+                    <td>{{
+                    mainStore.activeAlarm.html.replace("%device%", mainStore.activeAlarm.device).replace("%scanner%", mainStore.activeAlarm.scanner).replace("%room%", mainStore.activeAlarm.room).replace("%location%", mainStore.activeAlarm.location)
+                     }}</td>
+                </tr>
+            </table>
             <button v-on:click="() => {mainStore.send('AlarmStop', true)}">Alarm stop</button>
         </div>
 
-        <div>
+        <div class="box">
             <h3>Události</h3>
             <table>
                 <tr>
@@ -109,7 +150,74 @@ function getUnlocatedDevices() {
                 </tr>
             </table>
         </div>
+    </div>
 
+    <div class="box">
+        <h3>Novy alarm</h3>
+        <table>
+            <tr>
+                <th>Zařízení</th>
+                <td>
+                    <select v-model="newAlarm.device">
+                        <option v-for="device in Object.values(deviceStore.data)" :key="device.uuid" :value="device.name">{{ device.name }}</option>
+                        <option :value="newAlarm.device">{{ newAlarm.device }}</option>
+                    </select>
+                </td>
+                <td>
+                    <input v-model="newAlarm.device">
+                </td>
+            </tr>
+            <tr>
+                <th>Skener</th>
+                <td>
+                    <select v-model="newAlarm.scanner">
+                        <option v-for="scanner in Object.values(scannerStore.data)" :key="scanner.uuid" :value="scanner.name">{{ scanner.name }}</option>
+                        <option :value="newAlarm.scanner">{{ newAlarm.scanner }}</option>
+                    </select>
+                </td>
+                <td>
+                    <input v-model="newAlarm.scanner">
+                </td>
+            </tr>
+            <tr>
+                <th>Místnost</th>
+                <td>
+                    <select v-model="newAlarm.room">
+                        <option v-for="room in Object.values(roomStore.data)" :key="room.uuid" :value="room.name">{{ room.name }}</option>
+                        <option :value="newAlarm.room">{{ newAlarm.room }}</option>
+                    </select>
+                </td>
+                <td>
+                    <input v-model="newAlarm.room">
+                </td>
+            </tr>
+            <tr>
+                <th>Lokace</th>
+                <td>
+                    <select v-model="newAlarm.location">
+                        <option v-for="location in Object.values(locationStore.data)" :key="location.uuid" :value="location.name">{{ location.name }}</option>
+                        <option :value="newAlarm.location">{{ newAlarm.location }}</option>
+                    </select>
+                </td>
+                <td>
+                    <input v-model="newAlarm.location">
+                </td>
+            </tr>
+            <tr>
+                <th>Alarm</th>
+                <td><AlarmSelect v-model="newAlarm.alarm"></AlarmSelect></td>
+            </tr>
+        </table>
+        <button v-on:click="mainStore.alarm(
+                            newAlarm.device,
+                            newAlarm.scanner,
+                            newAlarm.location,
+                            newAlarm.room,
+                            newAlarm.alarm.subject,
+                            newAlarm.alarm.html,
+                            newAlarm.alarm.text,
+                            newAlarm.alarm.buzzer,
+                            newAlarm.alarm.led)">Spustit</button>
     </div>
 </template>
 
@@ -151,5 +259,14 @@ function getUnlocatedDevices() {
 .device {
     font-weight: bold;
     font-size: large;
+}
+
+.box {
+    background: var(--color-border);
+    display: flexbox;
+    width: 50%;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
 }
 </style>

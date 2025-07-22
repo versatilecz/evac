@@ -295,13 +295,12 @@ impl Scanner {
         let mut events = Vec::new();
 
         if let Some(device) = context.database.data.devices.get_mut(&device_uuid) {
-            /*
             tracing::debug!(
                 "Service advertisement data: {}: {:?}",
                 hex::encode(&device.mac),
                 data
             );
-             */
+
             let mut parser = parser::Parser::new(data);
             while let Some(parsed) = parser.next() {
                 //tracing::debug!("Service data[{}]: {:?}", parsed.tag, parsed.data);

@@ -1,4 +1,4 @@
-@import './base.css';
+@import "./base.css";
 
 #app {
   font-weight: normal;
@@ -213,6 +213,6 @@ table tbody tr:hover {
   display: block;
 }
 
-.bigModal input[type='number'] {
+.bigModal input[type="number"] {
   font-size: 100%;
 }

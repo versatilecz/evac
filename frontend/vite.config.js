@@ -1,28 +1,24 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import nightwatchPlugin from 'vite-plugin-nightwatch'
-import VueDevTools from 'vite-plugin-vue-devtools'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import nightwatchPlugin from "vite-plugin-nightwatch";
+import VueDevTools from "vite-plugin-vue-devtools";
 
 const backend = {
-  target: 'http://127.0.0.1:3030',
-}
+  target: "http://127.0.0.1:3030",
+};
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     proxy: {
-      '/api/operator': {...backend, ws: true},
-    }
+      "/api/operator": { ...backend, ws: true },
+    },
   },
-  plugins: [
-    vue(),
-    nightwatchPlugin(),
-    VueDevTools(),
-  ],
+  plugins: [vue(), nightwatchPlugin(), VueDevTools()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
-})
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+});

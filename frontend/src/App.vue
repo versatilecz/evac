@@ -1,6 +1,5 @@
 <script setup>
-
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template id="app">
@@ -8,17 +7,17 @@ import { RouterLink, RouterView } from 'vue-router'
     <h1>Evakuační system</h1>
 
     <nav>
-          <RouterLink to="/">Přehled</RouterLink>
+      <RouterLink to="/"> Přehled </RouterLink>
 
-          <RouterLink to="/config">Nastavení</RouterLink>
+      <RouterLink to="/config"> Nastavení </RouterLink>
 
-          <RouterLink to="/locations">Lokace</RouterLink>
-          <RouterLink to="/rooms">Místnosti</RouterLink>
-          <RouterLink to="/scanners">Skenery</RouterLink>
-          <RouterLink to="/alarms">Alarmy</RouterLink>
-          <RouterLink to="/emails">E-Maily</RouterLink>
-          <RouterLink to="/devices">Zařízení</RouterLink>
-          <RouterLink to="/tools">Nástroje</RouterLink>
+      <RouterLink to="/locations"> Lokace </RouterLink>
+      <RouterLink to="/rooms"> Místnosti </RouterLink>
+      <RouterLink to="/scanners"> Skenery </RouterLink>
+      <RouterLink to="/alarms"> Alarmy </RouterLink>
+      <RouterLink to="/emails"> E-Maily </RouterLink>
+      <RouterLink to="/devices"> Zařízení </RouterLink>
+      <RouterLink to="/tools"> Nástroje </RouterLink>
     </nav>
   </head>
 

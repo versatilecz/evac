@@ -27,127 +27,127 @@ module.exports = {
   custom_assertions_path: [],
 
   // See https://nightwatchjs.org/guide/extending-nightwatch/adding-plugins.html
-  plugins: ['@nightwatch/vue'],
+  plugins: ["@nightwatch/vue"],
 
   // See https://nightwatchjs.org/guide/concepts/test-globals.html#external-test-globals
-  globals_path: '',
+  globals_path: "",
 
   vite_dev_server: {
     start_vite: true,
-    port: process.env.CI ? 4173 : 5173
+    port: process.env.CI ? 4173 : 5173,
   },
 
   webdriver: {},
 
   test_workers: {
     enabled: true,
-    workers: 'auto'
+    workers: "auto",
   },
 
   test_settings: {
     default: {
       disable_error_log: false,
-      launch_url: `http://localhost:${process.env.CI ? '4173' : '5173'}`,
+      launch_url: `http://localhost:${process.env.CI ? "4173" : "5173"}`,
 
       screenshots: {
         enabled: false,
-        path: 'screens',
-        on_failure: true
+        path: "screens",
+        on_failure: true,
       },
 
       desiredCapabilities: {
-        browserName: 'firefox'
+        browserName: "firefox",
       },
 
       webdriver: {
         start_process: true,
-        server_path: ''
-      }
+        server_path: "",
+      },
     },
 
     safari: {
       desiredCapabilities: {
-        browserName: 'safari',
+        browserName: "safari",
         alwaysMatch: {
-          acceptInsecureCerts: false
-        }
+          acceptInsecureCerts: false,
+        },
       },
       webdriver: {
         start_process: true,
-        server_path: ''
-      }
+        server_path: "",
+      },
     },
 
     firefox: {
       desiredCapabilities: {
-        browserName: 'firefox',
+        browserName: "firefox",
         alwaysMatch: {
           acceptInsecureCerts: true,
-          'moz:firefoxOptions': {
+          "moz:firefoxOptions": {
             args: [
               // '-headless',
               // '-verbose'
-            ]
-          }
-        }
+            ],
+          },
+        },
       },
       webdriver: {
         start_process: true,
-        server_path: '',
+        server_path: "",
         cli_args: [
           // very verbose geckodriver logs
           // '-vv'
-        ]
-      }
+        ],
+      },
     },
 
     chrome: {
       desiredCapabilities: {
-        browserName: 'chrome',
-        'goog:chromeOptions': {
+        browserName: "chrome",
+        "goog:chromeOptions": {
           // More info on Chromedriver: https://sites.google.com/a/chromium.org/chromedriver/
           //
           // w3c:false tells Chromedriver to run using the legacy JSONWire protocol (not required in Chrome 78)
           w3c: true,
           args: [
-            //'--no-sandbox',
-            //'--ignore-certificate-errors',
-            //'--allow-insecure-localhost',
-            //'--headless'
-          ]
-        }
+            // '--no-sandbox',
+            // '--ignore-certificate-errors',
+            // '--allow-insecure-localhost',
+            // '--headless'
+          ],
+        },
       },
 
       webdriver: {
         start_process: true,
-        server_path: '',
+        server_path: "",
         cli_args: [
           // --verbose
-        ]
-      }
+        ],
+      },
     },
 
     edge: {
       desiredCapabilities: {
-        browserName: 'MicrosoftEdge',
-        'ms:edgeOptions': {
+        browserName: "MicrosoftEdge",
+        "ms:edgeOptions": {
           w3c: true,
           // More info on EdgeDriver: https://docs.microsoft.com/en-us/microsoft-edge/webdriver-chromium/capabilities-edge-options
           args: [
-            //'--headless'
-          ]
-        }
+            // '--headless'
+          ],
+        },
       },
 
       webdriver: {
         start_process: true,
         // Download msedgedriver from https://docs.microsoft.com/en-us/microsoft-edge/webdriver-chromium/
         //  and set the location below:
-        server_path: '',
+        server_path: "",
         cli_args: [
           // --verbose
-        ]
-      }
-    }
-  }
-}
+        ],
+      },
+    },
+  },
+};

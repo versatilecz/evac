@@ -1,15 +1,16 @@
 <script setup>
 import {ref} from 'vue'
 import { useMainStore } from '@/stores/mainStore'
+import { useMainStore } from "@/stores/mainStore";
 
-import { useLocationStore } from '@/stores/locationStore'
-import { useRoomStore } from '@/stores/roomStore'
-import { useScannerStore } from '@/stores/scannerStore'
-import { useDeviceStore } from '@/stores/deviceStore'
-import { useEventStore } from '@/stores/eventStore'
-import { useActivityStore } from '@/stores/activityStore'
-import AlarmSelect from '@/component/AlarmSelect.vue'
-import { useEmailStore } from '@/stores/emailStore'
+import { useLocationStore } from "@/stores/locationStore";
+import { useRoomStore } from "@/stores/roomStore";
+import { useScannerStore } from "@/stores/scannerStore";
+import { useDeviceStore } from "@/stores/deviceStore";
+import { useEventStore } from "@/stores/eventStore";
+import { useActivityStore } from "@/stores/activityStore";
+import AlarmSelect from "@/component/AlarmSelect.vue";
+import { useEmailStore } from "@/stores/emailStore";
 
 const mainStore = useMainStore()
 const locationStore = useLocationStore()
@@ -31,52 +32,75 @@ const newAlarm = ref({
 
 
 function getLocationDevices(room) {
-    const scanners = Object.values(scannerStore.data)
-    const result =
-    Object.values(activityStore.data).filter(activity => {
-        return scanners.some(scanner => {
-            return scanner.room == room && scanner.uuid == activity.scanner
-        })
-    }).map(activity => {
-        return {
-            uuid: deviceStore.data[activity.device].uuid,
-            name: deviceStore.data[activity.device].name,
-            rssi: activity.rssi,
-        }
+  const scanners = Object.values(scannerStore.data);
+  const result = Object.values(activityStore.data)
+    .filter((activity) => {
+      return scanners.some((scanner) => {
+        return scanner.room == room && scanner.uuid == activity.scanner;
+      });
     })
+    .map((activity) => {
+      return {
+        uuid: deviceStore.data[activity.device].uuid,
+        name: deviceStore.data[activity.device].name,
+        rssi: activity.rssi,
+      };
+    });
 
-    return result
-
+  return result;
 }
 
 function getUnlocatedDevices() {
-    return Object.values(deviceStore.data).filter(device => !(device.uuid in activityStore.data) && device.enabled)
+  return Object.values(deviceStore.data).filter(
+    (device) => !(device.uuid in activityStore.data) && device.enabled,
+  );
 }
 </script>
 
 <template>
-    <h2>Přehled zařízení</h2>
-    <div class="container">
-        <div class="location-wrap">
-            <div class="location" v-for="location of Object.values(locationStore.data)" :key="location.uuid">
-                <strong>{{ location.name }}</strong>
-                <div class="room-wrap">
-
-                    <div class="room" v-for="room of Object.values(roomStore.data).filter(room => room.location == location.uuid)" :key="room.uuid">
-                        <strong>{{ room.name }}</strong>
-                        <ul>
-                            <li class="position" v-for="position in getLocationDevices(room.uuid) " :key="position.uuid">{{ position.name }}&nbsp;({{ position.rssi }})</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="room">
-                <strong>Mimo systém</strong>
-                <ul>
-                    <li class="position" v-for="position in getUnlocatedDevices() " :key="position.uuid">{{ position.name }}</li>
-                </ul>
-            </div>
+  <h2>Přehled zařízení</h2>
+  <div class="container">
+    <div class="location-wrap">
+      <div
+        v-for="location of Object.values(locationStore.data)"
+        :key="location.uuid"
+        class="location"
+      >
+        <strong>{{ location.name }}</strong>
+        <div class="room-wrap">
+          <div
+            v-for="room of Object.values(roomStore.data).filter(
+              (room) => room.location == location.uuid,
+            )"
+            :key="room.uuid"
+            class="room"
+          >
+            <strong>{{ room.name }}</strong>
+            <ul>
+              <li
+                v-for="position in getLocationDevices(room.uuid)"
+                :key="position.uuid"
+                class="position"
+              >
+                {{ position.name }}&nbsp;({{ position.rssi }})
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
+      <div class="room">
+        <strong>Mimo systém</strong>
+        <ul>
+          <li
+            v-for="position in getUnlocatedDevices()"
+            :key="position.uuid"
+            class="position"
+          >
+            {{ position.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
 
         <div v-if="mainStore.activeAlarm !== null" class="box">
             <h3>Aktiví alarm</h3>
@@ -238,42 +262,42 @@ function getUnlocatedDevices() {
 
 <style scoped>
 .location-wrap {
-    display: flex;
-    flex-grow: inherit;
-    flex-flow: row;
+  display: flex;
+  flex-grow: inherit;
+  flex-flow: row;
 }
 
 .location {
-    background: var(--color-background-mute);
-    border-radius: 10px;
-    display: flexbox;
-    width: 50%;
-    padding: 10px;
-    margin: 10px;
+  background: var(--color-background-mute);
+  border-radius: 10px;
+  display: flexbox;
+  width: 50%;
+  padding: 10px;
+  margin: 10px;
 }
 
 .room-wrap {
-    background: var(--color-background-soft);
-    display: flex;
-    flex-grow: inherit;
-    flex-flow: row;
+  background: var(--color-background-soft);
+  display: flex;
+  flex-grow: inherit;
+  flex-flow: row;
 }
 
 .room {
-    background: var(--color-border);
-    display: flexbox;
-    width: 50%;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 10px;
+  background: var(--color-border);
+  display: flexbox;
+  width: 50%;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
 }
-.room:hover{
-    background: var(--color-border-hover);
+.room:hover {
+  background: var(--color-border-hover);
 }
 
 .device {
-    font-weight: bold;
-    font-size: large;
+  font-weight: bold;
+  font-size: large;
 }
 
 .box {

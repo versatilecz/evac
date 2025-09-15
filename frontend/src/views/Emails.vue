@@ -9,17 +9,17 @@ const new_email = ref({})
 </script>
 
 <template>
-    <h2>Emails</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Uuid</th>
-                <th>Název</th>
-                <th>Předmět</th>
-                <th>Text</th>
-                <th>Html</th>
-            </tr>
-        </thead>
+  <h2>Emails</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Uuid</th>
+        <th>Název</th>
+        <th>Předmět</th>
+        <th>Text</th>
+        <th>Html</th>
+      </tr>
+    </thead>
 
         <tbody>
             <tr v-for="email of Object.values(emailStore.data)" :key="email.uuid">
@@ -37,31 +37,40 @@ const new_email = ref({})
         </tbody>
     </table>
 
-    <table>
-        <tr>
-            <th>Název</th>
-            <td><input v-model="new_email.name"></td>
-        </tr>
-        <tr>
-            <th>Předmět</th>
-            <td><input v-model="new_email.subject"></td>
-        </tr>
-        <tr>
-            <th>Text</th>
-            <td><textarea v-model="new_email.text"></textarea></td>
-        </tr>
-        <tr>
-            <th>Html</th>
-            <td><textarea v-model="new_email.html"></textarea></td>
-        </tr>
-    </table>
-    <button v-on:click="emailStore.create(new_email.name, new_email.subject, new_email.text, new_email.html)">Vytvořit</button>
+  <table>
+    <tr>
+      <th>Název</th>
+      <td><input v-model="new_email.name" /></td>
+    </tr>
+    <tr>
+      <th>Předmět</th>
+      <td><input v-model="new_email.subject" /></td>
+    </tr>
+    <tr>
+      <th>Text</th>
+      <td><textarea v-model="new_email.text" /></td>
+    </tr>
+    <tr>
+      <th>Html</th>
+      <td><textarea v-model="new_email.html" /></td>
+    </tr>
+  </table>
+  <button
+    @click="
+      emailStore.create(
+        new_email.name,
+        new_email.subject,
+        new_email.text,
+        new_email.html,
+      )
+    "
+  >
+    Vytvořit
+  </button>
 </template>
-
-
 
 <style scoped>
 table {
-    width: 100%;
+  width: 100%;
 }
 </style>

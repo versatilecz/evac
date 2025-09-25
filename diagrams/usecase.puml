@@ -1,0 +1,40 @@
+@startuml
+
+actor :Správce systému: as maintenance
+actor :Operátor sytému: as operator
+actor :Externí pracovník: as external
+actor :anonymouse : as anonymouse
+
+usecase "Lokalizační panel" as localization
+usecase "Obsluha alarmů" as alarm
+usecase "Editace alarmů" as alarm_edit
+usecase "Obsluha notifikací" as notification
+usecase "Editace notifikací" as notification_edit
+usecase "Editace kontaktů" as contact_edit
+usecase "Editace lokaci" as location_edit
+usecase "Konfigurace systému" as system_config
+usecase "Záloha/reset" as backup
+
+usecase "Login" as login
+
+maintenance --> localization
+maintenance --> alarm
+maintenance --> alarm_edit
+maintenance --> notification
+maintenance --> notification_edit
+maintenance --> contact_edit
+maintenance --> location_edit
+maintenance --> system_config
+maintenance --> backup
+
+operator --> alarm
+operator --> alarm_edit
+operator --> notification
+operator --> localization
+operator --> contact_edit
+
+external --> localization
+
+anonymouse --> login
+
+@enduml

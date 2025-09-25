@@ -1,0 +1,42 @@
+@startuml
+participant Button as button
+participant Scanner as scanner
+participant Server as server
+participant Frontend as frontend
+actor User as user
+participant Notification as notification
+
+group Init system devices
+    server -> scanner : Hello
+    scanner -> server : Register
+    server -> scanner : Config
+end
+
+group Scan
+    button -> scanner : Advertisement
+    scanner -> server : Resent advertisement
+    server -> frontend : Decode advertisement message and calculate location and notify changes
+    frontend -> user : Draw location on monitor
+end
+
+group Alarm
+    button -> scanner : Advertisement with button press
+    scanner -> server : Resent advertisement
+    server -> frontend : Decode advertisement and notify about event
+    frontend -> user : Possibility to make action
+    user -> frontend : Alarm
+    frontend -> server : Alarm
+    server -> scanner : Change state (led/buzzer)
+    server -> notification : Send notification
+
+    user -> frontend : Disable alarm
+    frontend -> server : Disable alarm
+    server -> scanner : Disable alarm
+
+    user -> frontend : Emit notification
+    frontend -> server: Emit notification
+    server -> notification : Emit notification
+
+end
+
+@enduml

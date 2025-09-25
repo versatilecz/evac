@@ -1,6 +1,9 @@
 <script setup>
 import { useEmailStore } from '@/stores/emailStore'
+import { useMainStore } from '@/stores/mainStore';
 import { ref } from 'vue';
+
+const mainStore = useMainStore()
 const emailStore = useEmailStore()
 const new_email = ref({})
 </script>
@@ -28,6 +31,7 @@ const new_email = ref({})
                 <td>
                     <input type="submit" value="Save" v-on:click="emailStore.save(email)">
                     <input type="submit" value="Remove" v-on:click="emailStore.remove(email.uuid)">
+                    <input type="submit" value="Odeslat" v-on:click="mainStore.send('Email', {subject: email.subject, text: email.text, html: email.html})">
                 </td>
         </tr>
         </tbody>

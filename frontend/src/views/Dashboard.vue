@@ -9,6 +9,7 @@ import { useDeviceStore } from '@/stores/deviceStore'
 import { useEventStore } from '@/stores/eventStore'
 import { useActivityStore } from '@/stores/activityStore'
 import AlarmSelect from '@/component/AlarmSelect.vue'
+import { useEmailStore } from '@/stores/emailStore'
 
 const mainStore = useMainStore()
 const locationStore = useLocationStore()
@@ -17,6 +18,7 @@ const scannerStore = useScannerStore()
 const deviceStore = useDeviceStore()
 const eventStore = useEventStore()
 const activityStore = useActivityStore()
+const emailStore = useEmailStore()
 
 const newAlarm = ref({
     device: '',
@@ -78,6 +80,19 @@ function getUnlocatedDevices() {
 
         <div v-if="mainStore.activeAlarm !== null" class="box">
             <h3>Aktiví alarm</h3>
+
+            <h4>Odeslat email</h4>
+            <select v-model="sendEmail">
+                <option v-for="email in Object.values(emailStore.data)" :key="email.uuid" :value="email">{{ email.name }}</option>
+            </select>
+            <input type="submit" value="Odeslat" v-on:click="mainStore.send('Email', {subject: sendEmail.subject, text: sendEmail.text, html: sendEmail.html})">
+
+            <br>
+            <br>
+            <hr>
+            <br>
+
+            <h4>Detail alarmu</h4>
             <table>
                 <tr>
                     <th>Zařízení</th>
@@ -159,7 +174,7 @@ function getUnlocatedDevices() {
                 <th>Zařízení</th>
                 <td>
                     <select v-model="newAlarm.device">
-                        <option v-for="device in Object.values(deviceStore.data)" :key="device.uuid" :value="device.name">{{ device.name }}</option>
+                        <option v-for="device in Object.values(deviceStore.data).filter((d) => d.enabled)" :key="device.uuid" :value="device.name">{{ device.name }}</option>
                         <option :value="newAlarm.device">{{ newAlarm.device }}</option>
                     </select>
                 </td>

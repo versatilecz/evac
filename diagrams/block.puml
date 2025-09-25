@@ -1,0 +1,58 @@
+@startuml
+
+left to right direction
+
+package "Server" {
+  [Interface] as interface
+  [Statics] as statics
+  [Business logic] as server_business
+
+}
+
+package "Scanner" {
+    [Bluetooth] as scanner_bt
+    [Wifi] as scanner_wifi
+    [Ethernet] as scanner_eth
+    [Buzzer] as scanner_buzzer
+    [Led] as scanner_led
+    [Button] as scanner_button
+    [TPM] as scanner_tpm
+}
+
+package "Button" {
+    [Bluetooth] as btn_bt
+    [Button] as btn_btn
+    [Buzzer] as btn_buzzer
+}
+
+package "Frontend" as frontend {
+    [WebSocket] as frontend_ws
+    [Http] as frontend_http
+    [Location]
+    [Alarms]
+    [Notifications]
+    [Config]
+    [Business logic] as frontend_business
+}
+
+package "Network" as network {
+    [Http] as http
+    [WebSocket] as ws
+    [UDP] as udp
+    [Bluetooth] as bt
+}
+
+scanner_eth - udp : Scanner communication
+
+interface - http : use
+interface - ws : use
+interface - udp : Scanner communication
+
+frontend_ws - ws
+frontend_http - http
+
+statics - frontend
+btn_bt - bt
+scanner_bt - bt
+
+@enduml

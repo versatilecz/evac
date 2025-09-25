@@ -1,0 +1,136 @@
+@startuml
+
+package Structure {
+    dataclass Location {
+        uuid: Uuid
+        name: String
+    }
+
+    dataclass Room {
+        uuid: Uuid
+        name: String
+        location: Uuid
+        points: Vec<(u64, u64)>
+    }
+
+    dataclass Scanner {
+        uuid: Uuid
+        name: String
+        ip: String
+        port: u16
+        mac: Vec<u8>
+        room: Option<uuid::Uuid>
+        last_activity: DateTime
+        led: bool
+        buzzer: bool
+        scan: bool
+    }
+
+    dataclass Device {
+        uuid: uuid::Uuid
+        name: Option<String>
+        mac: Vec<u8>
+        enabled: bool
+        battery: Option<u8>
+        last_activity: DateTime
+    }
+}
+
+package Location {
+    dataclass Activities {
+        map: BTreeMap<uuid::Uuid, Vec<DeviceActivity>>,
+    }
+
+    dataclass DeviceActivity {
+        scanner_uuid: uuid::Uuid
+        timestamp: DateTime<Utc>
+        irssi: i64
+    }
+
+    dataclass EventKind {
+        Advertisement
+        ButtonPressed
+        ButtonDoublePressed
+        ButtonTriplePressed
+        ButtonLongPressed
+        ButtonHold
+        Operator
+    }
+
+    dataclass Event {
+        uuid: Uuid
+        timestamp: DateTime
+        scanner: Uuid
+        device: Option<Uuid>
+        kind: EventKind
+    }
+}
+
+package Notification {
+
+    dataclass Alarm {
+        uuid: Uuid
+        name: String
+        subject: String
+        buzzer: bool
+        led: bool
+        email: Uuid
+    }
+
+    dataclass Email {
+        uuid: Uuid
+        name: String
+        subject: String
+        html: String
+        text: String
+    }
+
+    dataclass ContactType {
+        Sms
+        Email
+    }
+
+    dataclass Contact {
+        uuid: Uuid
+        type: ContactType
+        value: String
+    }
+}
+
+package Auth {
+    dataclass User {
+        uuid: Uuid
+        username: String
+        password: String
+    }
+
+    dataclass Token {
+        uuid: Uuid
+        user: Uuid
+        token: String
+        valid_to: DateTime
+    }
+}
+
+package Config {
+    dataclass Config {
+        Base
+        Email
+        Config
+    }
+}
+
+
+Room::location --> Location
+Scanner::room --> Room
+DeviceActivity::scanner_uuid --> Scanner
+Activities::map --> Device
+Activities::map --> DeviceActivity
+
+Event::kind --> EventKind
+
+Token::user --> User
+Alarm::email --> Email
+Contact::type --> ContactType
+
+@enduml

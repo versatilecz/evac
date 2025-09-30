@@ -8,5 +8,23 @@
       "name": "Frontend",
       "path": "./frontend"
     }
-  ]
+  ],
+  "extensions": {
+    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  },
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "prettier.enable": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "nxConsole.nxWorkspacePath": "frontend"
+  }
 }

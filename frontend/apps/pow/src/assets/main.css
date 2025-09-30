@@ -1,0 +1,218 @@
+@import './base.css';
+
+#app {
+  font-weight: normal;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-border-soft);
+  transition: 0.4s;
+  border-radius: 10px;
+  padding: 5px 10px;
+}
+a:hover {
+  background: var(--vt-c-black);
+  color: var(--vt-c-white);
+}
+
+head {
+  display: block;
+}
+
+head nav {
+  margin: 10px;
+}
+
+head nav a {
+  padding: 10px;
+  margin: 5px;
+}
+
+head nav .left {
+  text-align: left;
+}
+
+head nav .right {
+  margin-left: auto;
+}
+
+head nav {
+  display: flex;
+}
+
+main {
+  display: block;
+}
+
+.modal-content {
+  background: var(--color-background);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px var(--color-background-mute);
+  max-width: 50%;
+  max-height: 50%;
+  margin: 10% auto;
+  vertical-align: middle;
+}
+
+.modal-content .modal-header {
+  text-align: left;
+  font-size: large;
+  color: var(--color-heading);
+  margin-bottom: 20px;
+}
+
+.modal-content .modal-body {
+  text-align: left;
+}
+
+.modal-body .row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  background-color: var(--color-background-mute);
+  vertical-align: middle;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.modal-content .modal-body .cell {
+  display: flex;
+  flex-basis: 50%;
+  vertical-align: middle;
+  margin: auto auto;
+}
+
+.modal-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+select {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.create {
+  background-color: var(--color-create);
+  /*
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-background-mute),
+    var(--color-background-mute) var(--strip-size),
+    var(--color-create) var(--strip-size),
+    var(--color-create) var(--strip-distance)
+  );
+  */
+}
+
+.free {
+  background-color: var(--color-free);
+  /*
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-background-mute),
+    var(--color-background-mute) var(--strip-size),
+    var(--color-free) var(--strip-size),
+    var(--color-free) var(--strip-distance)
+  );
+  */
+}
+
+.occupied {
+  background-color: var(--color-occupied) !important;
+  /*
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-background-mute),
+    var(--color-background-mute) var(--strip-size),
+    var(--color-occupied) var(--strip-size),
+    var(--color-occupied) var(--strip-distance)
+  );
+  */
+}
+
+.success {
+  background-color: green !important;
+}
+
+.attention {
+  background-color: var(--color-attention);
+  /*
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-background-mute),
+    var(--color-background-mute) var(--strip-size),
+    var(--color-attention) var(--strip-size),
+    var(--color-attention) var(--strip-distance)
+  );
+  */
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+svg {
+  margin: 0;
+  padding: 0;
+}
+
+.btn {
+  border-radius: var(--radius);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  padding: 5px;
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.row {
+  display: flex;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.strong {
+  font-weight: bolder;
+}
+
+table {
+  width: 100%;
+}
+
+table thead tr {
+  background-color: var(--color-text);
+  color: var(--color-background-mute);
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: var(--color-background-soft);
+}
+table tbody tr:hover {
+  background-color: var(--color-background-mute);
+}
+
+.bigModal .modal-content {
+  width: 90%;
+  height: 90%;
+  font-size: 150%;
+  overflow-y: scroll;
+  display: block;
+}
+
+.bigModal input[type='number'] {
+  font-size: 100%;
+}

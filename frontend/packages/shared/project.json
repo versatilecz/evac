@@ -1,0 +1,24 @@
+{
+  "name": "shared",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/shared/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "packages/shared/dist"
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "packages/shared/coverage"
+      }
+    }
+  },
+  "tags": ["scope:shared", "type:lib"]
+}

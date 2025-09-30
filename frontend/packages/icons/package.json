@@ -1,0 +1,51 @@
+{
+  "name": "@evac/icons",
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "require": "./dist/vite.cjs",
+      "default": "./dist/vite.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "./vite": [
+        "./dist/vite.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "preinstall": "npx only-allow npm",
+    "postinstall": "vite build",
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts,.vue"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@material-symbols/svg-400": "^0.36.2",
+    "svgson": "^5.3.1"
+  },
+  "peerDependencies": {
+    "vite": "^7.1.7"
+  }
+}

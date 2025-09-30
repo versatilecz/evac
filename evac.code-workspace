@@ -7,6 +7,62 @@
     {
       "name": "Frontend",
       "path": "./frontend"
+    },
+    {
+      "name": "Frontend / Apps",
+      "path": "./frontend/apps"
+    },
+    {
+      "name": "Frontend / Apps / POW",
+      "path": "./frontend/apps/pow"
+    },
+    {
+      "name": "Frontend / Apps / MVP",
+      "path": "./frontend/apps/mvp"
+    },
+    {
+      "name": "Frontend / Packages",
+      "path": "./frontend/packages"
     }
-  ]
+  ],
+  "extensions": {
+    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  },
+  "settings": {
+    "typescript.tsdk": "./frontend/node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "prettier.enable": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "nxConsole.nxWorkspacePath": "frontend",
+    "mcp": {
+      "servers": {
+        "figma-desktop": {
+          "url": "http://127.0.0.1:3845/mcp",
+          "type": "http"
+        }
+      },
+      "inputs": []
+    },
+    "chat.mcp.serverSampling": {
+      "evac.code-workspace: figma-desktop": {
+        "allowedModels": [
+          "copilot/claude-sonnet-4",
+          "copilot/claude-sonnet-4.5",
+          "copilot/gpt-5",
+          "copilot/gpt-5-mini",
+          "copilot/gpt-5-codex"
+        ]
+      }
+    }
+  }
 }

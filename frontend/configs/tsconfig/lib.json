@@ -16,6 +16,6 @@
       "@/*": ["${configDir}/src/*"]
     }
   },
-  "include": ["${configDir}/src/**/*.ts", "${configDir}/src/**/*.d.ts", "${configDir}/src/**/*.tsx"],
+  "include": ["${configDir}/src/*"],
   "exclude": ["../../node_modules", "${configDir}/node_modules"]
 }

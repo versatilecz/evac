@@ -12,11 +12,5 @@
   },
   "vueCompilerOptions": {
     "skipTemplateCodegen": true
-  },
-  "include": [
-    "${configDir}/src/**/*.ts",
-    "${configDir}/src/**/*.d.ts",
-    "${configDir}/src/**/*.tsx",
-    "${configDir}/src/**/*.vue"
-  ]
+  }
 }

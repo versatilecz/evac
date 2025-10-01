@@ -36,6 +36,7 @@ export function defineConfig(dirname: string, pkg: NpmPackage, config: ConfigOpt
       },
       rollupOptions: {
         external: [
+          /^node:/,
           ...Object.keys({
             ...(pkg.dependencies ?? {}),
             ...(pkg.peerDependencies ?? {}),

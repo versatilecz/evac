@@ -5,5 +5,5 @@
     "lib": ["ESNext"],
     "types": ["node"]
   },
-  "include": ["src/*", "src/aliases.json", "src/icons.json"]
+  "include": ["src/**/*", "src/aliases.json", "src/icons.json", "src/vite/plugin.ts"]
 }

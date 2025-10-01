@@ -12,12 +12,20 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "require": "./dist/vite.cjs",
+      "default": "./dist/vite.js"
     }
   },
   "typesVersions": {
-    ">=5": {
-      "index": [
+    "*": {
+      ".": [
         "./dist/index.d.ts"
+      ],
+      "./vite": [
+        "./dist/vite.d.ts"
       ]
     }
   },
@@ -34,5 +42,8 @@
   "dependencies": {
     "@material-symbols/svg-400": "^0.36.2",
     "svgson": "^5.3.1"
+  },
+  "peerDependencies": {
+    "vite": "^7.1.7"
   }
 }

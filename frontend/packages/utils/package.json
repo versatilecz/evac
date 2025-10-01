@@ -15,8 +15,8 @@
     }
   },
   "typesVersions": {
-    ">=5": {
-      "index": [
+    "*": {
+      ".": [
         "./dist/index.d.ts"
       ]
     }

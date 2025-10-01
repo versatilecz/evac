@@ -5,20 +5,22 @@ import { fileURLToPath } from 'node:url'
 
 import { parse, type INode } from 'svgson'
 import pkg from '../package.json' with { type: 'json' }
-import usedIcons from './icons.json' with { type: 'json' }
+import predefinedIcons from './icons.json' with { type: 'json' }
 
 import { collectAliases } from './aliases'
 import type { IconDescription } from './definitions'
+
+type IconsInput = Iterable<string | [string, string]> | Record<string, string>
 
 const assetsDirectory = 'icons' // Path to the directory containing the icons, relative to the package root
 const packageAssetsBaseDirectory = join(pkg.name, assetsDirectory) // Path to the icons directory in the package
 const iconsAbsolutePath = resolve(import.meta.dirname, '..', assetsDirectory)
 
-export async function getIcons(): Promise<Map<IconDescription['name'], IconDescription>> {
+export async function getIcons(icons: IconsInput = predefinedIcons): Promise<Map<IconDescription['name'], IconDescription>> {
   try {
-    const normalizedIcons = new Map(normalizeIcons(usedIcons))
-    const icons = await Promise.all([...parseSVGFiles(normalizedIcons)])
-    return new Map(icons)
+    const normalized = new Map(normalizeIcons(icons))
+    const parsed = await Promise.all([...parseSVGFiles(normalized)])
+    return new Map(parsed)
   } catch (cause) {
     const error = new Error('Error loading icons', { cause })
     throw error
@@ -97,7 +99,7 @@ function* normalizeIconsFromDirents(files: Iterable<Dirent>): Generator<[string,
   }
 }
 
-function* normalizeIcons(input: Record<string, string> | Iterable<string | [string, string]>): Generator<[string, string]> {
+function* normalizeIcons(input: IconsInput): Generator<[string, string]> {
   if (!input) {
     return
   }

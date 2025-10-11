@@ -16,9 +16,7 @@ export function toPromise<T>(
     return abortable(source, signal)
       [Symbol.asyncIterator]()
       .next()
-      .then((r: IteratorResult<T, undefined>) =>
-        r.done && typeof r.value === 'undefined' ? Promise.reject(new Error('No values in async iterable')) : r.value
-      )
+      .then((r: IteratorResult<T, undefined>) => (r.done && typeof r.value === 'undefined' ? Promise.reject(new Error('No values in async iterable')) : r.value))
   }
 
   return Promise.resolve(source)

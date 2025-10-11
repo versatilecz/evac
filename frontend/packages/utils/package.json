@@ -22,7 +22,6 @@
     }
   },
   "scripts": {
-    "preinstall": "npx only-allow npm",
     "postinstall": "vite build",
     "build": "vite build",
     "dev": "vite build --watch",
@@ -34,6 +33,7 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
+    "remeda": "^2.32.0",
     "rxjs": "^7.8.1"
   }
 }

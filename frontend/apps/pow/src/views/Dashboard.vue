@@ -59,16 +59,10 @@ function getUnlocatedDevices() {
       <div v-for="location of Object.values(locationStore.data)" :key="location.uuid" class="location">
         <strong>{{ location.name }}</strong>
         <div class="room-wrap">
-          <div
-            v-for="room of Object.values(roomStore.data).filter((room) => room.location == location.uuid)"
-            :key="room.uuid"
-            class="room"
-          >
+          <div v-for="room of Object.values(roomStore.data).filter((room) => room.location == location.uuid)" :key="room.uuid" class="room">
             <strong>{{ room.name }}</strong>
             <ul>
-              <li v-for="position in getLocationDevices(room.uuid)" :key="position.uuid" class="position">
-                {{ position.name }}&nbsp;({{ position.rssi }})
-              </li>
+              <li v-for="position in getLocationDevices(room.uuid)" :key="position.uuid" class="position">{{ position.name }}&nbsp;({{ position.rssi }})</li>
             </ul>
           </div>
         </div>
@@ -213,11 +207,7 @@ function getUnlocatedDevices() {
         <th>Zařízení</th>
         <td>
           <select v-model="newAlarm.device">
-            <option
-              v-for="device in Object.values(deviceStore.data).filter((d) => d.enabled)"
-              :key="device.uuid"
-              :value="device.name"
-            >
+            <option v-for="device in Object.values(deviceStore.data).filter((d) => d.enabled)" :key="device.uuid" :value="device.name">
               {{ device.name }}
             </option>
             <option :value="newAlarm.device">

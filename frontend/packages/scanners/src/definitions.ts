@@ -1,8 +1,8 @@
 import { MacAddress, macCodec, isoDatetimeToDate } from '@evac/shared'
 import * as z from 'zod'
 
-export type $Scanner = z.infer<typeof Scanner>
-export type $Scanners = z.infer<typeof Scanners>
+export type $Scanner = z.infer<typeof $Scanner>
+export type $Scanners = z.infer<typeof $Scanners>
 
 export const SCOPE = 'scanners'
 
@@ -11,7 +11,7 @@ export const PortNumber = z
   .min(0)
   .max(2 ** 16 - 1)
 
-export const Scanner = z.object({
+export const $Scanner = z.object({
   name: z.string(),
   uuid: z.uuidv4(),
   room: z.uuid().describe('The UUID of the room this scanner belongs to'),
@@ -24,14 +24,14 @@ export const Scanner = z.object({
   lastActivity: z.date(),
 })
 
-export const Scanners = z.map(z.uuidv4(), Scanner)
+export const $Scanners = z.map(z.uuidv4(), $Scanner)
 
-const ScannerCodec = Scanner.omit({ mac: true, lastActivity: true }).extend({
+const $ScannerCodec = $Scanner.omit({ mac: true, lastActivity: true }).extend({
   mac: macCodec,
   lastActivity: isoDatetimeToDate,
 })
 
-export const ScannersMessage = z.codec(z.object({ ScannerList: z.array(ScannerCodec) }), Scanners, {
+export const $ScannersMessage = z.codec(z.object({ ScannerList: z.array($ScannerCodec) }), $Scanners, {
   decode: (data) => new Map(data.ScannerList.map((scanner) => [scanner.uuid, scanner])),
   encode: (scanners) => ({ ScannerList: Array.from(scanners.values()) }),
 })

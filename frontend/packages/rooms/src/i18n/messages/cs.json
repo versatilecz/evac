@@ -1,0 +1,18 @@
+{
+  "room": {
+    "title": "Místnost",
+    "dialog": {
+      "title": "Detail místnosti",
+      "description": "",
+      "create": "Vytvořit místnost",
+      "edit": "Upravit místnost",
+      "confirmDelete": "Opravdu chcete smazat tuto místnost?"
+    }
+  },
+  "rooms": {
+    "config": {
+      "title": "Místnosti",
+      "description": "Správa místností v systému"
+    }
+  }
+}

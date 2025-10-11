@@ -1,0 +1,7 @@
+@layer components {
+  .icon {
+    width: var(--icon-size, theme('spacing.6'));
+    height: var(--icon-size, theme('spacing.6'));
+    fill: currentColor;
+  }
+}

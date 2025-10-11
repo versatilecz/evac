@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "preinstall": "npx only-allow npm",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
@@ -25,9 +24,5 @@
     "vue": "^3.5.21",
     "vue-final-modal": "^4.5.5",
     "vue-router": "^4.5.1"
-  },
-  "devDependencies": {
-    "vite-plugin-nightwatch": "^0.4.6",
-    "vite-plugin-vue-devtools": "^8.0.2"
   }
 }

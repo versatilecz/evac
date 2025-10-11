@@ -22,7 +22,6 @@
     }
   },
   "scripts": {
-    "preinstall": "npx only-allow npm",
     "postinstall": "vite build",
     "build": "vite build",
     "dev": "vite build --watch",
@@ -34,12 +33,16 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
+    "@evac/auth": "*",
     "@evac/shared": "*",
+    "@evac/ui": "*",
     "@evac/utils": "*",
     "@vueuse/core": "^13.9.0",
     "@vueuse/rxjs": "^13.9.0",
+    "remeda": "^2.32.0",
     "rxjs": "^7.8.2",
     "unstorage": "^1.17.1",
+    "vue-i18n": "^11.1.12",
     "zod": "^4.1.12"
   },
   "peerDependencies": {

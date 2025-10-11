@@ -1,0 +1,72 @@
+@theme {
+  --btn-corner-radius: var(--input-corner-radius, var(--radius-md));
+  --btn-padding-x: var(--btn-corner-radius);
+  --btn-gap-x: var(--input-gap-x, theme(spacing.2));
+  --btn-height: var(--input-height, theme(spacing.12));
+  --btn-min-width: var(--btn-height, theme(spacing.12));
+  --btn-foreground: currentColor;
+  --btn-background: var(--color-surface-subtle);
+
+  --btn-shadow: theme(shadow.sm);
+  --btn-filled-foreground: var(--color-inverse);
+  --btn-filled-background: var(--color-emphasis-high);
+
+  --btn-surface-foreground: var(--color-primary);
+  --btn-surface-background: var(--color-surface-subtle);
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center transition-all;
+    background-color: oklch(
+      from var(--btn-background) l c h / var(--btn-background-opacity, 0)
+    );
+    color: var(--btn-foreground);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    gap: var(--btn-gap-x);
+    min-width: var(--btn-min-width);
+    height: var(--btn-height);
+    padding: 0 var(--btn-padding-x);
+    border: none;
+    border-radius: var(--btn-corner-radius);
+  }
+
+  .btn:hover {
+    --btn-shadow: theme(shadow.md);
+    --btn-background-opacity: 1;
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: var(--btn-shadow);
+  }
+  .btn:active {
+    --btn-shadow: theme(shadow.sm);
+    transform: translateY(0) scale(0.98);
+    box-shadow: var(--btn-shadow);
+    filter: brightness(0.94);
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  .btn-filled,
+  .btn-surface {
+    box-shadow: var(--btn-shadow);
+  }
+
+  .btn-filled {
+    --btn-foreground: var(--btn-filled-foreground);
+    --btn-background: var(--btn-filled-background);
+    --btn-background-opacity: 1;
+  }
+
+  .btn-surface {
+    --btn-foreground: var(--btn-surface-foreground);
+    --btn-background: var(--btn-surface-background);
+    --btn-background-opacity: 1;
+  }
+}

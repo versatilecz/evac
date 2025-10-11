@@ -71,13 +71,7 @@ const new_alarm = ref({})
       </td>
     </tr>
   </table>
-  <button
-    @click="
-      alarmStore.create(new_alarm.name, new_alarm.subject, new_alarm.text, new_alarm.html, new_alarm.buzzer, new_alarm.led)
-    "
-  >
-    Vytvořit
-  </button>
+  <button @click="alarmStore.create(new_alarm.name, new_alarm.subject, new_alarm.text, new_alarm.html, new_alarm.buzzer, new_alarm.led)">Vytvořit</button>
 </template>
 
 <style scoped>

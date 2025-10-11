@@ -13,10 +13,7 @@ export const viewBox = '0 -960 960 960' // default viewBox for all icons
 
 export function filterIcons<T extends IconInstance>(icons: Iterable<[string, T]>, filters: IconFilters): Generator<[string, T]>
 export function filterIcons<T extends IconInstance>(icons: Iterable<T>, filters: IconFilters): Generator<T>
-export function* filterIcons<T extends IconInstance>(
-  icons: Iterable<T | [string, T]>,
-  filters: IconFilters
-): Generator<typeof icons extends [string, T] ? [string, T] : T> {
+export function* filterIcons<T extends IconInstance>(icons: Iterable<T | [string, T]>, filters: IconFilters): Generator<typeof icons extends [string, T] ? [string, T] : T> {
   const include = toSet(filters.include)
   const exclude = toSet(filters.exclude)
   const search = normalizeSearch(filters.search ?? '')

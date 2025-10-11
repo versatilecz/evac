@@ -1,25 +1,27 @@
-<template>
-  <div class="bg-white shadow-xs border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="py-6">
-        <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
-        <p v-if="subtitle" class="mt-2 text-sm text-gray-600">
-          {{ subtitle }}
-        </p>
-      </div>
-    </div>
-  </div>
-</template>
+<script setup lang="ts">
+import Icon from './Icon.vue'
+import { useI18n } from 'vue-i18n'
 
-<script setup>
-defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  subtitle: {
-    type: String,
-    default: null,
-  },
-})
+const { t } = useI18n({ useScope: 'global' })
 </script>
+
+<template>
+  <header class="px-6 flex items-center justify-between row-start-1">
+    <h1 class="text-2xl font-black">EVAC</h1>
+
+    <nav>
+      <RouterLink v-slot="{ isActive, navigate }" :to="{ name: 'config.index' }" custom>
+        <button class="btn btn-filled" :class="{ hidden: isActive }" @click="navigate">
+          <Icon icon="settings" />
+          <span>{{ t('page.configuration') }}</span>
+        </button>
+      </RouterLink>
+      <RouterLink v-slot="{ isActive, navigate }" :to="{ name: 'dashboard' }" custom>
+        <button class="btn btn-filled" :class="{ hidden: isActive }" @click="navigate">
+          <Icon icon="frame_person" />
+          <span>{{ t('page.overview') }}</span>
+        </button>
+      </RouterLink>
+    </nav>
+  </header>
+</template>

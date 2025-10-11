@@ -1,0 +1,21 @@
+{
+  "location": {
+    "title": "Location",
+    "dialog": {
+      "title": "Location detail",
+      "description": "",
+      "create": "Create location",
+      "edit": "Edit location",
+      "confirmDelete": "Are you sure you want to delete this location?"
+    },
+    "select": {
+      "placeholder": "Select location"
+    }
+  },
+  "locations": {
+    "config": {
+      "title": "Locations",
+      "description": "Manage locations in the system"
+    }
+  }
+}

@@ -5,24 +5,44 @@
       "path": "."
     },
     {
-      "name": "Frontend",
+      "name": "FE",
       "path": "./frontend"
     },
     {
-      "name": "Frontend / Apps",
+      "name": "FE / Apps",
       "path": "./frontend/apps"
     },
     {
-      "name": "Frontend / Apps / POW",
+      "name": "FE / Apps / POW",
       "path": "./frontend/apps/pow"
     },
     {
-      "name": "Frontend / Apps / MVP",
+      "name": "FE / Apps / MVP",
       "path": "./frontend/apps/mvp"
     },
     {
-      "name": "Frontend / Packages",
+      "name": "FE / Packages",
       "path": "./frontend/packages"
+    },
+    {
+      "name": "FE / Packages / Config",
+      "path": "./frontend/packages/config"
+    },
+    {
+      "name": "FE / Packages / Dashboard",
+      "path": "./frontend/packages/dashboard"
+    },
+    {
+      "name": "FE / Packages / Shared",
+      "path": "./frontend/packages/shared"
+    },
+    {
+      "name": "FE / Packages / UI",
+      "path": "./frontend/packages/ui"
+    },
+    {
+      "name": "FE / Packages / Utils",
+      "path": "./frontend/packages/utils"
     }
   ],
   "extensions": {
@@ -31,6 +51,7 @@
   "settings": {
     "typescript.tsdk": "./frontend/node_modules/typescript/lib",
     "typescript.enablePromptUseWorkspaceTsdk": true,
+    "vue.server.hybridMode": true,
     "prettier.enable": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
@@ -41,6 +62,9 @@
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "nxConsole.nxWorkspacePath": "frontend",

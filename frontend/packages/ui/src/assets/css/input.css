@@ -1,0 +1,78 @@
+@theme {
+  --input-corner-radius: var(--radius-md);
+  --input-padding-x: var(--input-corner-radius);
+  --input-gap-x: theme(spacing.2);
+  --input-height: theme(spacing.12);
+  --input-min-width: theme(spacing.24);
+  --input-foreground: var(--color-primary);
+  --input-background: oklch(from var(--color-white) l c h / 0.12);
+  --input-border: 1px solid var(--color-border-subtle);
+  --input-hint: var(--color-emphasis-low);
+}
+
+@layer components {
+  .input {
+    @apply flex items-center;
+    gap: var(--input-gap-x);
+    min-width: var(--input-min-width);
+    height: var(--input-height);
+    padding: 0 var(--input-padding-x);
+    border: var(--input-border);
+    border-radius: var(--input-corner-radius);
+    background: var(--input-background);
+    color: var(--input-foreground);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+
+    &:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / 0.3);
+      background: oklch(from var(--color-white) l c h / 0.15);
+      outline: none;
+    }
+
+    &:hover {
+      background: oklch(from var(--color-white) l c h / 0.15);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      background: oklch(from var(--color-white) l c h / 0.05);
+      color: var(--input-hint);
+      border-color: var(--color-border-subtle);
+      box-shadow: none;
+    }
+
+    input,
+    textarea {
+      @apply bg-transparent border-0 p-0 m-0 outline-none w-full;
+      font-size: inherit;
+      line-height: inherit;
+      font-weight: inherit;
+      color: inherit;
+
+      &::placeholder {
+        color: var(--input-hint);
+        opacity: 1; /* Override default opacity */
+      }
+
+      &:disabled {
+        &::placeholder {
+          color: var(--input-hint);
+        }
+      }
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      color: var(--input-hint);
+      flex-shrink: 0;
+    }
+  }
+}

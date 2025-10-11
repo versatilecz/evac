@@ -8,7 +8,16 @@
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "{projectRoot}/dist"
+        "outputPath": "{projectRoot}/dist",
+        "configFile": "{projectRoot}/vite.config.js"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "options": {
+        "command": "vite build --watch",
+        "cwd": "{projectRoot}"
       }
     },
     "test": {

@@ -1,17 +1,17 @@
 import type { RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
+import { Config, routes as configRoutes } from '@evac/config'
+import { Dashboard } from '@evac/dashboard'
 
-const routes: RouteRecordRaw[] = [
+export default [
   {
     path: '/',
-    name: 'home',
-    component: Home,
+    name: 'dashboard',
+    component: Dashboard,
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import('../views/About.vue'),
+    path: '/config',
+    name: 'config',
+    component: Config,
+    children: configRoutes,
   },
-]
-
-export default routes
+] satisfies RouteRecordRaw[]

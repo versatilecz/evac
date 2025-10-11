@@ -1,0 +1,29 @@
+{
+  "page": {
+    "overview": "Přehled",
+    "configuration": "Konfigurace"
+  },
+  "entity": {
+    "location": "Místo",
+    "locations": "Místa",
+    "uuid": "UUID",
+    "name": "Název",
+    "description": "Popis",
+    "battery": "Baterie",
+    "activity": "Aktivita",
+    "enabled": "Povoleno"
+  },
+  "action": {
+    "create": "Vytvořit",
+    "edit": "Upravit",
+    "delete": "Smazat",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "cancelChanges": "Zrušit změny",
+    "confirm": "Potvrdit",
+    "refresh": "Obnovit",
+    "close": "Zavřít",
+    "add": "Přidat",
+    "remove": "Odebrat"
+  }
+}

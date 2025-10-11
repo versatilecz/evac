@@ -1,0 +1,30 @@
+@theme {
+  --badge-foreground: var(--color-secondary);
+  --badge-background: var(--color-emphasis-1);
+  --badge-corner-radius: var(--radius-sm);
+  --badge-icon-size: theme('spacing.4');
+  --badge-padding-x: var(--badge-gap-x);
+  --badge-gap-x: var(--badge-corner-radius);
+  --badge-size: theme('spacing.6');
+}
+
+@layer components {
+  .badge {
+    --icon-size: var(--badge-icon-size);
+    @apply flex font-mono shadow-sm items-center justify-center text-center;
+    color: var(--badge-foreground);
+    background-color: var(--badge-background);
+    gap: var(--badge-gap-x);
+    padding: 0 var(--badge-padding-x);
+    font-size: 11px;
+    height: var(--badge-size);
+    min-width: var(--badge-size);
+    font-weight: 500;
+    border: none;
+    border-radius: var(--badge-corner-radius);
+  }
+  .badge-accent-blue {
+    --badge-background: var(--color-accent-blue);
+    --badge-foreground: var(--color-black);
+  }
+}

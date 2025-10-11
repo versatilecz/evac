@@ -2,7 +2,8 @@ import { abortable, asyncIterableFromEvent, defer, mergeAsyncIterables, mergeSig
 import type { Observable } from 'rxjs'
 import { prefixStorage, type Storage } from 'unstorage'
 import type { ZodType } from 'zod'
-import { logger as defaultLogger } from './logger.js'
+import { logger as defaultLogger } from './logger'
+import type { WebSocketConnection } from './websocket/connect'
 
 const ACTION_TIMEOUT = 5000
 
@@ -10,9 +11,12 @@ const STORAGE_KEY = {
   STATE: 'state',
 } as const
 
-type StorageFactory = (storage: Storage) => Storage
+export type WebSocketService<C extends ServiceConfig<any> = ServiceConfig<any>> = {} & ServiceBase<NoInfer<C>> &
+  ServiceListeners<NoInfer<C>> &
+  AsyncIterable<FromConfig<NoInfer<C>>> &
+  Disposable
 
-export type ServiceConfig<T extends object> = {
+export type ServiceConfig<T> = {
   name: string
   identity: ZodType<T>
   logger?: Console
@@ -20,40 +24,47 @@ export type ServiceConfig<T extends object> = {
   maxRetries?: number
 }
 
-export type CreateServicePayload<T extends object> = {
+type StorageFactory = (storage: Storage) => Storage
+
+type DataSource<C extends ServiceConfig<unknown>> = (this: WebSocketService<C>, source: WebSocketConnection<unknown>) => AsyncIterable<FromConfig<C>>
+type FromConfig<C extends ServiceConfig<unknown>> = C extends ServiceConfig<infer T> ? T : never
+
+type ServiceListeners<C extends ServiceConfig<unknown>> = EventTarget & {
+  addEventListener(type: 'data', listener: (this: WebSocketService<C>, event: CustomEvent<FromConfig<C>>) => unknown, options?: boolean | AddEventListenerOptions): void
+  removeEventListener(type: 'data', listener: (this: WebSocketService<C>, event: CustomEvent<FromConfig<C>>) => unknown, options?: boolean | EventListenerOptions): void
+  dispatchEvent(event: Event): boolean
+}
+
+export type ServiceBase<C extends ServiceConfig<unknown>> = {
+  readonly name: string
+  get: () => Promise<FromConfig<C> | undefined>
+  set(value: Partial<FromConfig<C>>, source: Promise<FromConfig<C>> | AsyncIterable<FromConfig<C>> | FromConfig<C>): Promise<void>
+  set(value: FromConfig<C>): Promise<void>
+  start: (payload: CreateServicePayload<FromConfig<C>>) => Disposable & { name: string; stop: () => void }
+  stop: () => void
+  withActions<A extends ActionDefinitions<C>>(actions: A): WebSocketService<C> & ServiceActions<A>
+  withSources(...newSources: DataSource<ServiceConfig<FromConfig<C>>>[]): WebSocketService<C>
+}
+
+type CreateServicePayload<T> = {
+  connection: WebSocketConnection<T>
   source: AsyncIterable<NoInfer<T>> | AsyncIterable<NoInfer<T>>[]
   storage?: Storage
   signal?: AbortSignal
 }
 
-export type AppServiceEventTarget<T extends object> = EventTarget & {
-  addEventListener(
-    type: 'data',
-    listener: (this: AppService<T>, event: CustomEvent<T>) => unknown,
-    options?: boolean | AddEventListenerOptions
-  ): void
-  removeEventListener(
-    type: 'data',
-    listener: (this: AppService<T>, event: CustomEvent<T>) => unknown,
-    options?: boolean | EventListenerOptions
-  ): void
-  dispatchEvent(event: Event): boolean
+export type ServiceActions<A extends ActionDefinitions<any>> = {
+  [K in keyof A]: A[K] extends (source: any, ...args: infer P) => infer R ? (...args: P) => R extends Promise<any> ? R : Promise<R> : never
 }
 
-export type AppService<T extends object = object> = AppServiceEventTarget<T> &
-  Disposable &
-  AsyncIterable<T> & {
-    set(value: Partial<NoInfer<T>>, source: Observable<T> | Promise<T> | AsyncIterable<T> | T): Promise<void>
-    set(value: NoInfer<T>): Promise<void>
-    start: (payload: CreateServicePayload<T>) => Disposable & { name: string }
-  }
+type ActionDefinitions<C extends ServiceConfig<unknown>> = {
+  [key: string]: Action<C>
+}
 
-export function defineService<T extends object>({
-  name,
-  identity,
-  storage: storageOrFactory,
-  logger = defaultLogger,
-}: ServiceConfig<T>): AppService<NoInfer<T>> {
+type Action<C extends ServiceConfig<unknown>> = (this: WebSocketService<C>, source: WebSocketConnection<FromConfig<C>>, ...args: any[]) => any
+
+export function defineService<C extends ServiceConfig<any>>(config: C): WebSocketService<C> {
+  const { name, identity, storage: storageOrFactory, logger = defaultLogger } = config
   // Use the provided storage factory or create a namespaced storage using the service name
   const setStorage = typeof storageOrFactory === 'function' ? storageOrFactory : (x: Storage) => prefixStorage(x, name)
 
@@ -61,16 +72,26 @@ export function defineService<T extends object>({
   let storage: Storage | undefined = typeof storageOrFactory === 'object' && storageOrFactory ? storageOrFactory : undefined
   let abortController = new AbortController()
   let abortSignal = abortController.signal
-  let sources: AsyncIterable<T>[] = []
   let started = defer<void>()
+  let activeConnection: WebSocketConnection<FromConfig<C>> | null = null
+  let sources: DataSource<NoInfer<C>>[] = []
 
-  const eventTarget = new EventTarget()
-  Object.defineProperty(eventTarget, Symbol.asyncIterator, { value: startObserving, enumerable: false })
-  Object.defineProperty(eventTarget, Symbol.dispose, { value: dispose, enumerable: false })
-  Object.defineProperty(eventTarget, 'start', { value: startService, enumerable: false })
-  Object.defineProperty(eventTarget, 'set', { value: setValue, enumerable: false })
+  const eventTarget = new EventTarget() as WebSocketService<C>
+  Object.assign(eventTarget, {
+    get name() {
+      return name
+    },
+    start: startService,
+    stop: dispose,
+    get: getFromStorage,
+    set: setValue,
+    withActions,
+    withSources,
+    [Symbol.asyncIterator]: startObserving,
+    [Symbol.dispose]: dispose,
+  } satisfies ServiceBase<NoInfer<C>> & AsyncIterable<FromConfig<NoInfer<C>>> & Disposable)
 
-  return eventTarget as AppService<T>
+  return eventTarget
 
   async function* startObserving() {
     const fromStorage = await getFromStorage()
@@ -79,8 +100,10 @@ export function defineService<T extends object>({
     }
 
     try {
-      for await (const event of asyncIterableFromEvent<CustomEvent<T>>(eventTarget, 'data', { signal: abortSignal })) {
-        yield event.detail
+      for await (const event of asyncIterableFromEvent<CustomEvent<FromConfig<NoInfer<C>>>>(eventTarget, 'data', {
+        signal: abortSignal,
+      })) {
+        yield identity.parse(event.detail)
       }
     } catch (cause) {
       logger.error(new Error(`[${name}] Error occurred while observing data`, { cause }))
@@ -92,7 +115,7 @@ export function defineService<T extends object>({
     try {
       await started.promise
       if (!storage) return
-      const stored = await storage.getItemRaw<T>(STORAGE_KEY.STATE)
+      const stored = await storage.getItemRaw<FromConfig<NoInfer<C>>>(STORAGE_KEY.STATE)
       if (typeof stored === 'undefined' || stored === null) return
       const parsed = identity.parse(stored)
       return parsed
@@ -101,17 +124,17 @@ export function defineService<T extends object>({
     }
   }
 
-  function startService({ source, storage: nextStorage, signal }: CreateServicePayload<T>): Disposable & { name: string } {
+  function startService({ connection, storage: nextStorage, signal }: CreateServicePayload<FromConfig<NoInfer<C>>>) {
     if (!abortController.signal.aborted) abortController.abort()
     abortController = new AbortController()
     abortSignal = signal ? mergeSignals(abortController.signal, signal) : abortController.signal
     abortSignal.addEventListener('abort', dispose, { once: true })
+    activeConnection = connection
 
     if (nextStorage) {
       storage = setStorage(nextStorage)
     }
 
-    sources = Array.isArray(source) ? source : [source]
     observeAndHandleIncomingData()
 
     logger.info(`[${name}] service started`)
@@ -119,42 +142,80 @@ export function defineService<T extends object>({
 
     return Object.freeze({
       name,
+      stop: dispose,
       [Symbol.dispose]: dispose,
     })
+  }
 
-    async function observeAndHandleIncomingData() {
-      for await (const data of abortable(mergeAsyncIterables(...sources), abortSignal)) {
-        await storeValue(data)
-        eventTarget.dispatchEvent(new CustomEvent('data', { detail: data }))
-        logger.info(`[${name}] received data`, data)
-      }
-
-      logger.warn(`[${name}] observation ended`)
+  async function observeAndHandleIncomingData() {
+    for await (const data of abortable(mergeAsyncIterables(...sources.map((x) => connectSource(x))), abortSignal)) {
+      await storeValue(data)
+      eventTarget.dispatchEvent(new CustomEvent('data', { detail: data }))
+      logger.info(`[${name}] received data`, data)
     }
+
+    logger.warn(`[${name}] observation ended`)
+  }
+
+  async function* connectSource(dataSource: DataSource<ServiceConfig<FromConfig<NoInfer<C>>>>) {
+    if (!dataSource) return
+
+    if (!activeConnection) {
+      throw new Error(`[${name}] Cannot connect data source - no active connection`)
+    }
+
+    yield* dataSource.call(eventTarget, activeConnection)
   }
 
   function dispose() {
     if (!abortController.signal.aborted) abortController.abort()
 
     started = defer<void>()
-    sources = []
     abortSignal.removeEventListener('abort', dispose)
     storage = undefined
+    sources = []
+    activeConnection = null
 
     logger.warn(`[${name}] service stopped`)
   }
 
-  async function setValue(value: Partial<T>, source?: Observable<T> | Promise<T> | AsyncIterable<T> | T) {
+  async function setValue(
+    value: Partial<FromConfig<NoInfer<C>>>,
+    source?: Observable<FromConfig<NoInfer<C>>> | Promise<FromConfig<NoInfer<C>>> | AsyncIterable<FromConfig<NoInfer<C>>> | FromConfig<NoInfer<C>>
+  ): Promise<void> {
     const sourceData = await toPromise(source, mergeSignals(abortController.signal, AbortSignal.timeout(ACTION_TIMEOUT)))
     const next = Object.assign(sourceData ?? {}, value)
     await storeValue(identity.parse(next))
   }
 
-  async function storeValue(value: T) {
+  async function storeValue(value: FromConfig<NoInfer<C>>) {
     if (storage) {
-      await storage
-        .setItemRaw(STORAGE_KEY.STATE, value as never)
-        .catch((cause) => logger.error(new Error(`[${name}] Failed to save state`, { cause })))
+      await storage.setItemRaw(STORAGE_KEY.STATE, value as never).catch((cause) => logger.error(new Error(`[${name}] Failed to save state`, { cause })))
     }
+  }
+
+  function withActions<A extends ActionDefinitions<C>>(actions: A): WebSocketService<C> & ServiceActions<A> {
+    for (const [actionName, actionImpl] of Object.entries(actions) as [string, (...args: any[]) => unknown][]) {
+      Object.defineProperty(eventTarget, actionName, {
+        value: async (...args: any[]) => {
+          if (!activeConnection) {
+            await started.promise
+          }
+          if (!activeConnection) {
+            throw new Error(`[${name}] Cannot perform action "${actionName}" - service is not started`)
+          }
+          const result = actionImpl.call(eventTarget, activeConnection, ...args)
+          return result
+        },
+        enumerable: false,
+      })
+    }
+
+    return eventTarget as WebSocketService<C> & ServiceActions<A>
+  }
+
+  function withSources(...newSources: DataSource<ServiceConfig<FromConfig<C>>>[]): WebSocketService<C> {
+    sources.push(...newSources)
+    return eventTarget
   }
 }

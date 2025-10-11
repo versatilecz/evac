@@ -1,0 +1,97 @@
+{
+  "config": {
+    "title": "Konfigurace",
+    "description": "Nastavení aplikace Evac",
+    "locations": {
+      "title": "Lokace",
+      "description": "Správa lokací, které aplikace Evac sleduje",
+      "add": "Přidat lokaci",
+      "edit": "Upravit lokaci",
+      "delete": "Smazat lokaci",
+      "deleteQuestion": "Opravdu chcete smazat tuto lokaci?",
+      "name": "Název",
+      "actions": "Akce",
+      "noLocations": "Žádné lokace nebyly přidány"
+    },
+    "rooms": {
+      "title": "Místnosti",
+      "description": "Správa místností v rámci lokací",
+      "add": "Přidat místnost",
+      "edit": "Upravit místnost",
+      "delete": "Smazat místnost",
+      "deleteQuestion": "Opravdu chcete smazat tuto místnost?",
+      "name": "Název",
+      "location": "Lokace",
+      "actions": "Akce",
+      "noRooms": "Žádné místnosti nebyly přidány"
+    },
+    "scanners": {
+      "title": "Skenery",
+      "description": "Správa skenerů připojených k aplikaci Evac",
+      "add": "Přidat skener",
+      "edit": "Upravit skener",
+      "delete": "Smazat skener",
+      "deleteQuestion": "Opravdu chcete smazat tento skener?",
+      "name": "Název",
+      "location": "Lokace",
+      "room": "Místnost",
+      "ipAddress": "IP adresa",
+      "port": "Port",
+      "actions": "Akce",
+      "noScanners": "Žádné skenery nebyly přidány"
+    },
+    "devices": {
+      "title": "Zařízení",
+      "description": "Správa zařízení sledovaných aplikací Evac",
+      "add": "Přidat zařízení",
+      "edit": "Upravit zařízení",
+      "delete": "Smazat zařízení",
+      "deleteQuestion": "Opravdu chcete smazat toto zařízení?",
+      "name": "Název",
+      "identifier": "Identifikátor",
+      "location": "Lokace",
+      "room": "Místnost",
+      "scanner": "Skener",
+      "actions": "Akce",
+      "noDevices": "Žádná zařízení nebyla přidána"
+    },
+    "alarms": {
+      "title": "Poplachy",
+      "description": "Správa poplachů generovaných aplikací Evac",
+      "noAlarms": "Žádné poplachy nebyly zaznamenány",
+      "device": "Zařízení",
+      "time": "Čas",
+      "status": "Stav",
+      "actions": "Akce",
+      "acknowledge": "Potvrdit"
+    },
+    "emails": {
+      "title": "E-maily",
+      "description": "Správa e-mailových oznámení o poplacích",
+      "add": "Přidat e-mail",
+      "edit": "Upravit e-mail",
+      "delete": "Smazat e-mail",
+      "deleteQuestion": "Opravdu chcete smazat tento e-mail?",
+      "address": "E-mailová adresa",
+      "actions": "Akce",
+      "noEmails": "Žádné e-maily nebyly přidány"
+    },
+    "tools": {
+      "title": "Nástroje",
+      "description": "Nástroje pro správu a údržbu aplikace Evac"
+    },
+    "config": {
+      "title": "Nastavení",
+      "description": "Obecná nastavení aplikace Evac",
+      "language": "Jazyk",
+      "light": "Světlé",
+      "dark": "Tmavé",
+      "system": "Systémové"
+    },
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "requiredField": "Toto pole je povinné",
+    "invalidIp": "Neplatná IP adresa",
+    "invalidPort": "Neplatný port"
+  }
+}

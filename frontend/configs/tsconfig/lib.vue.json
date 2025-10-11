@@ -8,9 +8,6 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
 
-    "types": ["vite/client", "vue"]
-  },
-  "vueCompilerOptions": {
-    "skipTemplateCodegen": true
+    "types": ["vite/client", "vue", "../../configs/tsconfig/env.d.ts"]
   }
 }

@@ -1,20 +1,21 @@
 import type { Storage } from 'unstorage'
 
 import { logger } from '../logger'
-import type { AppService } from '../service'
+import type { WebSocketService } from '../service'
 import { connectToWebSocket, type WebSocketConnection } from './connect'
 
 type OrchestratorConfig = {
   url: URL | string
-  services?: Map<AppService, MessageParser> | Iterable<AppService>
+  services?: Iterable<WebSocketService>
   storage: Storage
 }
 
 export type MessageParser = (source: AsyncIterable<object>) => AsyncIterable<object>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function defineWebSocketServices(...services: [AppService<any>, MessageParser][]): Map<AppService, MessageParser> {
-  return new Map<AppService, MessageParser>(services as [AppService, MessageParser][])
+const RECONNECT_INTERVAL = 2000
+
+export function defineWebSocketServices(...services: WebSocketService[]): Set<WebSocketService> {
+  return new Set<WebSocketService>(services)
 }
 
 export async function orchestrateWebSocketAndServices(config: OrchestratorConfig) {
@@ -27,14 +28,8 @@ export async function orchestrateWebSocketAndServices(config: OrchestratorConfig
     await waitForConnectionToOpen(connection)
     logger.log('[ws] connection established')
 
-    if (services instanceof Map) {
-      for (const [service, parser] of services) {
-        runningServices.add(service.start({ source: parser(connection), storage, signal: abortController.signal }))
-      }
-    } else {
-      for (const service of services ?? []) {
-        runningServices.add(service.start({ source: connection, storage, signal: abortController.signal }))
-      }
+    for (const service of services ?? []) {
+      runningServices.add(service.start({ connection, source: connection, storage, signal: abortController.signal }))
     }
 
     await listen(connection)
@@ -42,10 +37,13 @@ export async function orchestrateWebSocketAndServices(config: OrchestratorConfig
     logger.log('[ws] connection closed')
     abortController.abort()
   } catch (e) {
-    logger.error('[ws] error:', e)
+    logger.error(e)
     abortController.abort()
     runningServices.forEach((x) => x[Symbol.dispose]())
     runningServices.clear()
+    logger.info(`[ws] waiting ${RECONNECT_INTERVAL}ms before reconnecting...`)
+    await new Promise((resolve) => setTimeout(resolve, RECONNECT_INTERVAL))
+    logger.info('[ws] attempting to reconnect...')
     return orchestrateWebSocketAndServices(config)
   }
 }

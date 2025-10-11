@@ -1,0 +1,42 @@
+@layer components {
+  .config-link {
+    --config-link-inverse-corners-size: theme(spacing.4);
+    @apply grid grid-cols-[1em_1fr] gap-4 items-center justify-between pl-4 pr-6 text-secondary relative;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    height: theme(spacing.14);
+
+    &.active {
+      @apply font-bold rounded-l-full bg-surface-elevated;
+
+      &::before,
+      &::after {
+        @apply content-[''] absolute bg-surface-elevated right-0;
+        width: var(--config-link-inverse-corners-size);
+        height: var(--config-link-inverse-corners-size);
+      }
+
+      &::before {
+        bottom: 100%;
+        clip-path: shape(
+          from 100% 0,
+          vline by 100%,
+          hline by -100%,
+          curve to 100% 0 with 100% 100%,
+          close
+        );
+      }
+      &::after {
+        top: 100%;
+        clip-path: shape(
+          from 0 0,
+          hline by 100%,
+          vline by 100%,
+          curve to 0 0 with 100% 0,
+          close
+        );
+      }
+    }
+  }
+}

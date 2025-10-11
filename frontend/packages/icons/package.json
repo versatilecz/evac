@@ -30,7 +30,6 @@
     }
   },
   "scripts": {
-    "preinstall": "npx only-allow npm",
     "postinstall": "vite build",
     "build": "vite build",
     "dev": "vite build --watch",

@@ -1,5 +1,6 @@
 import { resolve } from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
+import fonts from '@evac/fonts/vite'
 import icons from '@evac/icons/vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
@@ -17,8 +18,9 @@ export default defineConfig({
   plugins: [
     icons({
       prefix: 'icon-',
-      content: ['./index.html', './src/**/*.{vue,js,ts}', '../../packages/ui/src/**/*.{vue,js,ts}'],
-     }),
+      content: ['./index.html', './src/**/*.{vue,js,ts}', '../../packages/*/src/**/*.{vue,js,ts}'],
+    }),
+    fonts(),
     vue(),
     tailwindcss(),
   ],

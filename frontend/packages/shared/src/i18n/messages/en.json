@@ -1,0 +1,29 @@
+{
+  "page": {
+    "overview": "Overview",
+    "configuration": "Configuration"
+  },
+  "entity": {
+    "location": "Location",
+    "locations": "Locations",
+    "uuid": "UUID",
+    "name": "Name",
+    "description": "Description",
+    "battery": "Battery",
+    "activity": "Activity",
+    "enabled": "Enabled"
+  },
+  "action": {
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "cancelChanges": "Cancel changes",
+    "confirm": "Confirm",
+    "refresh": "Refresh",
+    "close": "Close",
+    "add": "Add",
+    "remove": "Remove"
+  }
+}

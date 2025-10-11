@@ -1,0 +1,68 @@
+<script setup lang="ts">
+import { useLocations, LocationsFilter } from '@evac/locations'
+import { useRooms } from '@evac/rooms'
+import { DevicesRoot, InlineDevices } from '@evac/devices'
+import { Badge } from '@evac/ui'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+  messages: {
+    en: {
+      devicesOverview: 'Devices Overview',
+      unlocatedDevices: 'Unlocated Devices',
+    },
+    cs: {
+      devicesOverview: 'Přehled zařízení',
+      unlocatedDevices: 'Mimo systém',
+    },
+  },
+})
+
+const filter = ref(LocationsFilter.all)
+const { list: locations } = useLocations(filter)
+const { byLocation } = useRooms()
+</script>
+
+<template>
+  <section class="grid grid-rows-[auto_1fr]">
+    <header>
+      <h1 class="headline h-12 flex items-center">{{ t('devicesOverview') }}</h1>
+      <button type="button"></button>
+    </header>
+
+    <div class="list overflow-y-auto">
+      <template v-for="location of locations" :key="location.uuid">
+        <DevicesRoot v-slot="{ count }" :location="location.uuid">
+          <header class="flex gap-4 items-center h-12">
+            <h2 class="headline" v-text="location.name" />
+            <Badge>{{ count }}</Badge>
+          </header>
+        </DevicesRoot>
+
+        <template v-for="room of byLocation.get(location.uuid) ?? []" :key="room.uuid">
+          <DevicesRoot v-slot="{ count, devices }" :room="room.uuid">
+            <div class="border-t flex gap-4 items-center h-12">
+              <h3 class="paragraph font-semibold" v-text="room.name" />
+              <Badge>{{ count }}</Badge>
+              <InlineDevices v-slot="{ device }" :devices="devices" class="justify-end grow">
+                <Badge class="badge-accent-blue">{{ device.name }}</Badge>
+              </InlineDevices>
+            </div>
+          </DevicesRoot>
+        </template>
+      </template>
+      <DevicesRoot v-slot="{ count, devices }" unlocated>
+        <div class="list mt-2">
+          <header class="flex gap-4 items-center h-12">
+            <h2 class="headline">{{ t('unlocatedDevices') }}</h2>
+            <Badge>{{ count }}</Badge>
+          </header>
+          <InlineDevices v-slot="{ device }" :devices="devices" class="mt-2">
+            <Badge>{{ device.name }}</Badge>
+          </InlineDevices>
+        </div>
+      </DevicesRoot>
+    </div>
+  </section>
+</template>

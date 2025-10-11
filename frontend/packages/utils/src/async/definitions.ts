@@ -5,7 +5,5 @@ export function isAsyncIterable<T>(value: unknown): value is AsyncIterable<T> {
 }
 
 export function isAsyncIterator<T>(value: unknown): value is AsyncIterator<T> {
-  return (
-    typeof value === 'object' && value !== null && 'next' in value && typeof (value as { next: unknown }).next === 'function'
-  )
+  return typeof value === 'object' && value !== null && 'next' in value && typeof (value as { next: unknown }).next === 'function'
 }

@@ -76,10 +76,7 @@ type SearchContentsConfig = {
   root: string
   prefix: string
 }
-async function* searchContents(
-  icons: Map<string, IconDescription>,
-  { content, root, prefix }: SearchContentsConfig
-): AsyncGenerator<[string, IconDescription]> {
+async function* searchContents(icons: Map<string, IconDescription>, { content, root, prefix }: SearchContentsConfig): AsyncGenerator<[string, IconDescription]> {
   const globPatterns = Array.from(content)
   if (!globPatterns.length) {
     yield* icons.entries()
@@ -111,7 +108,7 @@ function* checkFileForIcons(icons: Iterable<string>, fileContent: string, prefix
   const normalizedContent = fileContent.toLowerCase()
   for (const icon of icons) {
     const prefixed = `${prefix}${icon}`
-    const search = [`"${prefixed}"`, `'${prefixed}'`, `#${prefixed}"`]
+    const search = [`"${prefixed}"`, `'${prefixed}'`, `#${prefixed}"`, `"${icon}"`, `'${icon}'`]
 
     if (search.some((s) => normalizedContent.includes(s.toLowerCase()))) {
       yield icon

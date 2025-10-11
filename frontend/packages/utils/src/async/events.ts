@@ -1,10 +1,6 @@
 type FromEventOptions = Omit<AddEventListenerOptions, 'once'> & { signal?: AbortSignal }
 
-export function asyncIterableFromEvent<T extends Event>(
-  target: EventTarget,
-  eventName: string,
-  options?: FromEventOptions
-): AsyncIterable<T> {
+export function asyncIterableFromEvent<T extends Event>(target: EventTarget, eventName: string, options?: FromEventOptions): AsyncIterable<T> {
   const { signal, ...opts } = options ?? {}
 
   return {

@@ -1,5 +1,4 @@
 import { resolve } from 'node:path'
-
 import vuePlugin, { type Options as VuePluginOptions } from '@vitejs/plugin-vue'
 import { defineConfig as defineViteConfig, type PluginOption } from 'vite'
 import dtsPlugin from 'vite-plugin-dts'
@@ -26,11 +25,14 @@ export function defineConfig(dirname: string, pkg: NpmPackage, config: ConfigOpt
   }
 
   return defineViteConfig({
+    root: dirname,
     build: {
+      outDir: 'dist',
+      emptyOutDir: true,
       lib: {
         entry: {
-          index: resolve(dirname, 'src/index.ts'),
-          ...resolveEntryPaths(entries, dirname),
+          index: 'src/index.ts',
+          ...entries,
         },
         formats: ['cjs', 'es'],
       },
@@ -49,14 +51,15 @@ export function defineConfig(dirname: string, pkg: NpmPackage, config: ConfigOpt
       minify: true,
     },
     plugins: [dtsPlugin(), ...plugins],
+    resolve: {
+      alias: {
+        '@': resolve(dirname, './src'),
+      },
+    },
   })
 }
 
 function checkForVueDependency(pkg: NpmPackage) {
   const allDependencies = new Set([...Object.keys(pkg.dependencies ?? {}), ...Object.keys(pkg.peerDependencies ?? {})])
   return allDependencies.has('vue') || allDependencies.has('vue-demi')
-}
-
-function resolveEntryPaths(entries: LibEntries, dirname = '') {
-  return Object.fromEntries(Object.entries(entries).map(([name, srcPath]) => [name, resolve(dirname, srcPath)]))
 }

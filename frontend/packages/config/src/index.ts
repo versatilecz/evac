@@ -6,4 +6,4 @@ export * from './router'
 export * from './base'
 export * from './email'
 
-export * from './views'
+export { Index as Config } from './views'

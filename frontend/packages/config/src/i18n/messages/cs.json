@@ -2,29 +2,6 @@
   "config": {
     "title": "Konfigurace",
     "description": "Nastavení aplikace Evac",
-    "locations": {
-      "title": "Lokace",
-      "description": "Správa lokací, které aplikace Evac sleduje",
-      "add": "Přidat lokaci",
-      "edit": "Upravit lokaci",
-      "delete": "Smazat lokaci",
-      "deleteQuestion": "Opravdu chcete smazat tuto lokaci?",
-      "name": "Název",
-      "actions": "Akce",
-      "noLocations": "Žádné lokace nebyly přidány"
-    },
-    "rooms": {
-      "title": "Místnosti",
-      "description": "Správa místností v rámci lokací",
-      "add": "Přidat místnost",
-      "edit": "Upravit místnost",
-      "delete": "Smazat místnost",
-      "deleteQuestion": "Opravdu chcete smazat tuto místnost?",
-      "name": "Název",
-      "location": "Lokace",
-      "actions": "Akce",
-      "noRooms": "Žádné místnosti nebyly přidány"
-    },
     "scanners": {
       "title": "Skenery",
       "description": "Správa skenerů připojených k aplikaci Evac",

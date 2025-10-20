@@ -5,10 +5,10 @@ import { useI18n, type ComposerTranslation } from 'vue-i18n'
 
 type DialogFormOptions<Tc extends object, Tu extends object = Tc> = {
   data: MaybeRefOrGetter<Tc | Tu | null | undefined>
-  seed: () => Promise<Tc> | Tc
-  type: {
-    create: ZodType<Tc>
-    update: ZodType<Tu>
+  seed?: () => Promise<Tc> | Tc
+  type?: {
+    create?: ZodType<Tc>
+    update?: ZodType<Tu>
   }
 }
 
@@ -27,7 +27,7 @@ type DialogForm<Tc extends object, Tu extends object = Tc> = DialogFormState & {
 export function useDialogForm<Tc extends object, Tu extends object = Tc>(options: DialogFormOptions<Tc, Tu>): DialogForm<Tc | Tu> {
   const input = computed(() => toValue(options.data))
   const formData = reactive<Tc | Tu>({} as Tc | Tu)
-  watch(input, (current) => Object.assign(formData, current ?? options.seed()), { immediate: true })
+  watch(input, (current) => Object.assign(formData, current ?? options.seed?.() ?? {}), { immediate: true })
 
   const hasData = computed(() => !!input.value)
   const hasChanges = computed(() => {
@@ -44,20 +44,24 @@ export function useDialogForm<Tc extends object, Tu extends object = Tc>(options
     hasChanges,
     isCreate,
     isUpdate,
-    isValid: options.type ? computed(() => options.type.create.safeParse(formData).success) : computed(() => true),
+    isValid: options.type?.create
+      ? computed(() => options.type!.create!.safeParse(formData).success)
+      : options.type?.update
+        ? computed(() => options.type!.update!.safeParse(formData).success)
+        : computed(() => true),
     reset,
   } satisfies DialogForm<Tc | Tu>
 
   function reset() {
-    Object.assign(formData, options.seed(), { ...toValue(options.data) } as Tc | Tu)
+    Object.assign(formData, options.seed?.() ?? {}, { ...toValue(options.data) } as Tc | Tu)
   }
 
   function isCreate(input: Tc | Tu | null | undefined): input is Tc {
-    return options.type.create.safeParse(input).success
+    return options.type?.create?.safeParse(input).success ?? false
   }
 
   function isUpdate(input: Tc | Tu | null | undefined): input is Tu {
-    return options.type.update.safeParse(input).success
+    return options.type?.update?.safeParse(input).success ?? false
   }
 }
 

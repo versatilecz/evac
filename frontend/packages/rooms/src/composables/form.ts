@@ -1,45 +1,8 @@
-import { logger } from '@evac/shared'
 import { useAction, useDialogForm } from '@evac/ui'
-import { useObservable } from '@vueuse/rxjs'
-import { from } from 'rxjs'
-import { computed, toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, type MaybeRefOrGetter } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { $RoomFormData, $Room } from './definitions'
-import { service } from './service'
-
-type UseRoomsOptions = {
-  location?: MaybeRefOrGetter<string | null | undefined>
-}
-
-export function useRooms(options: UseRoomsOptions = {}) {
-  const data = useObservable(from(service), { onError: logger.error, initialValue: new Map<string, $Room>() })
-  const list = computed(() => [...filterByLocation(data.value.values(), toValue(options.location) ?? null)])
-  const byLocation = computed(() => Map.groupBy(data.value.values(), (room) => room.location ?? ''))
-  const count = computed(() => data.value.size)
-
-  return {
-    count,
-    data,
-    list,
-    byLocation,
-  }
-
-  function* filterByLocation(rooms: Iterable<$Room>, location: string | null) {
-    for (const room of rooms) {
-      if (location && room.location !== location) continue
-      yield room
-    }
-  }
-}
-
-export function useRoom(uuid: MaybeRefOrGetter<string>) {
-  const { data } = useRooms()
-  const room = computed(() => data.value.get(toValue(uuid)) ?? null)
-
-  return {
-    room,
-  }
-}
+import { $RoomFormData, $Room } from '@/definitions'
+import { service } from '@/service'
 
 export function useRoomForm(input: MaybeRefOrGetter<$Room | $RoomFormData | undefined | null>) {
   const { t } = useI18n({ useScope: 'global' })

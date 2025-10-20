@@ -16,7 +16,7 @@ await initApp(storage)
 async function initApp(storage: Storage) {
   let app: VueApp | null = null
   app = createApp(App)
-  app.use(createAuth())
+  app.use(createAuth({ storage }))
   app.use(router)
   app.use(i18n)
   app.mount('#app')

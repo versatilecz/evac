@@ -1,5 +1,5 @@
 import * as z from 'zod'
-import { MAC_BASE, MacAddress } from './definitions'
+import { MAC_BASE, $MacAddress } from './definitions'
 
 const numberConversions = {
   16: {
@@ -12,7 +12,7 @@ const numberConversions = {
   },
 } as const
 
-export const macCodec = z.codec(z.array(z.number()), MacAddress, {
+export const macCodec = z.codec(z.array(z.number()), $MacAddress, {
   decode: (data) => data.map(numberConversions[MAC_BASE].decode).join(':'),
   encode: (x) => x.split(':').map(numberConversions[MAC_BASE].encode),
 })

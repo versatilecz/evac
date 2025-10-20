@@ -1,31 +1,21 @@
 import { defineService } from '@evac/shared'
-import {
-  SCOPE,
-  $Location,
-  $Locations,
-  $LocationsMessage,
-  $LocationDetailMessage,
-  $LocationRemoveMessage,
-  $LocationRemovedMessage,
-  $LocationFormData,
-  $LocationSetMessage,
-} from './definitions'
+import * as def from './definitions'
 
 export const service = defineService({
-  name: SCOPE,
-  identity: $Locations,
+  name: def.SCOPE,
+  identity: def.$Locations,
 })
   .withSources(
     async function* onList(source) {
       for await (const message of source) {
-        const parsed = $LocationsMessage.safeParse(message)
+        const parsed = def.$LocationsMessage.safeParse(message)
         if (!parsed.success) continue
         yield parsed.data
       }
     },
     async function* onDetail(source) {
       for await (const message of source) {
-        const parsed = $LocationDetailMessage.safeParse(message)
+        const parsed = def.$LocationDetailMessage.safeParse(message)
         if (!parsed.success) continue
 
         const state = await this.get()
@@ -36,7 +26,7 @@ export const service = defineService({
     },
     async function* onRemoved(source) {
       for await (const message of source) {
-        const parsed = $LocationRemovedMessage.safeParse(message)
+        const parsed = def.$LocationRemovedMessage.safeParse(message)
         if (!parsed.success) continue
 
         const state = await this.get()
@@ -48,24 +38,24 @@ export const service = defineService({
     }
   )
   .withActions({
-    create(source, input: $LocationFormData) {
+    create(source, input: def.$LocationFormData) {
       const location = {
-        ...$LocationFormData.parse(input),
+        ...def.$LocationFormData.parse(input),
         uuid: self.crypto.randomUUID(),
-      } satisfies $Location
+      } satisfies def.$Location
 
-      source.send($LocationSetMessage.encode(location))
+      source.send(def.$LocationSetMessage.encode(location))
     },
     remove(source, input: string) {
-      source.send($LocationRemoveMessage.encode(input))
+      source.send(def.$LocationRemoveMessage.encode(input))
     },
-    update(source, input: $Location) {
-      const location = $Location.parse(input)
-      source.send($LocationSetMessage.encode(location))
+    update(source, input: def.$Location) {
+      const location = def.$Location.parse(input)
+      source.send(def.$LocationSetMessage.encode(location))
     },
-    seed(): $LocationFormData {
+    seed(): def.$LocationFormData {
       return {
         name: '',
-      } satisfies $LocationFormData
+      } satisfies def.$LocationFormData
     },
   })

@@ -6,16 +6,14 @@ import Dialog from './Dialog.vue'
 
 defineProps<{ room: $Room }>()
 defineOptions({ inheritAttrs: false })
-const auth = useAuth()
+const { isDebug } = useAuth()
 </script>
 
 <template>
   <Dialog class="row-start-1 col-start-2 place-self-center" :room="room">
     <button type="button" class="btn btn-surface min-h-24 grid gap-2 place-content-center" v-bind="$attrs">
       <strong class="value">{{ room.name }}</strong>
-      <template v-if="auth.isAdmin">
-        <Badge>{{ room.uuid }}</Badge>
-      </template>
+      <Badge v-if="isDebug">{{ room.uuid }}</Badge>
     </button>
   </Dialog>
 </template>

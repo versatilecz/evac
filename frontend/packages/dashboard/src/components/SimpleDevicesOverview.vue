@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLocations, LocationsFilter } from '@evac/locations'
+import { useLocations, $FilterByReference } from '@evac/locations'
 import { useRooms } from '@evac/rooms'
 import { DevicesRoot, InlineDevices } from '@evac/devices'
 import { Badge } from '@evac/ui'
@@ -19,8 +19,8 @@ const { t } = useI18n({
   },
 })
 
-const filter = ref(LocationsFilter.all)
-const { list: locations } = useLocations(filter)
+const filter = ref($FilterByReference.enum.all)
+const { list: locations } = useLocations({ filter: { reference: filter } })
 const { byLocation } = useRooms()
 </script>
 

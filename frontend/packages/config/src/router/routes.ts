@@ -1,45 +1,46 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { Config, Locations, Rooms, Scanners, Tools } from '@/views'
 
 export default [
   {
     path: 'locations',
     name: 'config.locations',
-    component: () => import('../views/Locations.vue').then((m) => m.default),
+    component: Locations,
   },
   {
     path: 'rooms',
     name: 'config.rooms',
-    component: () => import('../views/Rooms.vue').then((m) => m.default),
+    component: Rooms,
   },
   {
     path: 'scanners',
     name: 'config.scanners',
-    component: () => import('../views/Locations.vue').then((m) => m.default),
+    component: Scanners,
   },
   {
     path: 'devices',
     name: 'config.devices',
-    component: () => import('../views/Locations.vue').then((m) => m.default),
+    component: Locations,
   },
   {
     path: 'alarms',
     name: 'config.alarms',
-    component: () => import('../views/Locations.vue').then((m) => m.default),
+    component: Locations,
   },
   {
     path: 'emails',
     name: 'config.emails',
-    component: () => import('../views/Locations.vue').then((m) => m.default),
+    component: Locations,
   },
   {
     path: 'tools',
     name: 'config.tools',
-    component: () => import('../views/Locations.vue').then((m) => m.default),
+    component: Tools,
   },
   {
     path: 'config',
     name: 'config.config',
-    component: () => import('../views/Locations.vue').then((m) => m.default),
+    component: Config,
   },
   {
     path: '',

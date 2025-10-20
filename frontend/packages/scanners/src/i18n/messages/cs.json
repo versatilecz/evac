@@ -1,0 +1,20 @@
+{
+  "scanner": {
+    "title": "Skener",
+    "dialog": {
+      "title": "Detail skeneru",
+      "description": "",
+      "edit": "Upravit skener",
+      "confirmDelete": "Opravdu chcete smazat tento skener?"
+    },
+    "select": {
+      "placeholder": "Vyberte skener"
+    }
+  },
+  "scanners": {
+    "config": {
+      "title": "Skenery",
+      "description": "Správa skenerů v systému"
+    }
+  }
+}

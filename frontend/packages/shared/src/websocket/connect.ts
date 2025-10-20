@@ -6,7 +6,7 @@ export function connectToWebSocket<T>(url: URL | string, options: WebSocketConne
   let currentSocket: WebSocket | null = null
   let retryAttempts = 0
   let isDisposed = false
-  let reconnectTimeoutId: NodeJS.Timeout | number | null = null
+  let reconnectTimeoutId: ReturnType<typeof setTimeout> | null = null
 
   // This EventTarget will have 'message', 'error', and 'close' events. Also 'failed' event when retries are exhausted.
   const service = new EventTarget() as WebSocketConnection<T>

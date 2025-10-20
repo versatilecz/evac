@@ -66,13 +66,13 @@
       "acknowledge": "Acknowledge"
     },
     "emails": {
-      "title": "EEmails",
+      "title": "Emails",
       "description": "Management of email notifications for alarms",
       "add": "Add email",
       "edit": "Edit email",
       "delete": "Delete email",
       "deleteQuestion": "Are you sure you want to delete this email?",
-      "address": "EEmail address",
+      "address": "Email address",
       "actions": "Actions",
       "noEmails": "No emails have been added"
     },

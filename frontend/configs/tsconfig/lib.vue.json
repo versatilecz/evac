@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./lib.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+
+    "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+
+    "types": ["vite/client", "vue", "../../configs/tsconfig/env.d.ts"]
+  }
+}

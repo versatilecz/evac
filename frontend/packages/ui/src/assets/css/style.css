@@ -1,0 +1,39 @@
+@layer components {
+  .paragraph {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .headline {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .description {
+    @apply text-secondary;
+  }
+
+  @scope (.table, .list) {
+    .headline {
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 16px;
+    }
+
+    .value {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  }
+
+  @scope (.footer) {
+    .paragraph {
+      font-weight: 400;
+      font-size: 8px;
+      line-height: 1.5;
+    }
+  }
+}

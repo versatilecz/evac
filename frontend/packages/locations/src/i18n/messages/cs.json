@@ -1,0 +1,21 @@
+{
+  "location": {
+    "title": "Lokace",
+    "dialog": {
+      "title": "Detail lokace",
+      "description": "",
+      "create": "Vytvořit lokaci",
+      "edit": "Upravit lokaci",
+      "confirmDelete": "Opravdu chcete smazat tuto lokaci?"
+    },
+    "select": {
+      "placeholder": "Vyberte lokaci"
+    }
+  },
+  "locations": {
+    "config": {
+      "title": "Lokace",
+      "description": "Správa lokací v systému"
+    }
+  }
+}

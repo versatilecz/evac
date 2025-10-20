@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "outDir": "${configDir}/dist",
+    "baseUrl": "${configDir}",
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "rootDir": "${configDir}/src",
+    "declarationDir": "${configDir}/dist",
+
+    "paths": {
+      "@/*": ["${configDir}/src/*"]
+    }
+  },
+  "include": ["${configDir}/src/**/*", "../../packages/*/src/i18n/messages/*.json"],
+  "exclude": ["../../node_modules", "${configDir}/node_modules"]
+}

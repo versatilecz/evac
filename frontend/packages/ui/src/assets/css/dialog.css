@@ -1,0 +1,17 @@
+@theme {
+  --dialog-min-width: 30rem;
+}
+
+@layer components {
+  .overlay[data-state='open'] {
+    @apply fixed inset-0 z-50;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+  .dialog {
+    @apply fixed z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl bg-surface-elevated rounded-lg;
+    min-width: var(--dialog-min-width);
+    max-width: calc(100dvw - 2rem);
+    max-height: calc(100dvh - 2rem);
+  }
+}

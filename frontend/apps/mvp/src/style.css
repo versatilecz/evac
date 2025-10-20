@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@evac/ui/theme.css';
+@import '@evac/config/style.css';
+
+@source '../../../packages/*/src/**/*.{vue,js,ts,jsx,tsx}';

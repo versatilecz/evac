@@ -1,0 +1,58 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "version": 2,
+  "parallel": 10,
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": ["default", "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)", "!{projectRoot}/eslint.config.js"],
+    "sharedGlobals": []
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
+    },
+    "start": {
+      "dependsOn": ["^dev"],
+      "inputs": ["default", "^default"]
+    },
+    "dev": {
+      "dependsOn": ["^dev"],
+      "inputs": ["default", "^default"],
+      "cache": false
+    },
+    "serve": {
+      "dependsOn": ["^dev"],
+      "inputs": ["default", "^default"]
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["start", "dev", "build", "preview", "prepublishOnly", "prebuild", "predev", "prepare"]
+      }
+    }
+  },
+  "generators": {
+    "@nx/vue": {
+      "application": {
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "e2eTestRunner": "none"
+      }
+    }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview"
+      },
+      "exclude": ["**/dist/**"]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+@theme {
+  --list-height: theme('spacing.12');
+}
+
+@layer components {
+  .list {
+    min-height: var(--list-height);
+  }
+}

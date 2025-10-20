@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2023",
+    "verbatimModuleSyntax": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "emitDeclarationOnly": true,
+
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "DOM.AsyncIterable", "ESNext.Disposable"],
+
+    "composite": true
+  },
+  "exclude": ["../../node_modules"]
+}

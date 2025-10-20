@@ -1,3 +1,92 @@
 {
-	"folders": []
+  "folders": [
+    {
+      "name": "EVAC",
+      "path": "."
+    },
+    {
+      "name": "FE",
+      "path": "./frontend"
+    },
+    {
+      "name": "FE / Apps",
+      "path": "./frontend/apps"
+    },
+    {
+      "name": "FE / Apps / POW",
+      "path": "./frontend/apps/pow"
+    },
+    {
+      "name": "FE / Apps / MVP",
+      "path": "./frontend/apps/mvp"
+    },
+    {
+      "name": "FE / Packages",
+      "path": "./frontend/packages"
+    },
+    {
+      "name": "FE / Packages / Config",
+      "path": "./frontend/packages/config"
+    },
+    {
+      "name": "FE / Packages / Dashboard",
+      "path": "./frontend/packages/dashboard"
+    },
+    {
+      "name": "FE / Packages / Shared",
+      "path": "./frontend/packages/shared"
+    },
+    {
+      "name": "FE / Packages / UI",
+      "path": "./frontend/packages/ui"
+    },
+    {
+      "name": "FE / Packages / Utils",
+      "path": "./frontend/packages/utils"
+    }
+  ],
+  "extensions": {
+    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  },
+  "settings": {
+    "typescript.tsdk": "./frontend/node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "vue.server.hybridMode": true,
+    "prettier.enable": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "nxConsole.nxWorkspacePath": "frontend",
+    "mcp": {
+      "servers": {
+        "figma-desktop": {
+          "url": "http://127.0.0.1:3845/mcp",
+          "type": "http"
+        }
+      },
+      "inputs": []
+    },
+    "chat.mcp.serverSampling": {
+      "evac.code-workspace: figma-desktop": {
+        "allowedModels": [
+          "copilot/claude-sonnet-4",
+          "copilot/claude-sonnet-4.5",
+          "copilot/gpt-5",
+          "copilot/gpt-5-mini",
+          "copilot/gpt-5-codex"
+        ]
+      }
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { MacAddress, macCodec, isoDatetimeToDate } from '@evac/shared'
+import { $MacAddress, macCodec, isoDatetimeToDate } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Scanner = z.infer<typeof $Scanner>
@@ -6,7 +6,7 @@ export type $Scanners = z.infer<typeof $Scanners>
 
 export const SCOPE = 'scanners'
 
-export const PortNumber = z
+export const $PortNumber = z
   .number()
   .min(0)
   .max(2 ** 16 - 1)
@@ -16,8 +16,8 @@ export const $Scanner = z.object({
   uuid: z.uuidv4(),
   room: z.uuid().describe('The UUID of the room this scanner belongs to'),
   ip: z.ipv4().or(z.ipv6()),
-  port: PortNumber,
-  mac: MacAddress,
+  port: $PortNumber,
+  mac: $MacAddress,
   buzzer: z.boolean(),
   scan: z.boolean(),
   led: z.boolean(),

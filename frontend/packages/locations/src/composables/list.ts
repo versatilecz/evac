@@ -20,8 +20,8 @@ export function useLocations({ filter = {}, sort = [] }: Options = {}) {
   const referenceFilter = filter.reference ?? $FilterByReference.enum.all
 
   const data = useObservable(from(service), { onError: logger.error, initialValue: new Map<string, $Location>() })
-  const all = computed(() => [...data.value.values()])
-  const list = computed(() => pipe(all.value, applyFilters([filterByReference(toValue(referenceFilter))]), sortByRules(toValue(sort) ?? [])))
+  const all = computed(() => pipe([...data.value.values()], sortByRules(toValue(sort) ?? [])))
+  const list = computed(() => pipe(data.value.values(), applyFilters([filterByReference(toValue(referenceFilter))]), sortByRules(toValue(sort) ?? [])))
   const count = computed(() => data.value.size)
 
   return {

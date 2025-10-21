@@ -43,7 +43,7 @@ export function useAuth() {
 function initAuth(): Auth {
   return {
     isAuthenticated: false,
-    isAdmin: false,
+    isAdmin: true,
     isUser: false,
     isExternal: false,
   }

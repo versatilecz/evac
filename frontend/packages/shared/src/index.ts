@@ -6,4 +6,5 @@ export * from './service'
 export * from './websocket'
 
 export * from './filter'
+export * from './format'
 export * from './sort'

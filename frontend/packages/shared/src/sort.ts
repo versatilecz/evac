@@ -14,13 +14,13 @@ export const $SortRule = z.object({
   direction: $SortDirection,
 })
 
-export function sortByRules<T>(rules: $SortRule[]): (input: Iterable<T>) => T[]
-export function sortByRules<T>(input: Iterable<T>, rules: $SortRule[]): T[]
-export function sortByRules<T>(...args: [$SortRule[]] | [Iterable<T>, $SortRule[]]) {
+export function sortByRules<T>(rules: $SortRule[] | $SortRule): (input: Iterable<T>) => T[]
+export function sortByRules<T>(input: Iterable<T>, rules: $SortRule[] | $SortRule): T[]
+export function sortByRules<T>(...args: [$SortRule[] | $SortRule] | [Iterable<T>, $SortRule[] | $SortRule]) {
   if (args.length === 1) {
-    return (input: Iterable<T>) => sort(input, args[0])
+    return (input: Iterable<T>) => sort(input, ensureArray(args[0]))
   } else {
-    return sort(args[0], args[1])
+    return sort(args[0], ensureArray(args[1]))
   }
 
   function sort(input: Iterable<T>, rules: unknown) {
@@ -40,4 +40,19 @@ export function sortByRules<T>(...args: [$SortRule[]] | [Iterable<T>, $SortRule[
       return 0
     })
   }
+
+  function ensureArray(rules: $SortRule[] | $SortRule): $SortRule[] {
+    return Array.isArray(rules) ? rules : [rules]
+  }
+}
+
+export function changeSortRule(sort: $SortRule, by: string): $SortRule {
+  const next = { ...sort }
+  if (next.by === by) {
+    next.direction = next.direction === $SortDirection.enum.Ascending ? $SortDirection.enum.Descending : $SortDirection.enum.Ascending
+  } else {
+    next.by = by
+    next.direction = $SortDirection.enum.Ascending
+  }
+  return next
 }

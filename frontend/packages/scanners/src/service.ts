@@ -38,6 +38,9 @@ export const service = defineService({
     }
   )
   .withActions({
+    remove(source, input: string) {
+      source.send(def.$ScannerRemoveMessage.encode(input))
+    },
     update(source, input: def.$Scanner) {
       const scanner = def.$Scanner.parse(input)
       source.send(def.$ScannerSetMessage.encode(scanner))

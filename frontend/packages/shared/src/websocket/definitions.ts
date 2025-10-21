@@ -22,5 +22,5 @@ export type WebSocketConnection<T> = EventTarget &
     /** The current ready state of the WebSocket connection */
     readonly readyState: number
     /** Sends data through the WebSocket connection */
-    send(data: string | ArrayBuffer | Blob | ArrayBufferView): void
+    send(data: unknown): void
   }

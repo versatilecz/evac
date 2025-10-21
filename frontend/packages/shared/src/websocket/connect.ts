@@ -79,12 +79,20 @@ export function connectToWebSocket<T>(url: URL | string, options: WebSocketConne
   Object.defineProperty(service, 'send', {
     value: function send(data: unknown) {
       if (currentSocket && currentSocket.readyState === WebSocket.OPEN) {
-        currentSocket.send(JSON.stringify(data))
+        currentSocket.send(encodeData(data))
       } else {
         throw new Error('WebSocket is not connected')
       }
     } satisfies WebSocketConnection<T>['send'],
   })
+
+  function encodeData(data: unknown) {
+    if (typeof data === 'string') return data
+    if (data instanceof ArrayBuffer || data instanceof Blob || ArrayBuffer.isView(data)) {
+      return data
+    }
+    return JSON.stringify(data)
+  }
 
   // Initialize the first connection
   createSocket()

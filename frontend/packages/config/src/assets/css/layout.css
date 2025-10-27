@@ -1,11 +1,16 @@
 @layer components {
   .config-link {
     --config-link-inverse-corners-size: theme(spacing.4);
-    @apply grid grid-cols-[1em_1fr] gap-4 items-center justify-between pl-4 pr-6 text-secondary relative;
+    @apply grid grid-cols-[1em_1fr] gap-4 items-center justify-between pl-4 pr-6 text-secondary relative transition-all;
     font-size: 18px;
     font-weight: 400;
     line-height: 1;
     height: theme(spacing.14);
+
+    &:not(.active):hover {
+      transform: translateY(-1px) scale(1.02);
+      font-weight: 500;
+    }
 
     &.active {
       @apply font-bold rounded-l-full bg-surface-elevated;

@@ -2,18 +2,19 @@ export * from './abort'
 export * from './deferred'
 export * from './async'
 export * from './promise'
+export * from './unstorage'
 
 // Date utilities
-export const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat('en-US', {
+export const formatDate = (date: Date, locale = 'cs'): string => {
+  return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
   }).format(date)
 }
 
-export const formatDateTime = (date: Date): string => {
-  return new Intl.DateTimeFormat('en-US', {
+export const formatDateTime = (date: Date, locale = 'cs'): string => {
+  return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',

@@ -1,50 +1,83 @@
-import { inject, type App } from 'vue'
-
-type Auth = {
-  isAuthenticated: boolean
-  isAdmin: boolean
-  isUser: boolean
-  isExternal: boolean
-}
+import { logger } from '@evac/shared'
+import { syncStorageWithSubject } from '@evac/utils'
+import { useSubject } from '@vueuse/rxjs'
+import type { Storage } from 'unstorage'
+import { inject, type App, type Ref, type ToRefs } from 'vue'
+import { isAuthenticated$$, isAdmin$$, isDebug$$, isUser$$, isExternal$$ } from './data'
+import type { Auth } from './definitions'
 
 // Augment Vue's component instance type
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $auth: Auth
+    $auth: ToRefs<Auth>
   }
 }
 
 declare module 'vue' {
   interface ComponentCustomProperties {
-    $auth: Auth
+    $auth: ToRefs<Auth>
   }
 }
 
-const AUTH_KEY = Symbol('auth')
+const SYMBOL = {
+  DEBUG: Symbol('auth:debug'),
+  ADMIN: Symbol('auth:admin'),
+  AUTH: Symbol('auth:auth'),
+  USER: Symbol('auth:user'),
+  EXTERNAL: Symbol('auth:external'),
+} as const
 
-export function createAuth() {
+type PluginOptions = {
+  storage: Storage
+}
+
+export function createAuth({ storage }: PluginOptions) {
   return function authPlugin(app: App) {
-    // TODO: implement real authentication logic
-    app.config.globalProperties.$auth = {
-      isAuthenticated: true,
-      isAdmin: true,
-      isUser: true,
-      isExternal: false,
-    }
+    const subscriptions = [syncStorageWithSubject<boolean>(storage, 'debug', isDebug$$)]
 
-    app.provide(AUTH_KEY, app.config.globalProperties.$auth)
+    const isAuthenticated = useSubject(isAuthenticated$$, { onError: logger.error })
+    const isAdmin = useSubject(isAdmin$$, { onError: logger.error })
+    const isDebug = useSubject(isDebug$$, { onError: logger.error })
+    const isUser = useSubject(isUser$$, { onError: logger.error })
+    const isExternal = useSubject(isExternal$$, { onError: logger.error })
+
+    const auth = {
+      isAuthenticated,
+      isAdmin,
+      isDebug,
+      isUser,
+      isExternal,
+    } satisfies ToRefs<Auth>
+
+    app.config.globalProperties.$auth = auth
+    app.provide(SYMBOL.AUTH, isAuthenticated)
+    app.provide(SYMBOL.ADMIN, isAdmin)
+    app.provide(SYMBOL.DEBUG, isDebug)
+    app.provide(SYMBOL.USER, isUser)
+    app.provide(SYMBOL.EXTERNAL, isExternal)
+
+    return () => {
+      return Promise.all(subscriptions.map((x) => x.then((y) => y.unsubscribe())))
+    }
   }
 }
 
-export function useAuth() {
-  return inject<Auth>(AUTH_KEY, initAuth, true)
-}
+export function useAuth(): ToRefs<Auth> {
+  const isDebug = inject<Ref<boolean>>(SYMBOL.DEBUG)
+  const isAuthenticated = inject<Ref<boolean>>(SYMBOL.AUTH)
+  const isAdmin = inject<Ref<boolean>>(SYMBOL.ADMIN)
+  const isUser = inject<Ref<boolean>>(SYMBOL.USER)
+  const isExternal = inject<Ref<boolean>>(SYMBOL.EXTERNAL)
 
-function initAuth(): Auth {
+  if (!isDebug || !isAuthenticated || !isAdmin || !isUser || !isExternal) {
+    throw new Error('Auth not provided')
+  }
+
   return {
-    isAuthenticated: false,
-    isAdmin: false,
-    isUser: false,
-    isExternal: false,
+    isAdmin,
+    isAuthenticated,
+    isDebug,
+    isUser,
+    isExternal,
   }
 }

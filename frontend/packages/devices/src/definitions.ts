@@ -1,4 +1,4 @@
-import { MacAddress, macCodec, isoDatetimeToDate } from '@evac/shared'
+import { $MacAddress, macCodec, isoDatetimeToDate } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Device = z.infer<typeof $Device>
@@ -6,15 +6,10 @@ export type $Devices = z.infer<typeof $Devices>
 
 export const SCOPE = 'devices'
 
-export const PortNumber = z
-  .number()
-  .min(0)
-  .max(2 ** 16 - 1)
-
 export const $Device = z.object({
   name: z.string(),
   uuid: z.uuidv4(),
-  mac: MacAddress,
+  mac: $MacAddress,
   lastActivity: z.date(),
   enabled: z.boolean(),
   battery: z.number().min(0).max(100).nullable(),

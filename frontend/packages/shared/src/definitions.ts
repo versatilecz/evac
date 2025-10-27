@@ -15,4 +15,6 @@ export const REGEX = {
   },
 } as const
 
-export const MacAddress = z.string().regex(REGEX.MAC[MAC_BASE]).describe('MAC address in string representation')
+export type $MacAddress = z.infer<typeof $MacAddress>
+
+export const $MacAddress = z.string().regex(REGEX.MAC[MAC_BASE]).describe('MAC address in string representation')

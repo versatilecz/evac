@@ -1,0 +1,39 @@
+@theme {
+  --switch-size: calc(var(--btn-height, theme(spacing.12)) - theme(spacing.4));
+  --switch-thumb-size: calc(var(--switch-size) / 2 - theme(spacing.1));
+}
+
+@layer components {
+  .switch {
+    --switch-color: var(--color-muted);
+    position: relative;
+  }
+  .switch::before {
+    @apply block absolute z-10;
+    content: '';
+    aspect-ratio: 2 / 1;
+    width: var(--switch-size);
+    background-color: var(--switch-color);
+    border-radius: var(--radius-full);
+  }
+  .switch[data-state='checked'] {
+    --switch-color: var(--color-accent-green);
+  }
+  .switch[data-state='unchecked'] {
+    --switch-color: var(--color-accent-red);
+  }
+
+  @scope (.switch) {
+    .thumb {
+      @apply absolute rounded-full bg-white transition-all z-20;
+      width: var(--switch-thumb-size);
+      height: var(--switch-thumb-size);
+    }
+    .thumb[data-state='checked'] {
+      right: calc(var(--switch-size) / 2 - var(--switch-thumb-size) / 2);
+    }
+    .thumb[data-state='unchecked'] {
+      left: calc(var(--switch-size) / 2 - var(--switch-thumb-size) / 2);
+    }
+  }
+}

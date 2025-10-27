@@ -3,7 +3,7 @@ import type { Observable } from 'rxjs'
 import { prefixStorage, type Storage } from 'unstorage'
 import type { ZodType } from 'zod'
 import { logger as defaultLogger } from './logger'
-import type { WebSocketConnection } from './websocket/connect'
+import type { WebSocketConnection } from './websocket/definitions'
 
 const ACTION_TIMEOUT = 5000
 

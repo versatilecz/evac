@@ -4,6 +4,10 @@ export * from 'reka-ui/namespaced'
 // Components that are used in multiple places across the app
 export { default as Badge } from './Badge.vue'
 export { default as Icon } from './Icon.vue'
+export { default as BooleanIcon } from './BooleanIcon.vue'
+
+// Helper components
+export * as List from './List'
 
 // Layout components
 export { default as ContentHeader } from './ContentHeader.vue'

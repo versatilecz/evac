@@ -2,7 +2,8 @@ import type { Storage } from 'unstorage'
 
 import { logger } from '../logger'
 import type { WebSocketService } from '../service'
-import { connectToWebSocket, type WebSocketConnection } from './connect'
+import { connectToWebSocket } from './connect'
+import type { WebSocketConnection } from './definitions'
 
 type OrchestratorConfig = {
   url: URL | string

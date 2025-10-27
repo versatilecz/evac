@@ -9,7 +9,7 @@
 
   --btn-shadow: theme(shadow.sm);
   --btn-filled-foreground: var(--color-inverse);
-  --btn-filled-background: var(--color-emphasis-high);
+  --btn-filled-background: var(--color-emphasis-8);
 
   --btn-surface-foreground: var(--color-primary);
   --btn-surface-background: var(--color-surface-subtle);

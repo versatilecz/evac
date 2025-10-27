@@ -1,9 +1,51 @@
 @theme {
-  --list-height: theme('spacing.12');
+  --list-height: theme(spacing.12);
+  --list-gap-x: theme(spacing.4);
 }
 
 @layer components {
   .list {
     min-height: var(--list-height);
+  }
+
+  @scope (.list) {
+    .headline {
+      @apply grid grid-cols-subgrid border-b;
+      padding: theme(spacing.1)
+        calc(theme(spacing.6) - calc(var(--list-gap-x) / 2));
+    }
+
+    .item {
+      @apply transition-all;
+      cursor: pointer;
+    }
+    .item:hover {
+      background-color: var(--color-emphasis-1);
+      transform: scale(1.01);
+    }
+    .item:disabled {
+      pointer-events: none;
+    }
+
+    .sort-trigger {
+      @apply inline-flex items-center gap-1 cursor-pointer transition-all;
+      justify-self: start;
+      border-radius: calc(var(--list-gap-x) / 2);
+      height: calc(var(--btn-height) * 0.75);
+      padding: 0 calc(var(--list-gap-x) / 2);
+
+      &:hover,
+      &:active {
+        background-color: var(--color-emphasis-1);
+        box-shadow: theme(shadow.md);
+      }
+      &:hover {
+        transform: translateY(-1px) scale(1.02);
+      }
+      &:active {
+        transform: translateY(0) scale(0.98);
+        filter: brightness(0.94);
+      }
+    }
   }
 }

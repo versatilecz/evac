@@ -7,5 +7,5 @@ const { room } = useRoom(() => props.uuid)
 </script>
 
 <template>
-  <slot :room="room" />
+  <slot v-if="room" :room="room" />
 </template>

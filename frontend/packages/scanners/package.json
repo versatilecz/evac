@@ -34,7 +34,9 @@
   },
   "dependencies": {
     "@evac/auth": "*",
+    "@evac/rooms": "^0.0.1",
     "@evac/shared": "*",
+    "@evac/ui": "*",
     "@evac/utils": "*",
     "@vueuse/core": "^13.9.0",
     "@vueuse/rxjs": "^13.9.0",

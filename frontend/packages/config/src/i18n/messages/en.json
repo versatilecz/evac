@@ -2,29 +2,6 @@
   "config": {
     "title": "Configuration",
     "description": "Settings for the Evac application",
-    "locations": {
-      "title": "Locations",
-      "description": "Management of locations monitored by the Evac application",
-      "add": "Add location",
-      "edit": "Edit location",
-      "delete": "Delete location",
-      "deleteQuestion": "Are you sure you want to delete this location?",
-      "name": "Name",
-      "actions": "Actions",
-      "noLocations": "No locations have been added"
-    },
-    "rooms": {
-      "title": "Rooms",
-      "description": "Management of rooms within locations",
-      "add": "Add room",
-      "edit": "Edit room",
-      "delete": "Delete room",
-      "deleteQuestion": "Are you sure you want to delete this room?",
-      "name": "Name",
-      "location": "Location",
-      "actions": "Actions",
-      "noRooms": "No rooms have been added"
-    },
     "scanners": {
       "title": "Scanners",
       "description": "Management of scanners connected to the Evac application",

@@ -5,5 +5,6 @@ export * from './router'
 
 export * from './base'
 export * from './email'
+export * from './tools/backup'
 
 export { Index as Config } from './views'

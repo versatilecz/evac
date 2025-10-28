@@ -23,6 +23,7 @@ export function useFormat() {
       date: intl.date(locale),
       dateTime: intl.dateTime(locale),
       percent: intl.percent(locale),
+      sort: intl.sort(locale),
       count: formatCount,
     } satisfies Formatters
   }

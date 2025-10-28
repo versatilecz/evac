@@ -19,3 +19,7 @@ export function dateTime(locale: string) {
 export function percent(locale: string) {
   return Intl.NumberFormat(locale, { style: 'percent' })
 }
+
+export function sort(locale: string) {
+  return new Intl.Collator(locale, { usage: 'sort', numeric: true })
+}

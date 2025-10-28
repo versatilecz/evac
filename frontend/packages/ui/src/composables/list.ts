@@ -39,7 +39,6 @@ export function useList({ initialSort, fields }: Options): ListContext {
 
   const gridStyle = computed(() => {
     const fields = visibleFields.value
-    console.log('visible', fields)
     const columns = fields.map((field) => (field.fill ? '1fr' : 'max-content'))
     return {
       display: 'grid',
@@ -93,8 +92,6 @@ export function useListContext(shouldAssert?: boolean): ListContext | undefined 
   if (shouldAssert && !context) {
     throw new Error('useListContext must be used within a useList provider')
   }
-
-  console.log(context)
 
   return context
 }

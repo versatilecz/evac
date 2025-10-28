@@ -4,7 +4,7 @@ import { useObservable } from '@vueuse/rxjs'
 import { pipe } from 'remeda'
 import { from } from 'rxjs'
 import { computed, toValue, type MaybeRefOrGetter } from 'vue'
-import { $Scanner } from '@/definitions'
+import { $Device } from '@/definitions'
 import { service } from '@/service'
 
 type Options = {
@@ -13,8 +13,8 @@ type Options = {
 
 export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
 
-export function useScanners({ sort = [DEFAULT_SORT] }: Options = {}) {
-  const data = useObservable(from(service), { onError: logger.error, initialValue: new Map<string, $Scanner>() })
+export function useDevices({ sort = [DEFAULT_SORT] }: Options = {}) {
+  const data = useObservable(from(service), { onError: logger.error, initialValue: new Map<string, $Device>() })
   const all = computed(() => [...data.value.values()])
   const list = computed(() => pipe(data.value.values(), applyFilters([]), sortByRules(toValue(sort))))
   const count = computed(() => formatCount(data.value.size, list.value.length))

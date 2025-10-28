@@ -6,12 +6,19 @@
   "entity": {
     "location": "Location",
     "locations": "Locations",
+    "room": "Room",
+    "rooms": "Rooms",
     "uuid": "UUID",
     "name": "Name",
     "description": "Description",
     "battery": "Battery",
     "activity": "Activity",
-    "enabled": "Enabled"
+    "enabled": "Enabled",
+    "ip": "IP",
+    "mac": "MAC",
+    "buzzer": "Buzzer",
+    "led": "LED",
+    "scan": "Scan"
   },
   "action": {
     "create": "Create",

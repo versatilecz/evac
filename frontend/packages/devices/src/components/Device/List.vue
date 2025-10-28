@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { List, useListContext } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
-import type { $Scanner } from '@/definitions'
+import type { $Device } from '@/definitions'
 import ListItem from './ListItem.vue'
 
 defineProps<{
-  scanners: Iterable<$Scanner>
+  devices: Iterable<$Device>
 }>()
 const { t } = useI18n({ useScope: 'global' })
 const { gridStyle, rowStyle, visible } = useListContext(true)
@@ -15,17 +15,14 @@ const { gridStyle, rowStyle, visible } = useListContext(true)
   <section class="list grid content-start" :style="gridStyle">
     <header class="headline" :style="rowStyle">
       <List.SortTrigger v-if="visible.name" sort-key="name">{{ t('entity.name') }}</List.SortTrigger>
-      <List.SortTrigger v-if="visible.room" sort-key="room">{{ t('entity.room') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.uuid" class="justify-self-center" sort-key="uuid">{{ t('entity.uuid') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.mac" class="justify-self-center" sort-key="mac">{{ t('entity.mac') }}</List.SortTrigger>
-      <List.SortTrigger v-if="visible.ip" class="justify-self-center" sort-key="ip">{{ t('entity.ip') }}</List.SortTrigger>
+      <List.SortTrigger v-if="visible.battery" class="justify-self-right" sort-key="mac">{{ t('entity.battery') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.lastActivity" class="justify-self-center" sort-key="lastActivity">{{ t('entity.activity') }}</List.SortTrigger>
-      <List.SortTrigger v-if="visible.buzzer" class="justify-self-center" sort-key="buzzer">{{ t('entity.buzzer') }}</List.SortTrigger>
-      <List.SortTrigger v-if="visible.led" class="justify-self-center" sort-key="led">{{ t('entity.led') }}</List.SortTrigger>
-      <List.SortTrigger v-if="visible.scan" class="justify-self-center" sort-key="scan">{{ t('entity.scan') }}</List.SortTrigger>
+      <List.SortTrigger v-if="visible.enabled" class="justify-self-center" sort-key="buzzer">{{ t('entity.enabled') }}</List.SortTrigger>
     </header>
-    <template v-for="scanner of scanners" :key="scanner.uuid">
-      <ListItem :style="rowStyle" :scanner="scanner" />
+    <template v-for="device of devices" :key="device.uuid">
+      <ListItem :style="rowStyle" :device="device" />
     </template>
     <slot />
   </section>

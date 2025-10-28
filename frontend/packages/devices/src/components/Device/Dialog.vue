@@ -31,14 +31,14 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
             <Dialog.Title class="headline">{{ title }}</Dialog.Title>
           </template>
           <template #description>
-            <Dialog.Description class="description">{{ t('scanner.dialog.description', '') }}</Dialog.Description>
+            <Dialog.Description class="description">{{ t('device.dialog.description', '') }}</Dialog.Description>
           </template>
         </ContentHeader>
 
         <form class="px-6 grid gap-4">
-          <label class="labe" for="scanner-name">
+          <label class="labe" for="device-name">
             <span class="label-text">{{ t('entity.name') }}</span>
-            <input id="scanner-name" v-model="formData.name" class="input w-full" type="text" />
+            <input id="device-name" v-model="formData.name" class="input w-full" type="text" />
           </label>
 
           <div class="flex gap-4 justify-between">
@@ -50,9 +50,9 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
           </div>
 
           <div class="flex gap-4 justify-around">
-            <label class="label grid gap-1 justify-items-center" for="scanner-buzzer">
+            <label class="label grid gap-1 justify-items-center" for="device-enabled">
               <span class="label-text">{{ t('entity.enabled') }}</span>
-              <Switch.Root id="scanner-buzzer" v-model="formData.enabled" class="btn switch">
+              <Switch.Root id="device-enabled" v-model="formData.enabled" class="btn switch">
                 <Switch.Thumb class="thumb" />
               </Switch.Root>
             </label>

@@ -42,7 +42,7 @@ export const service = defineService({
       source.send(def.$DeviceRemoveMessage.encode(input))
     },
     update(source, input: def.$Device) {
-      const scanner = def.$Device.parse(input)
-      source.send(def.$DeviceSetMessage.encode(scanner))
+      const device = def.$Device.parse(input)
+      source.send(def.$DeviceSetMessage.encode(device))
     },
   })

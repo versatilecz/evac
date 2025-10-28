@@ -2,27 +2,6 @@
   "config": {
     "title": "Konfigurace",
     "description": "Nastavení aplikace Evac",
-    "alarms": {
-      "title": "Poplachy",
-      "description": "Správa poplachů generovaných aplikací Evac",
-      "noAlarms": "Žádné poplachy nebyly zaznamenány",
-      "device": "Zařízení",
-      "time": "Čas",
-      "status": "Stav",
-      "actions": "Akce",
-      "acknowledge": "Potvrdit"
-    },
-    "emails": {
-      "title": "E-maily",
-      "description": "Správa e-mailových oznámení o poplacích",
-      "add": "Přidat e-mail",
-      "edit": "Upravit e-mail",
-      "delete": "Smazat e-mail",
-      "deleteQuestion": "Opravdu chcete smazat tento e-mail?",
-      "address": "E-mailová adresa",
-      "actions": "Akce",
-      "noEmails": "Žádné e-maily nebyly přidány"
-    },
     "tools": {
       "title": "Nástroje",
       "description": "Nástroje pro správu a údržbu aplikace Evac",

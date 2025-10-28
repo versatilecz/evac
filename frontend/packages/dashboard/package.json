@@ -36,8 +36,10 @@
     "vue": "^3.4.0"
   },
   "dependencies": {
+    "@evac/alarms": "*",
     "@evac/auth": "*",
     "@evac/devices": "*",
+    "@evac/emails": "*",
     "@evac/locations": "*",
     "@evac/rooms": "*",
     "@evac/scanners": "*",

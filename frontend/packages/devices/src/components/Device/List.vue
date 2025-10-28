@@ -17,9 +17,9 @@ const { gridStyle, rowStyle, visible } = useListContext(true)
       <List.SortTrigger v-if="visible.name" sort-key="name">{{ t('entity.name') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.uuid" class="justify-self-center" sort-key="uuid">{{ t('entity.uuid') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.mac" class="justify-self-center" sort-key="mac">{{ t('entity.mac') }}</List.SortTrigger>
-      <List.SortTrigger v-if="visible.battery" class="justify-self-right" sort-key="mac">{{ t('entity.battery') }}</List.SortTrigger>
+      <List.SortTrigger v-if="visible.battery" class="justify-self-right" sort-key="battery">{{ t('entity.battery') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.lastActivity" class="justify-self-center" sort-key="lastActivity">{{ t('entity.activity') }}</List.SortTrigger>
-      <List.SortTrigger v-if="visible.enabled" class="justify-self-center" sort-key="buzzer">{{ t('entity.enabled') }}</List.SortTrigger>
+      <List.SortTrigger v-if="visible.enabled" class="justify-self-center" sort-key="enabled">{{ t('entity.enabled') }}</List.SortTrigger>
     </header>
     <template v-for="device of devices" :key="device.uuid">
       <ListItem :style="rowStyle" :device="device" />

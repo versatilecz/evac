@@ -43,10 +43,5 @@
     "vite": "^7.0.0",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.0.0"
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true
   }
 }

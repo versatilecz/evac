@@ -17,10 +17,12 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
+    "@evac/alarms": "*",
     "@evac/auth": "*",
     "@evac/config": "*",
     "@evac/dashboard": "*",
     "@evac/devices": "*",
+    "@evac/emails": "*",
     "@evac/fonts": "*",
     "@evac/icons": "*",
     "@evac/locations": "*",

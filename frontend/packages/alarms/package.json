@@ -1,0 +1,51 @@
+{
+  "name": "@evac/alarms",
+  "version": "0.0.1",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "postinstall": "vite build",
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts,.vue"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@evac/auth": "*",
+    "@evac/shared": "*",
+    "@evac/ui": "*",
+    "@evac/utils": "*",
+    "@vueuse/core": "^13.9.0",
+    "@vueuse/rxjs": "^13.9.0",
+    "remeda": "^2.32.0",
+    "rxjs": "^7.8.2",
+    "unstorage": "^1.17.1",
+    "vue-i18n": "^11.1.12",
+    "zod": "^4.1.12"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  }
+}

@@ -24,26 +24,26 @@ const $DeviceCodec = $Device.omit({ mac: true, lastActivity: true }).extend({
 })
 
 export const $DevicesMessage = z.codec(z.object({ DeviceList: z.array($DeviceCodec) }), $Devices, {
-  decode: (data) => new Map(data.DeviceList.map((device) => [device.uuid, device])),
-  encode: (devices) => ({ DeviceList: Array.from(devices.values()) }),
+  decode: (input) => new Map(input.DeviceList.map((device) => [device.uuid, device])),
+  encode: (data) => ({ DeviceList: Array.from(data.values()) }),
 })
 
 export const $DeviceRemoveMessage = z.codec(z.object({ DeviceRemove: z.uuidv4() }), z.uuidv4(), {
-  decode: (data) => data.DeviceRemove,
+  decode: (input) => input.DeviceRemove,
   encode: (uuid) => ({ DeviceRemove: uuid }),
 })
 
 export const $DeviceRemovedMessage = z.codec(z.object({ DeviceRemoved: z.uuidv4() }), z.uuidv4(), {
-  decode: (data) => data.DeviceRemoved,
+  decode: (input) => input.DeviceRemoved,
   encode: (uuid) => ({ DeviceRemoved: uuid }),
 })
 
 export const $DeviceSetMessage = z.codec(z.object({ DeviceSet: $DeviceCodec }), $Device, {
-  decode: (data) => data.DeviceSet,
-  encode: (device) => ({ DeviceSet: device }),
+  decode: (input) => input.DeviceSet,
+  encode: (item) => ({ DeviceSet: item }),
 })
 
 export const $DeviceDetailMessage = z.codec(z.object({ DeviceDetail: $DeviceCodec }), $Device, {
-  decode: (data) => data.DeviceDetail,
-  encode: (scanner) => ({ DeviceDetail: scanner }),
+  decode: (input) => input.DeviceDetail,
+  encode: (item) => ({ DeviceDetail: item }),
 })

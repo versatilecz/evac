@@ -18,7 +18,10 @@
     "mac": "MAC",
     "buzzer": "Buzzer",
     "led": "LED",
-    "scan": "Scan"
+    "scan": "Scan",
+    "subject": "Subject",
+    "text": "Text",
+    "html": "HTML"
   },
   "action": {
     "create": "Create",

@@ -1,0 +1,20 @@
+{
+  "device": {
+    "title": "Zařízení",
+    "dialog": {
+      "title": "Detail zařízení",
+      "description": "",
+      "edit": "Upravit zařízení",
+      "confirmDelete": "Opravdu chcete smazat toto zařízení?"
+    },
+    "select": {
+      "placeholder": "Vyberte zařízení"
+    }
+  },
+  "devices": {
+    "config": {
+      "title": "Zařízení",
+      "description": "Spravujte fyzická bluetooth tlačítka"
+    }
+  }
+}

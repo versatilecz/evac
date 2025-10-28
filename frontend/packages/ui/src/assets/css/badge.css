@@ -27,4 +27,12 @@
     --badge-background: var(--color-accent-blue);
     --badge-foreground: var(--color-black);
   }
+  .badge-accent-red {
+    --badge-background: var(--color-accent-red);
+    --badge-foreground: var(--color-white);
+  }
+  .badge-accent-orange {
+    --badge-background: var(--color-accent-orange);
+    --badge-foreground: var(--color-black);
+  }
 }

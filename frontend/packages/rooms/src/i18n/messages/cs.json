@@ -7,6 +7,9 @@
       "create": "Vytvořit místnost",
       "edit": "Upravit místnost",
       "confirmDelete": "Opravdu chcete smazat tuto místnost?"
+    },
+    "select": {
+      "placeholder": "Vyberte místnost"
     }
   },
   "rooms": {

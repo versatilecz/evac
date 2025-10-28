@@ -2,6 +2,8 @@ import * as z from 'zod'
 import { BaseConfig } from './base/definitions'
 import { EmailConfig, EmailConfigCodec } from './email/definitions'
 
+export const CONFIG_ICON = 'settings'
+export const TOOLS_ICON = 'construction'
 export const SCOPE = 'config'
 
 export type $ConfigMessage = z.infer<typeof $ConfigMessage>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { ICON as DEVICES_ICON } from '@evac/devices'
 import { ICON as LOCATIONS_ICON } from '@evac/locations'
 import { ICON as ROOMS_ICON } from '@evac/rooms'
 import { ICON as SCANNERS_ICON } from '@evac/scanners'
 import { useI18n } from 'vue-i18n'
+import { CONFIG_ICON, TOOLS_ICON } from '@/definitions'
 import Link from './Link.vue'
 
 const { t } = useI18n({ useScope: 'global' })
@@ -13,10 +15,10 @@ const { t } = useI18n({ useScope: 'global' })
     <Link :icon="LOCATIONS_ICON" :to="{ name: 'config.locations' }">{{ t('locations.config.title') }}</Link>
     <Link :icon="ROOMS_ICON" :to="{ name: 'config.rooms' }">{{ t('rooms.config.title') }}</Link>
     <Link :icon="SCANNERS_ICON" :to="{ name: 'config.scanners' }">{{ t('config.scanners.title') }}</Link>
-    <Link icon="devices_wearables" :to="{ name: 'config.devices' }">{{ t('config.devices.title') }}</Link>
+    <Link :icon="DEVICES_ICON" :to="{ name: 'config.devices' }">{{ t('config.devices.title') }}</Link>
     <Link icon="detector_alarm" :to="{ name: 'config.alarms' }">{{ t('config.alarms.title') }}</Link>
     <Link icon="mail" :to="{ name: 'config.emails' }">{{ t('config.emails.title') }}</Link>
-    <Link icon="construction" :to="{ name: 'config.tools' }">{{ t('config.tools.title') }}</Link>
-    <Link icon="settings" :to="{ name: 'config.config' }">{{ t('config.config.title') }}</Link>
+    <Link :icon="TOOLS_ICON" :to="{ name: 'config.tools' }">{{ t('config.tools.title') }}</Link>
+    <Link :icon="CONFIG_ICON" :to="{ name: 'config.config' }">{{ t('config.config.title') }}</Link>
   </div>
 </template>

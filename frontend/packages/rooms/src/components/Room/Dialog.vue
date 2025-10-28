@@ -35,7 +35,7 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
           </template>
         </ContentHeader>
 
-        <form class="px-6">
+        <form class="px-6 grid gap-4">
           <label class="label" for="room-name">
             <span class="label-text">{{ t('entity.name') }}</span>
             <input id="room-name" v-model="formData.name" class="input w-full" type="text" />
@@ -45,17 +45,18 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
             <span class="label-text">{{ t('entity.location') }}</span>
             <Location.Select id="room-location" v-model="formData.location" class="input w-full" />
           </label>
-
-          <DialogActions
-            :has-data="hasData"
-            :has-changes="hasChanges"
-            @cancel="reset()"
-            @close="close"
-            @create="create.submit().then(close)"
-            @remove="remove.submit(close)"
-            @update="update.submit()"
-          />
         </form>
+
+        <DialogActions
+          class="px-6"
+          :has-data="hasData"
+          :has-changes="hasChanges"
+          @cancel="reset()"
+          @close="close"
+          @create="create.submit().then(close)"
+          @remove="remove.submit(close)"
+          @update="update.submit()"
+        />
       </Dialog.Content>
     </Dialog.Portal>
   </Dialog.Root>

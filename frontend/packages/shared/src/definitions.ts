@@ -6,6 +6,8 @@ export const APP_CONFIG = {
   description: 'Emergency Evacuation Management System',
 } as const
 
+export const DEFAULT_LOCALE = 'cs'
+
 export const MAC_BASE: 16 | 10 = 16
 
 export const REGEX = {

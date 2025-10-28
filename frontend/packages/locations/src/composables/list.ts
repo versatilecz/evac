@@ -1,4 +1,5 @@
-import { applyFilters, formatCount, logger, sortByRules, type $SortRule } from '@evac/shared'
+import { applyFilters, logger, sortByRules, type $SortRule } from '@evac/shared'
+import { formatCount } from '@evac/utils'
 import { useObservable } from '@vueuse/rxjs'
 import { pipe } from 'remeda'
 import { from } from 'rxjs'

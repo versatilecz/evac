@@ -4,14 +4,21 @@
     "configuration": "Konfigurace"
   },
   "entity": {
-    "location": "Místo",
-    "locations": "Místa",
+    "location": "Lokace",
+    "locations": "Lokace",
+    "room": "Místnost",
+    "rooms": "Místnosti",
     "uuid": "UUID",
     "name": "Název",
     "description": "Popis",
     "battery": "Baterie",
     "activity": "Aktivita",
-    "enabled": "Povoleno"
+    "enabled": "Povoleno",
+    "ip": "IP",
+    "mac": "MAC",
+    "buzzer": "Bzučák",
+    "led": "LED",
+    "scan": "Skenovat"
   },
   "action": {
     "create": "Vytvořit",

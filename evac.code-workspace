@@ -25,12 +25,40 @@
       "path": "./frontend/packages"
     },
     {
+      "name": "FE / Packages / Auth",
+      "path": "./frontend/packages/auth"
+    },
+    {
       "name": "FE / Packages / Config",
       "path": "./frontend/packages/config"
     },
     {
       "name": "FE / Packages / Dashboard",
       "path": "./frontend/packages/dashboard"
+    },
+    {
+      "name": "FE / Packages / Devices",
+      "path": "./frontend/packages/devices"
+    },
+    {
+      "name": "FE / Packages / Fonts",
+      "path": "./frontend/packages/fonts"
+    },
+    {
+      "name": "FE / Packages / Icons",
+      "path": "./frontend/packages/icons"
+    },
+    {
+      "name": "FE / Packages / Locations",
+      "path": "./frontend/packages/locations"
+    },
+    {
+      "name": "FE / Packages / Rooms",
+      "path": "./frontend/packages/rooms"
+    },
+    {
+      "name": "FE / Packages / Scanners",
+      "path": "./frontend/packages/scanners"
     },
     {
       "name": "FE / Packages / Shared",

@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { Badge, BooleanIcon, useListContext } from '@evac/ui'
+import { Badge, BooleanIcon, useFormat, useListContext } from '@evac/ui'
 import { Room } from '@evac/rooms'
-import { formatDateTime } from '@evac/utils'
-import { useI18n } from 'vue-i18n'
 import type { $Scanner } from '@/definitions'
 import Dialog from './Dialog.vue'
 
 defineProps<{ scanner: $Scanner }>()
 defineOptions({ inheritAttrs: false })
-const { locale } = useI18n({ useScope: 'global' })
+const formatter = useFormat()
 const { visible } = useListContext(true)
 </script>
 
@@ -22,10 +20,10 @@ const { visible } = useListContext(true)
       <Badge v-if="visible.uuid">{{ scanner.uuid }}</Badge>
       <Badge v-if="visible.mac">{{ scanner.mac }}</Badge>
       <Badge v-if="visible.ip">{{ scanner.ip }}{{ scanner.port ? `:${scanner.port}` : '' }}</Badge>
-      <Badge v-if="visible.lastActivity">{{ formatDateTime(scanner.lastActivity, locale) }}</Badge>
-      <BooleanIcon v-if="visible.buzzer" :value="scanner.buzzer" />
-      <BooleanIcon v-if="visible.led" :value="scanner.led" />
-      <BooleanIcon v-if="visible.scan" :value="scanner.scan" />
+      <Badge v-if="visible.lastActivity">{{ formatter.dateTime.format(scanner.lastActivity) }}</Badge>
+      <BooleanIcon v-if="visible.buzzer" class="justify-self-center" :value="scanner.buzzer" />
+      <BooleanIcon v-if="visible.led" class="justify-self-center" :value="scanner.led" />
+      <BooleanIcon v-if="visible.scan" class="justify-self-center" :value="scanner.scan" />
     </button>
   </Dialog>
 </template>

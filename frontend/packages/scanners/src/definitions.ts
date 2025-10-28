@@ -47,12 +47,12 @@ export const $ScannerRemovedMessage = z.codec(z.object({ ScannerRemoved: z.uuidv
   encode: (uuid) => ({ ScannerRemoved: uuid }),
 })
 
-export const $ScannerSetMessage = z.codec(z.object({ ScannerSet: $Scanner }), $Scanner, {
+export const $ScannerSetMessage = z.codec(z.object({ ScannerSet: $ScannerCodec }), $Scanner, {
   decode: (data) => data.ScannerSet,
   encode: (scanner) => ({ ScannerSet: scanner }),
 })
 
-export const $ScannerDetailMessage = z.codec(z.object({ ScannerDetail: $Scanner }), $Scanner, {
+export const $ScannerDetailMessage = z.codec(z.object({ ScannerDetail: $ScannerCodec }), $Scanner, {
   decode: (data) => data.ScannerDetail,
   encode: (scanner) => ({ ScannerDetail: scanner }),
 })

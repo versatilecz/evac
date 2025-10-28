@@ -2,36 +2,6 @@
   "config": {
     "title": "Konfigurace",
     "description": "Nastavení aplikace Evac",
-    "scanners": {
-      "title": "Skenery",
-      "description": "Správa skenerů připojených k aplikaci Evac",
-      "add": "Přidat skener",
-      "edit": "Upravit skener",
-      "delete": "Smazat skener",
-      "deleteQuestion": "Opravdu chcete smazat tento skener?",
-      "name": "Název",
-      "location": "Lokace",
-      "room": "Místnost",
-      "ipAddress": "IP adresa",
-      "port": "Port",
-      "actions": "Akce",
-      "noScanners": "Žádné skenery nebyly přidány"
-    },
-    "devices": {
-      "title": "Zařízení",
-      "description": "Správa zařízení sledovaných aplikací Evac",
-      "add": "Přidat zařízení",
-      "edit": "Upravit zařízení",
-      "delete": "Smazat zařízení",
-      "deleteQuestion": "Opravdu chcete smazat toto zařízení?",
-      "name": "Název",
-      "identifier": "Identifikátor",
-      "location": "Lokace",
-      "room": "Místnost",
-      "scanner": "Skener",
-      "actions": "Akce",
-      "noDevices": "Žádná zařízení nebyla přidána"
-    },
     "alarms": {
       "title": "Poplachy",
       "description": "Správa poplachů generovaných aplikací Evac",
@@ -55,7 +25,10 @@
     },
     "tools": {
       "title": "Nástroje",
-      "description": "Nástroje pro správu a údržbu aplikace Evac"
+      "description": "Nástroje pro správu a údržbu aplikace Evac",
+      "backups": "Zálohy",
+      "newBackup": "Nová záloha",
+      "debug": "Ladění"
     },
     "config": {
       "title": "Nastavení",

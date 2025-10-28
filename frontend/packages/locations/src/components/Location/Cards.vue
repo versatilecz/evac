@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grid gap-4 grid-cols-[repeat(auto-fill,_minmax(18rem,_1fr))] items-center list">
+  <div class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] items-center list">
     <template v-for="location of locations" :key="location.uuid">
       <Card :location="location" />
     </template>

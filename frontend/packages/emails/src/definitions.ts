@@ -1,3 +1,4 @@
+import { $SortDirection, type $SortRule } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Email = z.infer<typeof $Email>
@@ -6,6 +7,7 @@ export type $EmailFormData = z.infer<typeof $EmailFormData>
 
 export const ICON = 'mail'
 export const SCOPE = 'emails'
+export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
 
 export const $Email = z.object({
   name: z.string(),

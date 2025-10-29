@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PageContainer } from '@evac/ui'
-import { SimpleDevicesOverview } from '../components'
 import { useI18n } from 'vue-i18n'
+import { SimpleDevicesOverview } from '@/components'
 
 const { t } = useI18n({
   messages: {

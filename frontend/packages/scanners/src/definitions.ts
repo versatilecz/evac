@@ -1,4 +1,4 @@
-import { $MacAddress, macCodec, isoDatetimeToDate } from '@evac/shared'
+import { $MacAddress, macCodec, isoDatetimeToDate, $SortDirection, type $SortRule } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Scanner = z.infer<typeof $Scanner>
@@ -6,6 +6,7 @@ export type $Scanners = z.infer<typeof $Scanners>
 
 export const ICON = 'infrared'
 export const SCOPE = 'scanners'
+export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
 
 export const $PortNumber = z
   .number()

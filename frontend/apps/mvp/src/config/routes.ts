@@ -1,46 +1,52 @@
+import { Views as Alarms } from '@evac/alarms'
+import { Views as Config } from '@evac/config'
+import { Views as Devices } from '@evac/devices'
+import { Views as Emails } from '@evac/emails'
+import { Views as Locations } from '@evac/locations'
+import { Views as Rooms } from '@evac/rooms'
+import { Views as Scanners } from '@evac/scanners'
 import type { RouteRecordRaw } from 'vue-router'
-import { Alarms, Config, Devices, Emails, Locations, Rooms, Scanners, Tools } from '@/views'
 
 export default [
   {
     path: 'locations',
     name: 'config.locations',
-    component: Locations,
+    component: Locations.Config,
   },
   {
     path: 'rooms',
     name: 'config.rooms',
-    component: Rooms,
+    component: Rooms.Config,
   },
   {
     path: 'scanners',
     name: 'config.scanners',
-    component: Scanners,
+    component: Scanners.Config,
   },
   {
     path: 'devices',
     name: 'config.devices',
-    component: Devices,
+    component: Devices.Config,
   },
   {
     path: 'alarms',
     name: 'config.alarms',
-    component: Alarms,
+    component: Alarms.Config,
   },
   {
     path: 'emails',
     name: 'config.emails',
-    component: Emails,
+    component: Emails.Config,
   },
   {
     path: 'tools',
     name: 'config.tools',
-    component: Tools,
+    component: Config.Tools,
   },
   {
     path: 'config',
     name: 'config.config',
-    component: Config,
+    component: Config.Config,
   },
   {
     path: '',

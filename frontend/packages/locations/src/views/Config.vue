@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Badge, ContentHeader } from '@evac/ui'
-import { Location, useLocations } from '@evac/locations'
 import { useI18n } from 'vue-i18n'
+import { Location } from '@/components'
+import { useLocations } from '@/composables'
 
 const { t } = useI18n({ useScope: 'global' })
 const { count, list: locations } = useLocations()

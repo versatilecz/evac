@@ -1,34 +1,34 @@
 <script setup lang="ts">
 import { useAuth } from '@evac/auth'
 import { Badge, ContentHeader, defineListFields, useList } from '@evac/ui'
-import { DEFAULT_SORT, Scanner, useScanners } from '@evac/scanners'
 import { useI18n } from 'vue-i18n'
+import { Email } from '@/components'
+import { useEmails } from '@/composables'
+import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
 const auth = useAuth()
 
 const fields = defineListFields(
-  { key: 'name', fill: true },
-  { key: 'room' },
+  { key: 'name' },
   { key: 'uuid', visible: () => auth.isDebug.value },
-  { key: 'mac', visible: () => auth.isDebug.value },
-  { key: 'ip' },
-  { key: 'lastActivity' },
+  { key: 'subject' },
+  { key: 'text', fill: true },
   { key: 'buzzer' },
-  { key: 'led' },
-  { key: 'scan' }
+  { key: 'led' }
 )
 const { sort } = useList({ initialSort: DEFAULT_SORT, fields })
-const { count, list: scanners } = useScanners({ sort })
+const { count, list: emails } = useEmails({ sort })
 </script>
 
 <template>
-  <ContentHeader :description="t('scanners.config.description', '')">
+  <ContentHeader :description="t('emails.config.description', '')">
     <template #title>
-      <h1 class="headline">{{ t('scanners.config.title') }}</h1>
+      <h1 class="headline">{{ t('emails.config.title') }}</h1>
       <Badge>{{ count }}</Badge>
       <span class="grow" />
+      <Email.Dialog />
     </template>
   </ContentHeader>
-  <Scanner.List class="pb-12" :scanners="scanners" />
+  <Email.List :emails="emails" />
 </template>

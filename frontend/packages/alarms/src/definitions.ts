@@ -1,3 +1,4 @@
+import { $SortDirection, type $SortRule } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Alarm = z.infer<typeof $Alarm>
@@ -6,6 +7,7 @@ export type $AlarmFormData = z.infer<typeof $AlarmFormData>
 
 export const ICON = 'detector_alarm'
 export const SCOPE = 'alarms'
+export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
 
 export const $Alarm = z.object({
   name: z.string(),

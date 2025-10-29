@@ -15,6 +15,7 @@
     "config": {
       "title": "Scanners",
       "description": "Manage scanners in the system"
-    }
+    },
+    "empty": "No scanners found."
   }
 }

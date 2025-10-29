@@ -22,7 +22,7 @@ const { count, byLocation: rooms } = useRooms()
   </ContentHeader>
   <section class="px-6 list">
     <template v-for="location of list" :key="location.uuid">
-      <h2 class="headline mb-4">{{ location.name }}</h2>
+      <h2 class="headline mb-3 px-0">{{ location.name }}</h2>
       <Room.Cards class="mb-12 grid content-start items-center" :rooms="rooms.get(location.uuid) ?? []" />
     </template>
   </section>

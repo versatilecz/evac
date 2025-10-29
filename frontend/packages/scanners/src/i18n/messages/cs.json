@@ -15,6 +15,7 @@
     "config": {
       "title": "Skenery",
       "description": "Správa skenerů v systému"
-    }
+    },
+    "empty": "Žádné skenery nebyly nalezeny."
   }
 }

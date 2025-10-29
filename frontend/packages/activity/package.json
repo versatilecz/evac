@@ -1,5 +1,5 @@
 {
-  "name": "@evac/devices",
+  "name": "@evac/activity",
   "version": "0.0.1",
   "type": "module",
   "sideEffects": false,
@@ -33,11 +33,8 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
-    "@evac/activity": "*",
     "@evac/auth": "*",
-    "@evac/locations": "*",
-    "@evac/rooms": "*",
-    "@evac/scanners": "*",
+    "@evac/config": "*",
     "@evac/shared": "*",
     "@evac/ui": "*",
     "@evac/utils": "*",

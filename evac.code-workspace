@@ -25,6 +25,10 @@
       "path": "./frontend/packages"
     },
     {
+      "name": "FE / Packages / Activity",
+      "path": "./frontend/packages/activity"
+    },
+    {
       "name": "FE / Packages / Alarms",
       "path": "./frontend/packages/alarms"
     },

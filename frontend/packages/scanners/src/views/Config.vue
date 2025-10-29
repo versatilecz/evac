@@ -32,5 +32,8 @@ const { count, list: scanners } = useScanners({ sort })
       <span class="grow" />
     </template>
   </ContentHeader>
-  <Scanner.List class="pb-12" :scanners="scanners" />
+  <Scanner.List v-if="scanners.length" class="pb-12" :scanners="scanners" />
+  <div v-else class="px-6">
+    <p class="paragraph p-4 text-center border-emphasis-4 border rounded-md">{{ t('scanners.empty') }}</p>
+  </div>
 </template>

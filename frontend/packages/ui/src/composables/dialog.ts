@@ -27,7 +27,7 @@ type DialogForm<Tc extends object, Tu extends object = Tc> = DialogFormState & {
 export function useDialogForm<Tc extends object, Tu extends object = Tc>(options: DialogFormOptions<Tc, Tu>): DialogForm<Tc | Tu> {
   const input = computed(() => toValue(options.data))
   const formData = reactive<Tc | Tu>({} as Tc | Tu)
-  watch(input, async (current) => Object.assign(formData, current ?? await options.seed?.()), { immediate: true })
+  watch(input, async (current) => Object.assign(formData, current ?? (await options.seed?.())), { immediate: true })
 
   const hasData = computed(() => !!input.value)
   const hasChanges = computed(() => {

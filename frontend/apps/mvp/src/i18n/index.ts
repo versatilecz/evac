@@ -13,5 +13,14 @@ export default createI18n({
   legacy: false,
   locale: 'cs',
   fallbackLocale: 'en',
-  messages: pipe(messages, mergeDeep(configMessages), mergeDeep(alarmsMessages), mergeDeep(devicesMessages), mergeDeep(emailsMessages), mergeDeep(locationsMessages), mergeDeep(roomsMessages), mergeDeep(scannersMessages)),
+  messages: pipe(
+    messages,
+    mergeDeep(configMessages),
+    mergeDeep(alarmsMessages),
+    mergeDeep(devicesMessages),
+    mergeDeep(emailsMessages),
+    mergeDeep(locationsMessages),
+    mergeDeep(roomsMessages),
+    mergeDeep(scannersMessages)
+  ),
 })

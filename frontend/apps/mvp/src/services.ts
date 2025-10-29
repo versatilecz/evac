@@ -1,5 +1,7 @@
+import { service as alarmService } from '@evac/alarms'
 import { service as configService, backupService } from '@evac/config'
 import { service as devicesService } from '@evac/devices'
+import { service as emailsService } from '@evac/emails'
 import { service as locationsService } from '@evac/locations'
 import { service as roomsService } from '@evac/rooms'
 import { service as scannersService } from '@evac/scanners'
@@ -10,7 +12,7 @@ export default async function handleServicesOverWebSocket(url: URL | string, sto
   try {
     await orchestrateWebSocketAndServices({
       url,
-      services: defineWebSocketServices(configService, backupService, locationsService, roomsService, scannersService, devicesService),
+      services: defineWebSocketServices(configService, backupService, locationsService, roomsService, scannersService, devicesService, alarmService, emailsService),
       storage,
     })
 

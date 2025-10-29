@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { Config, Devices, Locations, Rooms, Scanners, Tools } from '@/views'
+import { Alarms, Config, Devices, Emails, Locations, Rooms, Scanners, Tools } from '@/views'
 
 export default [
   {
@@ -25,12 +25,12 @@ export default [
   {
     path: 'alarms',
     name: 'config.alarms',
-    component: Locations,
+    component: Alarms,
   },
   {
     path: 'emails',
     name: 'config.emails',
-    component: Locations,
+    component: Emails,
   },
   {
     path: 'tools',

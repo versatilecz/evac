@@ -1,6 +1,7 @@
 @theme {
   --input-corner-radius: var(--radius-md);
   --input-padding-x: var(--input-corner-radius);
+  --input-padding-y: theme(spacing.3);
   --input-gap-x: theme(spacing.2);
   --input-height: theme(spacing.12);
   --input-min-width: theme(spacing.24);
@@ -15,8 +16,9 @@
     @apply flex items-center;
     gap: var(--input-gap-x);
     min-width: var(--input-min-width);
+    min-height: var(--input-height);
     height: var(--input-height);
-    padding: 0 var(--input-padding-x);
+    padding: var(--input-padding-y) var(--input-padding-x);
     border: var(--input-border);
     border-radius: var(--input-corner-radius);
     background: var(--input-background);

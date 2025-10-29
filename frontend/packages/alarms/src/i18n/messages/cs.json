@@ -1,0 +1,21 @@
+{
+  "alarm": {
+    "title": "Alarm",
+    "dialog": {
+      "title": "Detail alarmu",
+      "description": "",
+      "create": "Vytvořit alarm",
+      "edit": "Upravit alarm",
+      "confirmDelete": "Opravdu chcete smazat tento alarm?"
+    },
+    "select": {
+      "placeholder": "Vyberte alarm"
+    }
+  },
+  "alarms": {
+    "config": {
+      "title": "Alarmy",
+      "description": "Spravujte alarmy systému Evac"
+    }
+  }
+}

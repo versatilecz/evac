@@ -1,0 +1,32 @@
+<script setup lang="ts">
+import { useAuth } from '@evac/auth'
+import { Badge, ContentHeader, defineListFields, useList } from '@evac/ui'
+import { DEFAULT_SORT, Alarm, useAlarms } from '@evac/alarms'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({ useScope: 'global' })
+const auth = useAuth()
+
+const fields = defineListFields(
+  { key: 'name' },
+  { key: 'uuid', visible: () => auth.isDebug.value },
+  { key: 'subject' },
+  { key: 'text', fill: true },
+  { key: 'buzzer' },
+  { key: 'led' }
+)
+const { sort } = useList({ initialSort: DEFAULT_SORT, fields })
+const { count, list: alarms } = useAlarms({ sort })
+</script>
+
+<template>
+  <ContentHeader :description="t('alarms.config.description', '')">
+    <template #title>
+      <h1 class="headline">{{ t('alarms.config.title') }}</h1>
+      <Badge>{{ count }}</Badge>
+      <span class="grow" />
+      <Alarm.Dialog />
+    </template>
+  </ContentHeader>
+  <Alarm.List :alarms="alarms" />
+</template>

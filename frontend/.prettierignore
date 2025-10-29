@@ -1,0 +1,18 @@
+# Build outputs
+dist
+build
+out
+coverage
+.next
+.turbo
+.storybook
+# Dependencies
+node_modules
+# Configs and generated assets
+*.config.js
+*.config.cjs
+*.config.mjs
+*.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

@@ -1,0 +1,21 @@
+{
+  "alarm": {
+    "title": "Alarm",
+    "dialog": {
+      "title": "Alarm detail",
+      "description": "",
+      "create": "Create alarm",
+      "edit": "Edit alarm",
+      "confirmDelete": "Are you sure you want to delete this alarm?"
+    },
+    "select": {
+      "placeholder": "Select alarm"
+    }
+  },
+  "alarms": {
+    "config": {
+      "title": "Alarms",
+      "description": "Manage alarms in the system"
+    }
+  }
+}

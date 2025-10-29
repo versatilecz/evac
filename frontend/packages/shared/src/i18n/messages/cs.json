@@ -18,7 +18,10 @@
     "mac": "MAC",
     "buzzer": "Bzučák",
     "led": "LED",
-    "scan": "Skenovat"
+    "scan": "Skenovat",
+    "subject": "Předmět",
+    "text": "Text",
+    "html": "HTML"
   },
   "action": {
     "create": "Vytvořit",

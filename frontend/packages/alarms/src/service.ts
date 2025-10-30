@@ -64,3 +64,33 @@ export const service = defineService({
       } satisfies def.$AlarmFormData
     },
   })
+
+export const activeAlarmService = defineService({
+  name: `${def.SCOPE}:active`,
+  identity: def.$ActiveAlarmState,
+})
+  .withSources(
+    async function* onAlarm(source) {
+      for await (const message of source) {
+        const parsed = def.$AlarmMessage.safeParse(message)
+        if (!parsed.success) continue
+        yield parsed.data
+      }
+    },
+    async function* onAlarmStop(source) {
+      for await (const message of source) {
+        const parsed = def.$AlarmStopMessage.safeParse(message)
+        if (!parsed.success) continue
+        yield undefined
+      }
+    }
+  )
+  .withActions({
+    stop(source) {
+      source.send(def.$AlarmStopMessage.encode(true))
+    },
+    alarm(source, input: def.$ActiveAlarm) {
+      const alarm = def.$ActiveAlarm.parse(input)
+      source.send(def.$AlarmMessage.encode(alarm))
+    },
+  })

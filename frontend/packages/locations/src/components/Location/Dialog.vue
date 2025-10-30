@@ -2,7 +2,7 @@
 import { ContentHeader, Dialog, DialogActions, Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useLocationForm } from '@/composables'
-import { $Location, $LocationFormData } from '@/definitions'
+import { ICON, $Location, $LocationFormData } from '@/definitions'
 
 const props = defineProps<{ location?: $Location | $LocationFormData }>()
 defineOptions({ inheritAttrs: false })
@@ -26,7 +26,7 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
       <Dialog.Content class="dialog">
         <ContentHeader>
           <template #title>
-            <Icon class="size-8" icon="location_on" />
+            <Icon class="size-8" :icon="ICON" />
             <Dialog.Title class="headline">{{ title }}</Dialog.Title>
           </template>
           <template #description>

@@ -3,7 +3,7 @@ import { Room } from '@evac/rooms'
 import { Badge, ContentHeader, Dialog, DialogActions, Icon, Switch, useFormat } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useScannerForm } from '@/composables'
-import { $Scanner } from '@/definitions'
+import { ICON, $Scanner } from '@/definitions'
 
 const props = defineProps<{ scanner: $Scanner }>()
 defineOptions({ inheritAttrs: false })
@@ -27,7 +27,7 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useScann
       <Dialog.Content class="dialog">
         <ContentHeader>
           <template #title>
-            <Icon class="size-8" icon="location_on" />
+            <Icon class="size-8" :icon="ICON" />
             <Dialog.Title class="headline">{{ title }}</Dialog.Title>
           </template>
           <template #description>

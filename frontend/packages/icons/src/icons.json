@@ -35,5 +35,6 @@
   "@material-symbols/svg-400/outlined/settings.svg",
   "@material-symbols/svg-400/outlined/settings_backup_restore.svg",
   "@material-symbols/svg-400/outlined/undo.svg",
-  "@material-symbols/svg-400/outlined/warning.svg"
+  "@material-symbols/svg-400/outlined/warning.svg",
+  "@material-symbols/svg-400/outlined/warning_off.svg"
 ]

@@ -46,7 +46,7 @@ export const service = defineService({
 
       source.send(def.$EmailSetMessage.encode(alarm))
     },
-    remove(source, input: string) {
+    remove(source, input: def.$Email['uuid']) {
       source.send(def.$EmailRemoveMessage.encode(input))
     },
     update(source, input: def.$Email) {
@@ -60,5 +60,8 @@ export const service = defineService({
         text: '',
         html: '',
       } satisfies def.$EmailFormData
+    },
+    async send(source, input: def.$EmailToSend) {
+      source.send(def.$EmailSendMessage.encode(input))
     },
   })

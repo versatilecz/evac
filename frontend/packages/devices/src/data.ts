@@ -5,9 +5,9 @@ import { scanners$ } from '@evac/scanners'
 import * as Rx from 'rxjs'
 import type { $Device, $Devices, $DeviceWithActivity } from '@/definitions'
 import { collectDevicesByLocation, collectDevicesByRoom, collectUnallocatedDevices } from '@/misc'
-import { service as devices } from '@/service'
+import { service } from '@/service'
 
-export const devices$ = Rx.from(devices)
+export const devices$ = Rx.from(service)
 
 export const unallocatedDevices$ = Rx.combineLatest([activity$, devices$]).pipe(
   Rx.map(([activity, devices]) => Iterator.from(collectUnallocatedDevices({ activity, devices }))),

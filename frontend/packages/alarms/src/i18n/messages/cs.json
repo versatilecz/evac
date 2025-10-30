@@ -10,7 +10,8 @@
     },
     "select": {
       "placeholder": "Vyberte alarm"
-    }
+    },
+    "stop": "Zastavit alarm"
   },
   "alarms": {
     "config": {

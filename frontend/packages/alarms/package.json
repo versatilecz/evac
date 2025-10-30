@@ -34,6 +34,11 @@
   },
   "dependencies": {
     "@evac/auth": "*",
+    "@evac/devices": "*",
+    "@evac/emails": "*",
+    "@evac/locations": "*",
+    "@evac/rooms": "*",
+    "@evac/scanners": "*",
     "@evac/shared": "*",
     "@evac/ui": "*",
     "@evac/utils": "*",

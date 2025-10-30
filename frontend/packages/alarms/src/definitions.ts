@@ -4,6 +4,7 @@ import * as z from 'zod'
 export type $Alarm = z.infer<typeof $Alarm>
 export type $Alarms = z.infer<typeof $Alarms>
 export type $AlarmFormData = z.infer<typeof $AlarmFormData>
+export type $ActiveAlarm = z.infer<typeof $ActiveAlarm>
 
 export const ICON = 'detector_alarm'
 export const SCOPE = 'alarms'
@@ -18,6 +19,19 @@ export const $Alarm = z.object({
   buzzer: z.boolean(),
   led: z.boolean(),
 })
+
+export const $ActiveAlarm = $Alarm
+  .omit({
+    name: true,
+    uuid: true,
+  })
+  .extend({
+    location: z.string(),
+    room: z.string(),
+    scanner: z.string(),
+    device: z.string(),
+  })
+export const $ActiveAlarmState = z.union([$ActiveAlarm, z.undefined(), z.null()])
 
 export const $Alarms = z.map(z.uuidv4(), $Alarm)
 export const $AlarmFormData = $Alarm.omit({ uuid: true })
@@ -46,4 +60,14 @@ export const $AlarmSetMessage = z.codec(z.object({ AlarmSet: $AlarmCodec }), $Al
 export const $AlarmDetailMessage = z.codec(z.object({ AlarmDetail: $AlarmCodec }), $Alarm, {
   decode: (input) => input.AlarmDetail,
   encode: (item) => ({ AlarmDetail: item }),
+})
+
+export const $AlarmMessage = z.codec(z.object({ Alarm: $ActiveAlarm }), $ActiveAlarm, {
+  decode: (input) => input.Alarm,
+  encode: (data) => ({ Alarm: data }),
+})
+
+export const $AlarmStopMessage = z.codec(z.object({ AlarmStop: z.boolean() }), z.boolean(), {
+  decode: (input) => input.AlarmStop,
+  encode: (data) => ({ AlarmStop: data }),
 })

@@ -75,7 +75,7 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
   let abortSignal = abortController.signal
   let started = defer<void>()
   let activeConnection: WebSocketConnection<FromConfig<C>> | null = null
-  let sources: DataSource<NoInfer<C>>[] = []
+  const sources: DataSource<NoInfer<C>>[] = []
 
   const eventTarget = new EventTarget() as WebSocketService<C>
   Object.assign(eventTarget, {
@@ -101,9 +101,7 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
     }
 
     try {
-      for await (const event of asyncIterableFromEvent<CustomEvent<FromConfig<NoInfer<C>>>>(eventTarget, 'data', {
-        signal: abortSignal,
-      })) {
+      for await (const event of asyncIterableFromEvent<CustomEvent<FromConfig<NoInfer<C>>>>(eventTarget, 'data')) {
         yield identity.parse(event.detail)
       }
     } catch (cause) {
@@ -150,7 +148,8 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
   }
 
   async function observeAndHandleIncomingData() {
-    for await (const data of abortable(mergeAsyncIterables(...sources.map((x) => connectSource(x))), abortSignal)) {
+    const source = abortable(mergeAsyncIterables(...sources.map((x) => connectSource(x))), abortSignal)
+    for await (const data of source) {
       await storeValue(data)
       eventTarget.dispatchEvent(new CustomEvent('data', { detail: data }))
       logger.info(`[${name}] received data`, data)
@@ -175,7 +174,6 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
     started = defer<void>()
     abortSignal.removeEventListener('abort', dispose)
     storage = undefined
-    sources = []
     activeConnection = null
 
     logger.warn(`[${name}] service stopped`)

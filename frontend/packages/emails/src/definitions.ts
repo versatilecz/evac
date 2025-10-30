@@ -4,6 +4,7 @@ import * as z from 'zod'
 export type $Email = z.infer<typeof $Email>
 export type $Emails = z.infer<typeof $Emails>
 export type $EmailFormData = z.infer<typeof $EmailFormData>
+export type $EmailToSend = z.infer<typeof $EmailToSend>
 
 export const ICON = 'mail'
 export const SCOPE = 'emails'
@@ -20,6 +21,8 @@ export const $Email = z.object({
 export const $Emails = z.map(z.uuidv4(), $Email)
 export const $EmailFormData = $Email.omit({ uuid: true })
 const $EmailCodec = $Email
+
+export const $EmailToSend = $Email.pick({ subject: true, text: true, html: true })
 
 export const $EmailsMessage = z.codec(z.object({ EmailList: z.array($EmailCodec) }), $Emails, {
   decode: (input) => new Map(input.EmailList.map((item) => [item.uuid, item])),
@@ -44,4 +47,9 @@ export const $EmailSetMessage = z.codec(z.object({ EmailSet: $EmailCodec }), $Em
 export const $EmailDetailMessage = z.codec(z.object({ EmailDetail: $EmailCodec }), $Email, {
   decode: (input) => input.EmailDetail,
   encode: (item) => ({ EmailDetail: item }),
+})
+
+export const $EmailSendMessage = z.codec(z.object({ Email: $EmailToSend }), $EmailToSend, {
+  decode: (input) => input.Email,
+  encode: (item) => ({ Email: item }),
 })

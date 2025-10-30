@@ -10,7 +10,8 @@
     },
     "select": {
       "placeholder": "Select alarm"
-    }
+    },
+    "stop": "Stop alarm"
   },
   "alarms": {
     "config": {

@@ -26,9 +26,8 @@ const { byLocation } = useRooms()
 
 <template>
   <section class="grid grid-rows-[auto_1fr]">
-    <header>
-      <h1 class="headline h-12 flex items-center">{{ t('devicesOverview') }}</h1>
-      <button type="button"></button>
+    <header class="pt-4">
+      <h1 class="headline">{{ t('devicesOverview') }}</h1>
     </header>
 
     <div class="list overflow-y-auto">

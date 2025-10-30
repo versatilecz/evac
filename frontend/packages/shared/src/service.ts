@@ -1,11 +1,8 @@
-import { abortable, asyncIterableFromEvent, defer, mergeAsyncIterables, mergeSignals, toPromise } from '@evac/utils'
-import type { Observable } from 'rxjs'
+import { abortable, asyncIterableFromEvent, defer, mergeAsyncIterables, mergeSignals } from '@evac/utils'
 import { prefixStorage, type Storage } from 'unstorage'
 import type { ZodType } from 'zod'
 import { logger as defaultLogger } from './logger'
 import type { WebSocketConnection } from './websocket/definitions'
-
-const ACTION_TIMEOUT = 5000
 
 const STORAGE_KEY = {
   STATE: 'state',
@@ -31,7 +28,11 @@ type FromConfig<C extends ServiceConfig<unknown>> = C extends ServiceConfig<infe
 
 type ServiceListeners<C extends ServiceConfig<unknown>> = EventTarget & {
   addEventListener(type: 'data', listener: (this: WebSocketService<C>, event: CustomEvent<FromConfig<C>>) => unknown, options?: boolean | AddEventListenerOptions): void
+  addEventListener(type: 'start', listener: (this: WebSocketService<C>, event: CustomEvent<never>) => unknown, options?: boolean | AddEventListenerOptions): void
+  addEventListener(type: 'stop', listener: (this: WebSocketService<C>, event: CustomEvent<never>) => unknown, options?: boolean | AddEventListenerOptions): void
   removeEventListener(type: 'data', listener: (this: WebSocketService<C>, event: CustomEvent<FromConfig<C>>) => unknown, options?: boolean | EventListenerOptions): void
+  removeEventListener(type: 'start', listener: (this: WebSocketService<C>, event: CustomEvent<never>) => unknown, options?: boolean | EventListenerOptions): void
+  removeEventListener(type: 'stop', listener: (this: WebSocketService<C>, event: CustomEvent<never>) => unknown, options?: boolean | EventListenerOptions): void
   dispatchEvent(event: Event): boolean
 }
 
@@ -74,7 +75,7 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
   let abortSignal = abortController.signal
   let started = defer<void>()
   let activeConnection: WebSocketConnection<FromConfig<C>> | null = null
-  let sources: DataSource<NoInfer<C>>[] = []
+  const sources: DataSource<NoInfer<C>>[] = []
 
   const eventTarget = new EventTarget() as WebSocketService<C>
   Object.assign(eventTarget, {
@@ -100,9 +101,7 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
     }
 
     try {
-      for await (const event of asyncIterableFromEvent<CustomEvent<FromConfig<NoInfer<C>>>>(eventTarget, 'data', {
-        signal: abortSignal,
-      })) {
+      for await (const event of asyncIterableFromEvent<CustomEvent<FromConfig<NoInfer<C>>>>(eventTarget, 'data')) {
         yield identity.parse(event.detail)
       }
     } catch (cause) {
@@ -139,6 +138,7 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
 
     logger.info(`[${name}] service started`)
     started.resolve()
+    eventTarget.dispatchEvent(new CustomEvent('start'))
 
     return Object.freeze({
       name,
@@ -148,7 +148,8 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
   }
 
   async function observeAndHandleIncomingData() {
-    for await (const data of abortable(mergeAsyncIterables(...sources.map((x) => connectSource(x))), abortSignal)) {
+    const source = abortable(mergeAsyncIterables(...sources.map((x) => connectSource(x))), abortSignal)
+    for await (const data of source) {
       await storeValue(data)
       eventTarget.dispatchEvent(new CustomEvent('data', { detail: data }))
       logger.info(`[${name}] received data`, data)
@@ -173,19 +174,14 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
     started = defer<void>()
     abortSignal.removeEventListener('abort', dispose)
     storage = undefined
-    sources = []
     activeConnection = null
 
     logger.warn(`[${name}] service stopped`)
+    eventTarget.dispatchEvent(new CustomEvent('stop'))
   }
 
-  async function setValue(
-    value: Partial<FromConfig<NoInfer<C>>>,
-    source?: Observable<FromConfig<NoInfer<C>>> | Promise<FromConfig<NoInfer<C>>> | AsyncIterable<FromConfig<NoInfer<C>>> | FromConfig<NoInfer<C>>
-  ): Promise<void> {
-    const sourceData = await toPromise(source, mergeSignals(abortController.signal, AbortSignal.timeout(ACTION_TIMEOUT)))
-    const next = Object.assign(sourceData ?? {}, value)
-    await storeValue(identity.parse(next))
+  async function setValue(value: Partial<FromConfig<NoInfer<C>>>): Promise<void> {
+    await storeValue(identity.parse(value))
   }
 
   async function storeValue(value: FromConfig<NoInfer<C>>) {

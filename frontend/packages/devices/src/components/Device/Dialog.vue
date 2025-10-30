@@ -2,7 +2,7 @@
 import { Badge, ContentHeader, Dialog, DialogActions, Icon, Switch, useFormat } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useDeviceForm } from '@/composables'
-import { $Device } from '@/definitions'
+import { ICON, $Device } from '@/definitions'
 import BatteryBadge from '../BatteryBadge.vue'
 
 const props = defineProps<{ device: $Device }>()
@@ -27,7 +27,7 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
       <Dialog.Content class="dialog">
         <ContentHeader>
           <template #title>
-            <Icon class="size-8" icon="location_on" />
+            <Icon class="size-8" :icon="ICON" />
             <Dialog.Title class="headline">{{ title }}</Dialog.Title>
           </template>
           <template #description>

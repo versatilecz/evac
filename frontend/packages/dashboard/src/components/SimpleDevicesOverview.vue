@@ -26,22 +26,21 @@ const { byLocation } = useRooms()
 
 <template>
   <section class="grid grid-rows-[auto_1fr]">
-    <header>
-      <h1 class="headline h-12 flex items-center">{{ t('devicesOverview') }}</h1>
-      <button type="button"></button>
+    <header class="pt-4">
+      <h1 class="headline">{{ t('devicesOverview') }}</h1>
     </header>
 
     <div class="list overflow-y-auto">
       <template v-for="location of locations" :key="location.uuid">
-        <DevicesRoot v-slot="{ count }" :location="location.uuid">
-          <header class="flex gap-4 items-center h-12">
-            <h2 class="headline" v-text="location.name" />
+        <DevicesRoot v-slot="{ count }" source-type="location" :location="location.uuid">
+          <header class="flex gap-4 items-center pt-4 pb-2">
+            <h2 class="headline px-0" v-text="location.name" />
             <Badge>{{ count }}</Badge>
           </header>
         </DevicesRoot>
 
         <template v-for="room of byLocation.get(location.uuid) ?? []" :key="room.uuid">
-          <DevicesRoot v-slot="{ count, devices }" :room="room.uuid">
+          <DevicesRoot v-slot="{ count, devices }" source-type="room" :room="room.uuid">
             <div class="border-t flex gap-4 items-center h-12">
               <h3 class="paragraph font-semibold" v-text="room.name" />
               <Badge>{{ count }}</Badge>
@@ -52,10 +51,10 @@ const { byLocation } = useRooms()
           </DevicesRoot>
         </template>
       </template>
-      <DevicesRoot v-slot="{ count, devices }" unlocated>
+      <DevicesRoot v-slot="{ count, devices }" source-type="unallocated">
         <div class="list mt-2">
-          <header class="flex gap-4 items-center h-12">
-            <h2 class="headline">{{ t('unlocatedDevices') }}</h2>
+          <header class="flex gap-4 items-center pt-4 pb-2 border-b">
+            <h2 class="headline px-0 w-max whitespace-nowrap">{{ t('unlocatedDevices') }}</h2>
             <Badge>{{ count }}</Badge>
           </header>
           <InlineDevices v-slot="{ device }" :devices="devices" class="mt-2">

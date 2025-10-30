@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import type { $SourceType } from '@/definitions'
 import { useDevices } from '../composables'
 
-defineProps<{
+const props = defineProps<{
+  sourceType?: $SourceType
   location?: string
   room?: string
-  unlocated?: boolean
 }>()
 
-const { list: devices } = useDevices()
+const { list: devices } = useDevices({
+  sourceType: props.sourceType,
+  location: () => props.location,
+  room: () => props.room,
+})
 </script>
 
 <template>

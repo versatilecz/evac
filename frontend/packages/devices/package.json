@@ -33,7 +33,11 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
+    "@evac/activity": "*",
     "@evac/auth": "*",
+    "@evac/locations": "*",
+    "@evac/rooms": "*",
+    "@evac/scanners": "*",
     "@evac/shared": "*",
     "@evac/ui": "*",
     "@evac/utils": "*",

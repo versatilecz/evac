@@ -13,13 +13,13 @@ type OrchestratorConfig = {
 
 export type MessageParser = (source: AsyncIterable<object>) => AsyncIterable<object>
 
-const RECONNECT_INTERVAL = 2000
+const RECONNECT_DELAY = 1000
 
 export function defineWebSocketServices(...services: WebSocketService[]): Set<WebSocketService> {
   return new Set<WebSocketService>(services)
 }
 
-export async function orchestrateWebSocketAndServices(config: OrchestratorConfig) {
+export async function orchestrateWebSocketAndServices(config: OrchestratorConfig): Promise<void> {
   const abortController = new AbortController()
   const runningServices = new Set<Disposable>()
   try {
@@ -34,16 +34,18 @@ export async function orchestrateWebSocketAndServices(config: OrchestratorConfig
     }
 
     await listen(connection)
-
-    logger.log('[ws] connection closed')
-    abortController.abort()
+    throw new Error('[ws] connection closed')
   } catch (e) {
     logger.error(e)
     abortController.abort()
     runningServices.forEach((x) => x[Symbol.dispose]())
     runningServices.clear()
-    logger.info(`[ws] waiting ${RECONNECT_INTERVAL}ms before reconnecting...`)
-    await new Promise((resolve) => setTimeout(resolve, RECONNECT_INTERVAL))
+    return reconnect()
+  }
+
+  async function reconnect(): Promise<void> {
+    logger.info(`[ws] waiting ${RECONNECT_DELAY}ms before reconnecting...`)
+    await new Promise((resolve) => setTimeout(resolve, RECONNECT_DELAY))
     logger.info('[ws] attempting to reconnect...')
     return orchestrateWebSocketAndServices(config)
   }

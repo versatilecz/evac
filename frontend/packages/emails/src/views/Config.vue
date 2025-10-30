@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useAuth } from '@evac/auth'
 import { Badge, ContentHeader, defineListFields, useList } from '@evac/ui'
-import { DEFAULT_SORT, Email, useEmails } from '@evac/emails'
 import { useI18n } from 'vue-i18n'
+import { Email } from '@/components'
+import { useEmails } from '@/composables'
+import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
 const auth = useAuth()

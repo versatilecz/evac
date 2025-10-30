@@ -1,17 +1,17 @@
+import { Views as Dashboard } from '@evac/dashboard'
 import type { RouteRecordRaw } from 'vue-router'
-import { Config, routes as configRoutes } from '@evac/config'
-import { Dashboard } from '@evac/dashboard'
+import { routes as configRoutes, Views as Config } from '@/config'
 
 export default [
   {
     path: '/',
     name: 'dashboard',
-    component: Dashboard,
+    component: Dashboard.Basic,
   },
   {
     path: '/config',
     name: 'config',
-    component: Config,
+    component: Config.Config,
     children: configRoutes,
   },
 ] satisfies RouteRecordRaw[]

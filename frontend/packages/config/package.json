@@ -34,13 +34,7 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
-    "@evac/alarms": "*",
     "@evac/auth": "*",
-    "@evac/devices": "*",
-    "@evac/emails": "*",
-    "@evac/locations": "*",
-    "@evac/rooms": "*",
-    "@evac/scanners": "*",
     "@evac/shared": "*",
     "@evac/ui": "*",
     "@evac/utils": "*",
@@ -54,7 +48,6 @@
     "zod": "^4.1.12"
   },
   "peerDependencies": {
-    "@evac/icons": "*",
     "vue": "^3.5.0"
   }
 }

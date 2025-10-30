@@ -10,7 +10,7 @@
 
   @scope (.list) {
     .headline {
-      @apply grid grid-cols-subgrid border-b;
+      @apply grid grid-cols-subgrid;
       padding: theme(spacing.1)
         calc(theme(spacing.6) - calc(var(--list-gap-x) / 2));
     }

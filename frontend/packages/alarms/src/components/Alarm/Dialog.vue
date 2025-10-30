@@ -2,7 +2,7 @@
 import { ContentHeader, Dialog, DialogActions, Icon, Switch } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useAlarmForm } from '@/composables'
-import { $Alarm, $AlarmFormData } from '@/definitions'
+import { ICON, $Alarm, $AlarmFormData } from '@/definitions'
 
 const props = defineProps<{ alarm?: $Alarm | $AlarmFormData }>()
 defineOptions({ inheritAttrs: false })
@@ -25,7 +25,7 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
       <Dialog.Content class="dialog">
         <ContentHeader>
           <template #title>
-            <Icon class="size-8" icon="location_on" />
+            <Icon class="size-8" :icon="ICON" />
             <Dialog.Title class="headline">{{ title }}</Dialog.Title>
           </template>
           <template #description>

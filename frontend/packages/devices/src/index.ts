@@ -1,5 +1,8 @@
 export * from './definitions'
 export * from './i18n'
 export * from './service'
+export * from './data'
 export * from './composables'
 export * from './components'
+export * as Views from './views'
+export * from './misc'

@@ -1,31 +1,34 @@
 <script setup lang="ts">
 import { useAuth } from '@evac/auth'
 import { Badge, ContentHeader, defineListFields, useList } from '@evac/ui'
-import { DEFAULT_SORT, Device, useDevices } from '@evac/devices'
 import { useI18n } from 'vue-i18n'
+import { Alarm } from '@/components'
+import { useAlarms } from '@/composables'
+import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
 const auth = useAuth()
 
 const fields = defineListFields(
-  { key: 'name', fill: true },
+  { key: 'name' },
   { key: 'uuid', visible: () => auth.isDebug.value },
-  { key: 'mac', visible: () => auth.isDebug.value },
-  { key: 'battery' },
-  { key: 'lastActivity' },
-  { key: 'enabled' }
+  { key: 'subject' },
+  { key: 'text', fill: true },
+  { key: 'buzzer' },
+  { key: 'led' }
 )
 const { sort } = useList({ initialSort: DEFAULT_SORT, fields })
-const { count, list: devices } = useDevices({ sort })
+const { count, list: alarms } = useAlarms({ sort })
 </script>
 
 <template>
-  <ContentHeader :description="t('devices.config.description', '')">
+  <ContentHeader :description="t('alarms.config.description', '')">
     <template #title>
-      <h1 class="headline">{{ t('devices.config.title') }}</h1>
+      <h1 class="headline">{{ t('alarms.config.title') }}</h1>
       <Badge>{{ count }}</Badge>
       <span class="grow" />
+      <Alarm.Dialog />
     </template>
   </ContentHeader>
-  <Device.List class="pb-12" :devices="devices" />
+  <Alarm.List :alarms="alarms" />
 </template>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useAuth } from '@evac/auth'
 import { Badge, ContentHeader, defineListFields, useList } from '@evac/ui'
-import { DEFAULT_SORT, Scanner, useScanners } from '@evac/scanners'
 import { useI18n } from 'vue-i18n'
+import { Scanner } from '@/components'
+import { useScanners } from '@/composables'
+import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
 const auth = useAuth()
@@ -30,5 +32,8 @@ const { count, list: scanners } = useScanners({ sort })
       <span class="grow" />
     </template>
   </ContentHeader>
-  <Scanner.List class="pb-12" :scanners="scanners" />
+  <Scanner.List v-if="scanners.length" class="pb-12" :scanners="scanners" />
+  <div v-else class="px-6">
+    <p class="paragraph p-4 text-center border-emphasis-4 border rounded-md">{{ t('scanners.empty') }}</p>
+  </div>
 </template>

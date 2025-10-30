@@ -1,2 +1,2 @@
 export * from './components'
-export * from './views'
+export * as Views from './views'

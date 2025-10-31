@@ -3,6 +3,7 @@ import { service as alarmsService, activeAlarmService } from '@evac/alarms'
 import { service as configService, backupService } from '@evac/config'
 import { service as devicesService } from '@evac/devices'
 import { service as emailsService } from '@evac/emails'
+import { service as eventsService } from '@evac/events'
 import { service as locationsService } from '@evac/locations'
 import { service as roomsService } from '@evac/rooms'
 import { service as scannersService } from '@evac/scanners'
@@ -19,7 +20,8 @@ const services = defineWebSocketServices(
   activityService,
   emailsService,
   alarmsService,
-  activeAlarmService
+  activeAlarmService,
+  eventsService
 )
 
 export default function handleServicesOverWebSocket(url: URL | string, storage: Storage) {

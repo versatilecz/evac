@@ -53,6 +53,10 @@
       "path": "./frontend/packages/emails"
     },
     {
+      "name": "FE / Packages / Events",
+      "path": "./frontend/packages/events"
+    },
+    {
       "name": "FE / Packages / Fonts",
       "path": "./frontend/packages/fonts"
     },

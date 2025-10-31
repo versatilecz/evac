@@ -24,6 +24,7 @@
     "@evac/dashboard": "*",
     "@evac/devices": "*",
     "@evac/emails": "*",
+    "@evac/events": "*",
     "@evac/fonts": "*",
     "@evac/icons": "*",
     "@evac/locations": "*",

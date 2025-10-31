@@ -32,6 +32,7 @@ const placement = computed(() => {
     </header>
 
     <p v-if="alarm.text" v-text="alarm.text" />
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-else-if="alarm.html" v-html="alarm.html" />
 
     <slot />

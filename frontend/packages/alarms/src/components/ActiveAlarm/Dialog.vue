@@ -105,7 +105,7 @@ function seed() {
           <label class="label" for="active-alarm-location">
             <span class="label-text">{{ t('location.title') }}</span>
 
-            <select v-model="formData.location" id="active-alarm-location" class="input w-full">
+            <select id="active-alarm-location" v-model="formData.location" class="input w-full">
               <option disabled value="">{{ t('location.select.placeholder') }}</option>
               <template v-for="location of locations" :key="location.uuid">
                 <option :value="location.uuid">{{ location.name }}</option>
@@ -116,7 +116,7 @@ function seed() {
           <label class="label" for="active-alarm-room">
             <span class="label-text">{{ t('room.title') }}</span>
 
-            <select v-model="formData.room" id="active-alarm-room" class="input w-full" :disabled="!formData.location">
+            <select id="active-alarm-room" v-model="formData.room" class="input w-full" :disabled="!formData.location">
               <option disabled value="">{{ t('room.select.placeholder') }}</option>
               <template v-for="room of rooms" :key="room.uuid">
                 <option :value="room.uuid">{{ room.name }}</option>
@@ -127,7 +127,7 @@ function seed() {
           <label class="label" for="active-alarm-scanner">
             <span class="label-text">{{ t('scanner.title') }}</span>
 
-            <select v-model="formData.scanner" id="active-alarm-scanner" class="input w-full" :disabled="!formData.room">
+            <select id="active-alarm-scanner" v-model="formData.scanner" class="input w-full" :disabled="!formData.room">
               <option disabled value="">{{ t('scanner.select.placeholder') }}</option>
               <template v-for="scanner of scanners" :key="scanner.uuid">
                 <option :value="scanner.uuid">{{ scanner.name }}</option>
@@ -138,7 +138,7 @@ function seed() {
           <label class="label" for="active-alarm-device">
             <span class="label-text">{{ t('device.title') }}</span>
 
-            <select v-model="formData.device" id="active-alarm-device" class="input w-full" :disabled="!devices.length">
+            <select id="active-alarm-device" v-model="formData.device" class="input w-full" :disabled="!devices.length">
               <option disabled value="">{{ t('device.select.placeholder') }}</option>
               <template v-for="device of devices" :key="device.uuid">
                 <option :value="device.uuid">{{ device.name }}</option>
@@ -149,7 +149,7 @@ function seed() {
           <label class="label" for="active-alarm-alarm">
             <span class="label-text">{{ t('alarm.title') }}</span>
 
-            <select v-model="formData.alarm" id="active-alarm-alarm" class="input w-full" :disabled="!alarms.length">
+            <select id="active-alarm-alarm" v-model="formData.alarm" class="input w-full" :disabled="!alarms.length">
               <option disabled value="">{{ t('alarm.select.placeholder') }}</option>
               <template v-for="alarm of alarms" :key="alarm.uuid">
                 <option :value="alarm.uuid">{{ alarm.name }}</option>

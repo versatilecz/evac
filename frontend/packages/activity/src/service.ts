@@ -55,6 +55,11 @@ export const service = defineService({
       if (!state) return
 
       const next = new Map(filterOutdatedActivities(state, diff))
+      const nextIds = new Set(next.keys())
+      const currentIds = new Set(state.keys())
+      const diffIds = nextIds.symmetricDifference(currentIds).size
+      if (!diffIds) return // No changes, no need to spam storage
+
       this.set(next)
     },
   })

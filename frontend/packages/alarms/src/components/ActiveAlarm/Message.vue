@@ -1,20 +1,10 @@
 <script setup lang="ts">
-import { Badge, BooleanIcon, Icon } from '@evac/ui'
-import { computed } from 'vue'
+import { Badge, BooleanIcon, EntityBreadcrumbs, Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import type { $ActiveAlarm } from '@/definitions'
 
 const props = defineProps<{ alarm: $ActiveAlarm }>()
 const { t } = useI18n()
-
-const placement = computed(() => {
-  const alarm = props.alarm
-  let parts = []
-  if (alarm.location) parts.push(alarm.location)
-  if (alarm.room) parts.push(alarm.room)
-  if (alarm.scanner) parts.push(alarm.scanner)
-  return parts.join(' / ')
-})
 </script>
 
 <template>
@@ -24,9 +14,12 @@ const placement = computed(() => {
       <h2 class="headline" v-text="alarm.subject" />
 
       <span class="grow" />
-      <Badge v-if="alarm.location"
-        >{{ placement }} / <strong>{{ alarm.device }}</strong></Badge
-      >
+      <Badge v-if="alarm.location">
+        <EntityBreadcrumbs :location="alarm.location" :room="alarm.room" :scanner="alarm.scanner" :device="alarm.device" v-slot="{ delimiter, rest, last }">
+          <template v-if="rest.length">{{ rest + delimiter }}</template
+          ><strong>{{ last }}</strong>
+        </EntityBreadcrumbs>
+      </Badge>
       <Badge>{{ t('entity.led') }}: <BooleanIcon :value="alarm.led" /></Badge>
       <Badge>{{ t('entity.buzzer') }}: <BooleanIcon :value="alarm.buzzer" /></Badge>
     </header>

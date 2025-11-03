@@ -41,6 +41,7 @@
     "@evac/config": "*",
     "@evac/devices": "*",
     "@evac/emails": "*",
+    "@evac/events": "*",
     "@evac/locations": "*",
     "@evac/rooms": "*",
     "@evac/scanners": "*",

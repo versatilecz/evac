@@ -25,7 +25,7 @@ const { byLocation } = useRooms()
 </script>
 
 <template>
-  <section class="grid grid-rows-[auto_1fr]">
+  <section>
     <header class="pt-4">
       <h1 class="headline">{{ t('devicesOverview') }}</h1>
     </header>

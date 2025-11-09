@@ -3,6 +3,7 @@ use std::{
     default,
     net::{Ipv4Addr, SocketAddrV4},
 };
+use uuid::Uuid;
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Activity {
@@ -18,9 +19,7 @@ pub struct Alarm {
     pub scanner: String,
     pub location: String,
     pub room: String,
-    pub subject: String,
-    pub html: String,
-    pub text: String,
+    pub email: Uuid,
     pub buzzer: bool,
     pub led: bool,
 }
@@ -72,13 +71,17 @@ pub enum WebMessage {
     AlarmDetail(crate::database::entities::Alarm),
     AlarmRemove(uuid::Uuid),
     AlarmRemoved(uuid::Uuid),
-    Alarm(Alarm),
+    Alarm {
+        alarm: Alarm,
+        group: uuid::Uuid,
+    },
     AlarmStop(bool),
 
     Email {
         subject: String,
         html: String,
         text: String,
+        group: uuid::Uuid,
     },
 
     EmailList(Vec<crate::database::entities::Email>),

@@ -1,12 +1,12 @@
-pub mod context;
-pub mod database;
-pub mod message;
-pub mod scanner;
-pub mod server;
-pub mod util;
-pub mod web;
+use ::server::context;
+use ::server::database;
+use ::server::database::{entities::Activities, LoadSave};
+use ::server::message;
+use ::server::scanner;
+use ::server::server;
+use ::server::util;
+use ::server::web;
 
-use crate::database::{entities::Activities, LoadSave};
 use clap::{builder::Str, Parser};
 use shared::messages::scanner::ScannerEvent;
 use std::{
@@ -74,6 +74,7 @@ async fn main() -> anyhow::Result<()> {
         scanner_sender,
         database,
         alarm: None,
+        group: None,
     };
 
     let global_sender = context.global_broadcast.clone();

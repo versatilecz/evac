@@ -3,6 +3,7 @@ use std::{collections::BTreeMap, net::Ipv4Addr, os::unix::fs::chroot};
 use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use shared::messages::scanner;
+use uuid::Uuid;
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
@@ -191,8 +192,7 @@ pub struct Alarm {
     pub subject: String,
     pub buzzer: bool,
     pub led: bool,
-    pub html: String,
-    pub text: String,
+    pub email: uuid::Uuid,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -203,4 +203,42 @@ pub struct Email {
     pub subject: String,
     pub html: String,
     pub text: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(rename_all = "camelCase")]
+pub enum ContactKind {
+    Sms { number: String },
+    Email { email: String },
+}
+
+impl Default for ContactKind {
+    fn default() -> Self {
+        ContactKind::Email {
+            email: String::from("miksanik@gmail.com"),
+        }
+    }
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", default)]
+pub struct Contact {
+    pub uuid: uuid::Uuid,
+    pub kind: ContactKind,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ContactGroup {
+    pub uuid: uuid::Uuid,
+    pub name: String,
+    pub contacts: Vec<Uuid>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", default)]
+pub struct User {
+    uuid: uuid::Uuid,
+    username: String,
+    password: String,
 }

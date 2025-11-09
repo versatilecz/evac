@@ -7,7 +7,7 @@ use crate::{
     message::web::WebMessage,
 };
 use shared::messages::scanner::{ScannerEvent, ScannerMessage, State};
-use uuid::timestamp::context;
+use uuid::{timestamp::context, Uuid};
 
 #[derive(Debug, Clone)]
 pub struct Operator {
@@ -103,7 +103,10 @@ impl Operator {
 
             if let Some(alarm) = &context.alarm {
                 self.sender
-                    .send(crate::message::web::WebMessage::Alarm(alarm.clone()))
+                    .send(crate::message::web::WebMessage::Alarm {
+                        alarm: alarm.clone(),
+                        group: context.group.unwrap_or_default(),
+                    })
                     .await?;
             }
 
@@ -263,8 +266,7 @@ impl Operator {
                 if let Some(saved) = context.database.data.alarms.get_mut(&alarm.uuid) {
                     saved.name = alarm.name;
                     saved.subject = alarm.subject;
-                    saved.html = alarm.html;
-                    saved.text = alarm.text;
+                    saved.email = alarm.email;
                     saved.led = alarm.led;
                     saved.buzzer = alarm.buzzer;
 
@@ -290,10 +292,12 @@ impl Operator {
                 Ok(())
             }
 
-            WebMessage::Alarm(alarm) => {
+            WebMessage::Alarm { alarm, group } => {
                 // Set the alarm
                 let mut context = self.context.write().await;
+
                 context.alarm = Some(alarm.clone());
+                let contacts = context.database.data.get_contacts_by_group(group);
 
                 context.database.data.scanners.values_mut().for_each(|s| {
                     s.buzzer = alarm.buzzer;
@@ -313,11 +317,21 @@ impl Operator {
                         },
                     })
                     .await?;
-                context
-                    .web_broadcast
-                    .send(WebMessage::Alarm(alarm.clone()))?;
+                context.web_broadcast.send(WebMessage::Alarm {
+                    alarm: alarm.clone(),
+                    group: group,
+                })?;
 
-                context.database.config.email.send_alarm(alarm).await?;
+                if let Some(email) = context.database.data.emails.get(&alarm.email) {
+                    for contact in contacts {
+                        context
+                            .database
+                            .config
+                            .notification
+                            .send_alarm(contact, email.clone(), alarm.clone())
+                            .await?;
+                    }
+                }
 
                 Ok(())
             }
@@ -359,15 +373,26 @@ impl Operator {
                 subject,
                 html,
                 text,
+                group,
             } => {
                 let context = self.context.read().await;
-                context
-                    .database
-                    .config
-                    .email
-                    .send(subject, html, text)
-                    .await?;
-                tracing::info!("Email has been send");
+
+                for contact in context.database.data.get_contacts_by_group(group) {
+                    context
+                        .database
+                        .config
+                        .notification
+                        .send_notifications(
+                            contact,
+                            crate::database::entities::Email {
+                                html: html.clone(),
+                                text: text.clone(),
+                                ..Default::default()
+                            },
+                        )
+                        .await?;
+                    tracing::info!("Email has been send");
+                }
                 Ok(())
             }
 

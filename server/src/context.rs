@@ -11,6 +11,7 @@ pub struct Context {
     pub scanner_sender: tokio::sync::mpsc::Sender<ScannerEvent>,
     pub database: crate::database::Database,
     pub alarm: Option<crate::message::web::Alarm>,
+    pub group: Option<uuid::Uuid>,
 }
 impl Context {
     /*

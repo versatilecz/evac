@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::collections::{BTreeMap, HashSet};
 
-use crate::database::entities::{Activities, Alarm, EventKind};
+use crate::database::entities::{Activities, Alarm, Contact, EventKind};
 
 pub mod config;
 pub mod entities;
@@ -34,6 +34,8 @@ pub struct Data {
     pub rooms: BTreeMap<uuid::Uuid, entities::Room>,
     pub alarms: BTreeMap<uuid::Uuid, Alarm>,
     pub emails: BTreeMap<uuid::Uuid, entities::Email>,
+    pub contacts: BTreeMap<uuid::Uuid, entities::Contact>,
+    pub contact_group: BTreeMap<uuid::Uuid, entities::ContactGroup>,
 
     pub backups: HashSet<String>,
 }
@@ -247,12 +249,30 @@ impl Default for Data {
             ]),
             alarms: BTreeMap::new(),
             emails: BTreeMap::new(),
+            contacts: BTreeMap::new(),
+            contact_group: BTreeMap::new(),
             backups: HashSet::new(),
         }
     }
 }
 
 impl LoadSave for Data {}
+
+impl Data {
+    pub fn get_contacts_by_group(&self, group: uuid::Uuid) -> Vec<Contact> {
+        let contacts = self
+            .contact_group
+            .get(&group)
+            .map(|g| g.contacts.clone())
+            .unwrap_or_default();
+
+        self.contacts
+            .values()
+            .filter(|c| contacts.contains(&c.uuid))
+            .cloned()
+            .collect()
+    }
+}
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase", default)]

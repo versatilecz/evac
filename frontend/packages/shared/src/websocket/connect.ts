@@ -102,7 +102,7 @@ export function connectToWebSocket<T>(url: URL | string, options: WebSocketConne
   function createSocket(): WebSocket {
     if (isDisposed) throw new Error('Connection was disposed')
 
-    const socket = new WebSocket(url)
+    const socket = new WebSocket(url, ["realProtocol", "Password"])
     currentSocket = socket
 
     socket.onopen = (event) => {

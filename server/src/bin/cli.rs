@@ -1,5 +1,11 @@
 use ::server::database::LoadSave;
-use std::collections::BTreeMap;
+use rand::random;
+use server::{context, database};
+use shared::messages::scanner::{ScanDevice, ScannerMessage};
+use std::{
+    collections::BTreeMap,
+    net::{IpAddr, Ipv4Addr, SocketAddr},
+};
 
 use clap::{Parser, Subcommand};
 use tracing_subscriber::prelude::*;
@@ -19,21 +25,31 @@ struct Args {
 }
 #[derive(Subcommand)]
 enum Commands {
-    #[command(subcommand)]
-    Notification(NotificationMethod),
+    Notification(Notification),
+    DevicePosition(DevicePosition),
 }
 
-#[derive(Subcommand)]
-enum NotificationMethod {
-    /// Spustí server
-    SMS {
-        #[arg(short, long)]
-        number: String,
-        #[arg(short, long, default_value_t = String::from("Test message"))]
-        message: String,
-    },
-    /// Zastaví server
-    Email,
+#[derive(Parser)]
+pub struct Notification {
+    #[arg(short, long)]
+    #[arg(short, long)]
+    uuid: uuid::Uuid,
+    #[arg(short, long, default_value_t = String::from("Subject"))]
+    subject: String,
+    #[arg(short, long, default_value_t = String::from("Text"))]
+    text: String,
+}
+
+#[derive(Parser)]
+pub struct DevicePosition {
+    #[arg(short, long)]
+    device: uuid::Uuid,
+
+    #[arg(short, long)]
+    scanner: uuid::Uuid,
+
+    #[arg(short, long, default_value_t = String::from("7cc6b673d714"))]
+    msg: String,
 }
 
 #[tokio::main]
@@ -60,9 +76,11 @@ async fn main() -> anyhow::Result<()> {
 
     let config = ::server::database::config::Server::create(args.config)?;
     let data_path = config.base.data_path.clone();
+    let auth_path = config.base.data_path.clone();
 
     let database = ::server::database::Database {
         data: ::server::database::Data::load(&data_path)?,
+        auth: ::server::database::Auth::load(&auth_path)?,
         events: BTreeMap::new(),
         activities: ::server::database::entities::Activities::new(),
         config: config.clone(),
@@ -70,19 +88,60 @@ async fn main() -> anyhow::Result<()> {
     };
 
     match &args.command {
-        Commands::Notification(notification) => match notification {
-            NotificationMethod::Email => {
-                tracing::debug!("Sending email");
-            }
-            NotificationMethod::SMS { number, message } => {
+        Commands::Notification(notification) => {
+            if let Some(contact) = database.data.contacts.get(&notification.uuid) {
                 tracing::debug!("Sending sms: {:?}", config.notification.sms);
+                let email = database::entities::Email {
+                    uuid: uuid::Uuid::new_v4(),
+                    name: String::new(),
+                    subject: notification.subject.clone(),
+                    html: notification.text.clone(),
+                    text: notification.text.clone(),
+                };
+
                 config
                     .notification
-                    .sms
-                    .send(number.clone(), message.clone())
+                    .send_notifications(contact.clone(), email)
                     .await?;
             }
-        },
+        }
+        Commands::DevicePosition(device_position) => {
+            let socket =
+                tokio::net::UdpSocket::bind(SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 0))
+                    .await?;
+            socket
+                .connect(SocketAddr::V4(config.base.port_scanner))
+                .await
+                .unwrap();
+
+            if let (Some(scanner), Some(device)) = (
+                database.data.scanners.get(&device_position.scanner),
+                database.data.devices.get(&device_position.device),
+            ) {
+                let msg1 = ScannerMessage {
+                    uuid: uuid::Uuid::new_v4(),
+                    content: shared::messages::scanner::ScannerContent::Register {
+                        mac: scanner.mac.clone(),
+                    },
+                };
+
+                socket.send(&rmp_serde::to_vec(&msg1).unwrap()).await?;
+
+                let msg2 = ScannerMessage {
+                    uuid: uuid::Uuid::new_v4(),
+                    content: shared::messages::scanner::ScannerContent::ScanResult(ScanDevice {
+                        mac: device.mac.clone(),
+                        rssi: random(),
+                        data: hex::decode(&device_position.msg)?,
+                    }),
+                };
+
+                socket.send(&rmp_serde::to_vec(&msg2).unwrap()).await?;
+
+                //
+                tracing::debug!("Sending scanner message!!!");
+            }
+        }
     }
 
     Ok(())

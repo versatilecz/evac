@@ -34,6 +34,9 @@ const websocket = useWebSocket(`${schema}//${hostname}/api/operator`, {
   onFailed() {
     alert('Failed to connect WebSocket after 3 retries')
   },
+  onConnected() {
+    websocket.send(JSON.stringify({ Login: {Login: {"username": "admin", "password": "password"}}}))
+  }
 })
 
 app.provide('$websocket', websocket)

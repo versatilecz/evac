@@ -5,6 +5,8 @@ use std::{
 };
 use uuid::Uuid;
 
+use crate::database::entities::Role;
+
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Activity {
     pub device: uuid::Uuid,
@@ -24,10 +26,27 @@ pub struct Alarm {
     pub led: bool,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub enum Auth {
+    Token(String),
+    Login { username: String, password: String },
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct UserInfo {
+    pub username: String,
+    pub roles: Vec<Role>,
+    pub password: Option<String>,
+}
+
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum WebMessage {
     #[default]
     Close,
+
+    Login(Auth),
+    Logout,
+    UserInfo(UserInfo),
 
     Ping,
 
@@ -89,6 +108,28 @@ pub enum WebMessage {
     EmailDetail(crate::database::entities::Email),
     EmailRemove(uuid::Uuid),
     EmailRemoved(uuid::Uuid),
+
+    UserList(Vec<UserInfo>),
+    UserSet(UserInfo),
+    UserDetail(UserInfo),
+    UserRemove(uuid::Uuid),
+    UserRemoved(uuid::Uuid),
+
+    TokenGetForUser(uuid::Uuid),
+    TokenGet,
+    TokenDetail(uuid::Uuid),
+
+    ContactList(Vec<crate::database::entities::Contact>),
+    ContactSet(crate::database::entities::Contact),
+    ContactDetail(crate::database::entities::Contact),
+    ContactRemove(uuid::Uuid),
+    ContactRemoved(uuid::Uuid),
+
+    ContactGroupList(Vec<crate::database::entities::ContactGroup>),
+    ContactGroupSet(crate::database::entities::ContactGroup),
+    ContactGroupDetail(crate::database::entities::ContactGroup),
+    ContactGroupRemove(uuid::Uuid),
+    ContactGroupRemoved(uuid::Uuid),
 
     BackupList(Vec<String>),
     BackupRemove(String),

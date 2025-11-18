@@ -25,6 +25,15 @@ pub trait LoadSave {
     }
 }
 
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", default)]
+pub struct Auth {
+    pub users: BTreeMap<String, entities::User>,
+    pub tokens: BTreeMap<String, entities::Token>,
+}
+
+impl LoadSave for Auth {}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Data {
@@ -279,6 +288,7 @@ impl Data {
 pub struct Database {
     pub config: config::Server,
     pub data: Data,
+    pub auth: Auth,
     pub events: BTreeMap<uuid::Uuid, entities::Event>,
     pub activities: entities::Activities,
     pub version: String,

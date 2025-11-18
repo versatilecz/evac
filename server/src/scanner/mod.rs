@@ -4,7 +4,9 @@ use std::{collections::BTreeMap, net::SocketAddr, time::Duration};
 use mail_send::mail_auth::arc::parse;
 use serde::de;
 use serde_json::ser;
-use shared::messages::scanner::{self, ScannerContent, ScannerEvent, ScannerMessage, State};
+use shared::messages::scanner::{
+    self, ScannerContent, ScannerEvent, ScannerMessage, ScannerWrapped, State,
+};
 use tokio::{
     net::UdpSocket,
     sync::{broadcast, RwLockWriteGuard},
@@ -40,6 +42,7 @@ impl Scanner {
 
     pub async fn send(&self, event: ScannerEvent) -> anyhow::Result<bool> {
         let data = rmp_serde::to_vec(&event.message)?;
+        //let wrapped = rmp_serde::to_vec(&ScannerWrapped::Plain(data))?;
 
         if let Some(socket) = self.socket.as_ref() {
             tracing::info!("Scanner: {:?}", event.scanner);
@@ -71,7 +74,7 @@ impl Scanner {
                         return Ok(true);
                     }
                     Err(err) => {
-                        tracing::error!("{:?}", err);
+                        tracing::error!("{:?} {:?}", err, &buf[..len]);
                         return Ok(false);
                     }
                 }

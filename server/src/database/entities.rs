@@ -236,9 +236,26 @@ pub struct ContactGroup {
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum Role {
+    #[default]
+    Anonymous,
+    Admin,
+    Service,
+    External,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct User {
-    uuid: uuid::Uuid,
-    username: String,
-    password: String,
+    pub username: String,
+    pub password: String,
+    pub roles: Vec<Role>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Token {
+    pub nonce: String,
+    pub user: String,
+    pub is_valid: bool,
+    pub created: chrono::DateTime<chrono::Utc>,
 }

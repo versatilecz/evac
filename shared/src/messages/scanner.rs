@@ -26,6 +26,20 @@ pub struct ScanDevice {
     pub data: Vec<u8>,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
+pub enum ScannerWrapped {
+    Plain(Vec<u8>),
+    Hashed {
+        nonce: Vec<u8>,
+        message: Vec<u8>,
+        hash: Vec<u8>,
+    },
+    Encrypted {
+        encrypted: Vec<u8>,
+        pub_key: Vec<u8>,
+    },
+}
+
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub enum ScannerContent {
     #[default]

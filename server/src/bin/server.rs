@@ -51,15 +51,19 @@ async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let config = crate::database::config::Server::create(args.config)?;
     let data_path = config.base.data_path.clone();
+    let auth_path = config.base.auth_path.clone();
+
     tracing::info!("{}", serde_json::to_string(&config).unwrap());
     let database = crate::database::Database {
         data: crate::database::Data::load(&data_path).unwrap_or_default(),
+        auth: crate::database::Auth::load(&auth_path).unwrap_or_default(),
         events: BTreeMap::new(),
         activities: Activities::new(),
         config: config.clone(),
         version: String::new(),
     };
     database.data.save(&data_path)?;
+    database.auth.save(&auth_path)?;
     database.config.save()?;
 
     let broadcast = SocketAddr::V4(config.base.port_broadcast);

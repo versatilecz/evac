@@ -8,6 +8,7 @@ use crate::database::entities::{Contact, ContactKind};
 use super::LoadSave;
 use mail_send::{mail_builder::MessageBuilder, Credentials, SmtpClientBuilder};
 use serde::{Deserialize, Serialize};
+use sha2::Digest;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
@@ -104,6 +105,7 @@ impl SMS {
 pub struct Base {
     pub config_path: String,
     pub data_path: String,
+    pub auth_path: String,
     pub frontend_path: String,
     pub salt: String,
     pub query_size: usize,
@@ -118,6 +120,7 @@ impl Default for Base {
         Base {
             config_path: String::new(),
             data_path: String::new(),
+            auth_path: String::new(),
             frontend_path: String::new(),
             salt: String::new(),
             query_size: 16,
@@ -127,6 +130,15 @@ impl Default for Base {
             activity_diff: 15,
             routine: 5,
         }
+    }
+}
+
+impl Base {
+    pub fn get_hashed(&self, data: &str) -> String {
+        let mut hasher = sha2::Sha256::new();
+        hasher.update(&self.salt);
+        hasher.update(data);
+        hex::encode(hasher.finalize())
     }
 }
 

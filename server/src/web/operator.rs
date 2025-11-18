@@ -1,121 +1,318 @@
 use crate::{
     database::{
         config::Email,
-        entities::{self, Alarm, Device},
+        entities::{self, Alarm, Device, Role, User},
         LoadSave,
     },
-    message::web::WebMessage,
+    message::web::{Auth, UserInfo, WebMessage},
 };
+use anyhow::Context;
 use shared::messages::scanner::{ScannerEvent, ScannerMessage, State};
 use uuid::{timestamp::context, Uuid};
+
+pub const ANONYMOUS_USERNAME: &str = "Anonymouse";
 
 #[derive(Debug, Clone)]
 pub struct Operator {
     pub uuid: uuid::Uuid,
     pub context: crate::context::ContextWrapped,
     pub sender: tokio::sync::mpsc::Sender<crate::message::web::WebMessage>,
+    pub roles: Vec<crate::database::entities::Role>,
+    pub username: String,
 }
 
 impl Operator {
+    pub fn has_role(&self, msg: &crate::message::web::WebMessage) -> bool {
+        let has_role = |roles: &[Role]| roles.iter().any(|r| self.roles.contains(r));
+
+        match msg {
+            WebMessage::Login(..)
+            | WebMessage::Logout
+            | WebMessage::UserInfo(..)
+            | WebMessage::Ping
+            | WebMessage::Pong
+            | WebMessage::Close => true,
+
+            WebMessage::Activity(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ActivityList(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::LocationDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::LocationList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::LocationSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::LocationRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::LocationRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::RoomDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::RoomList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::RoomSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::RoomRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::RoomRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::ScannerDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ScannerList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ScannerSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ScannerRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ScannerRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::DeviceDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::DeviceList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::DeviceSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::DeviceRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::DeviceRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::Event(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::EventList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::EventRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::EventRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::EmailDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::EmailList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::EmailSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::Email { .. } => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::EmailRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::EmailRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::AlarmDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::AlarmList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::AlarmSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::Alarm { .. } => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::AlarmStop(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::AlarmRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::AlarmRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::ContactDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::ContactGroupDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactGroupList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactGroupSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactGroupRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::ContactGroupRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::UserDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::UserList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::UserSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::UserRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::UserRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+
+            WebMessage::TokenGet => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::TokenDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::TokenGetForUser(..) => has_role(&[Role::Admin]),
+
+            WebMessage::Config(..) => has_role(&[Role::Admin]),
+
+            WebMessage::Backup(..) => has_role(&[Role::Admin]),
+            WebMessage::BackupList(..) => has_role(&[Role::Admin]),
+            WebMessage::BackupRemove(..) => has_role(&[Role::Admin]),
+            WebMessage::Restore(..) => has_role(&[Role::Admin]),
+        }
+    }
     pub async fn init(&self) -> anyhow::Result<()> {
-        {
-            let context = self.context.read().await;
-            self.sender
-                .send(crate::message::web::WebMessage::Config(
-                    context.database.config.clone(),
-                ))
-                .await?;
+        Ok(())
+    }
+    pub async fn login(&self) -> anyhow::Result<()> {
+        let context = self.context.read().await;
+        self.sender
+            .send(crate::message::web::WebMessage::Config(
+                context.database.config.clone(),
+            ))
+            .await?;
 
-            self.sender
-                .send(crate::message::web::WebMessage::LocationList(
-                    context.database.data.locations.values().cloned().collect(),
-                ))
-                .await?;
+        self.sender
+            .send(crate::message::web::WebMessage::LocationList(
+                context.database.data.locations.values().cloned().collect(),
+            ))
+            .await?;
 
-            self.sender
-                .send(crate::message::web::WebMessage::RoomList(
-                    context.database.data.rooms.values().cloned().collect(),
-                ))
-                .await?;
+        self.sender
+            .send(crate::message::web::WebMessage::RoomList(
+                context.database.data.rooms.values().cloned().collect(),
+            ))
+            .await?;
 
-            self.sender
-                .send(crate::message::web::WebMessage::ScannerList(
-                    context.database.data.scanners.values().cloned().collect(),
-                ))
-                .await?;
+        self.sender
+            .send(crate::message::web::WebMessage::ScannerList(
+                context.database.data.scanners.values().cloned().collect(),
+            ))
+            .await?;
 
-            self.sender
-                .send(crate::message::web::WebMessage::DeviceList(
-                    context.database.data.devices.values().cloned().collect(),
-                ))
-                .await?;
+        self.sender
+            .send(crate::message::web::WebMessage::DeviceList(
+                context.database.data.devices.values().cloned().collect(),
+            ))
+            .await?;
 
-            self.sender
-                .send(crate::message::web::WebMessage::ActivityList(
-                    context
-                        .database
-                        .data
-                        .devices
-                        .values()
-                        .filter_map(|d| {
-                            if d.enabled {
-                                if let Some(activity) = context.database.activities.best(d.uuid) {
-                                    Some(crate::message::web::Activity {
-                                        device: d.uuid,
-                                        scanner: activity.scanner_uuid,
-                                        rssi: activity.irssi,
-                                        timestamp: activity.timestamp,
-                                    })
-                                } else {
-                                    None
-                                }
+        self.sender
+            .send(crate::message::web::WebMessage::ActivityList(
+                context
+                    .database
+                    .data
+                    .devices
+                    .values()
+                    .filter_map(|d| {
+                        if d.enabled {
+                            if let Some(activity) = context.database.activities.best(d.uuid) {
+                                Some(crate::message::web::Activity {
+                                    device: d.uuid,
+                                    scanner: activity.scanner_uuid,
+                                    rssi: activity.irssi,
+                                    timestamp: activity.timestamp,
+                                })
                             } else {
                                 None
                             }
-                        })
-                        .collect(),
-                ))
-                .await?;
-
-            self.sender
-                .send(crate::message::web::WebMessage::EventList(
-                    context.database.events.values().cloned().collect(),
-                ))
-                .await?;
-
-            self.sender
-                .send(crate::message::web::WebMessage::AlarmList(
-                    context.database.data.alarms.values().cloned().collect(),
-                ))
-                .await?;
-
-            self.sender
-                .send(crate::message::web::WebMessage::EmailList(
-                    context.database.data.emails.values().cloned().collect(),
-                ))
-                .await?;
-
-            self.sender
-                .send(crate::message::web::WebMessage::BackupList(
-                    context.database.data.backups.iter().cloned().collect(),
-                ))
-                .await?;
-
-            if let Some(alarm) = &context.alarm {
-                self.sender
-                    .send(crate::message::web::WebMessage::Alarm {
-                        alarm: alarm.clone(),
-                        group: context.group.unwrap_or_default(),
+                        } else {
+                            None
+                        }
                     })
-                    .await?;
-            }
+                    .collect(),
+            ))
+            .await?;
 
-            Ok(())
+        self.sender
+            .send(crate::message::web::WebMessage::EventList(
+                context.database.events.values().cloned().collect(),
+            ))
+            .await?;
+
+        self.sender
+            .send(crate::message::web::WebMessage::AlarmList(
+                context.database.data.alarms.values().cloned().collect(),
+            ))
+            .await?;
+
+        self.sender
+            .send(crate::message::web::WebMessage::EmailList(
+                context.database.data.emails.values().cloned().collect(),
+            ))
+            .await?;
+
+        self.sender
+            .send(crate::message::web::WebMessage::UserList(
+                context
+                    .database
+                    .auth
+                    .users
+                    .values()
+                    .map(|u| UserInfo {
+                        username: u.username.clone(),
+                        roles: u.roles.clone(),
+                        password: None,
+                    })
+                    .collect(),
+            ))
+            .await?;
+
+        self.sender
+            .send(crate::message::web::WebMessage::ContactList(
+                context.database.data.contacts.values().cloned().collect(),
+            ))
+            .await?;
+
+        self.sender
+            .send(crate::message::web::WebMessage::ContactGroupList(
+                context
+                    .database
+                    .data
+                    .contact_group
+                    .values()
+                    .cloned()
+                    .collect(),
+            ))
+            .await?;
+
+        self.sender
+            .send(crate::message::web::WebMessage::BackupList(
+                context.database.data.backups.iter().cloned().collect(),
+            ))
+            .await?;
+
+        if let Some(alarm) = &context.alarm {
+            self.sender
+                .send(crate::message::web::WebMessage::Alarm {
+                    alarm: alarm.clone(),
+                    group: context.group.unwrap_or_default(),
+                })
+                .await?;
         }
+
+        Ok(())
     }
 
-    pub async fn process(&self, msg: crate::message::web::WebMessage) -> anyhow::Result<()> {
+    pub async fn process(&mut self, msg: crate::message::web::WebMessage) -> anyhow::Result<()> {
         match msg {
+            WebMessage::Login(auth) => {
+                tracing::debug!("Try to login: {:?}", auth);
+
+                match auth {
+                    Auth::Login { username, password } => {
+                        if let Some(user) = self
+                            .context
+                            .read()
+                            .await
+                            .database
+                            .auth
+                            .users
+                            .values()
+                            .find(|u| u.username.eq(&username))
+                            .cloned()
+                        {
+                            self.username = user.username.clone();
+                            self.roles = user.roles.clone();
+
+                            self.login().await?;
+                        }
+                    }
+
+                    Auth::Token(token) => {
+                        if let Some(token) = self
+                            .context
+                            .read()
+                            .await
+                            .database
+                            .auth
+                            .tokens
+                            .values()
+                            .find(|t| t.nonce.eq(&token))
+                            .cloned()
+                        {
+                            if let Some(user) = self
+                                .context
+                                .read()
+                                .await
+                                .database
+                                .auth
+                                .users
+                                .get(&token.user)
+                                .cloned()
+                            {
+                                self.username = user.username.clone();
+                                self.roles = user.roles.clone();
+                                self.login().await?;
+                            }
+                        }
+                    }
+                }
+
+                self.sender
+                    .send(crate::message::web::WebMessage::UserInfo(UserInfo {
+                        username: self.username.clone(),
+                        roles: self.roles.clone(),
+                        password: None,
+                    }))
+                    .await?;
+
+                Ok(())
+            }
+            WebMessage::Logout => {
+                self.username = String::from(ANONYMOUS_USERNAME);
+                self.roles = vec![Role::Anonymous];
+                Ok(())
+            }
+
             WebMessage::LocationSet(location) => {
                 let mut context = self.context.write().await;
                 let location =
@@ -134,6 +331,7 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(WebMessage::LocationDetail(location.clone()))?;
+
                 Ok(())
             }
 
@@ -164,6 +362,7 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(WebMessage::RoomDetail(room.clone()))?;
+
                 Ok(())
             }
 
@@ -215,7 +414,6 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(WebMessage::ScannerDetail(scanner.clone()))?;
-
                 Ok(())
             }
             WebMessage::ScannerRemove(uuid) => {
@@ -245,7 +443,6 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::DeviceRemoved(uuid))?;
-
                 Ok(())
             }
 
@@ -288,7 +485,6 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::AlarmRemoved(uuid))?;
-
                 Ok(())
             }
 
@@ -385,6 +581,7 @@ impl Operator {
                         .send_notifications(
                             contact,
                             crate::database::entities::Email {
+                                subject: subject.clone(),
                                 html: html.clone(),
                                 text: text.clone(),
                                 ..Default::default()
@@ -393,6 +590,7 @@ impl Operator {
                         .await?;
                     tracing::info!("Email has been send");
                 }
+
                 Ok(())
             }
 
@@ -429,6 +627,47 @@ impl Operator {
                 Ok(())
             }
 
+            WebMessage::UserSet(user) => {
+                let mut context = self.context.write().await;
+                let password = user
+                    .password
+                    .map(|p| context.database.config.base.get_hashed(&p));
+
+                let user_info =
+                    if let Some(saved) = context.database.auth.users.get_mut(&user.username) {
+                        saved.roles = user.roles;
+                        if let Some(password) = password {
+                            saved.password = password;
+                        }
+
+                        UserInfo {
+                            username: saved.username.clone(),
+                            roles: saved.roles.clone(),
+                            password: None,
+                        }
+                    } else {
+                        context.database.auth.users.insert(
+                            user.username.clone(),
+                            User {
+                                username: user.username.clone(),
+                                password: password.context("Password mus be provided")?,
+                                roles: user.roles.clone(),
+                            },
+                        );
+                        UserInfo {
+                            username: user.username,
+                            roles: user.roles,
+                            password: None,
+                        }
+                    };
+
+                context
+                    .web_broadcast
+                    .send(WebMessage::UserInfo(user_info))?;
+
+                Ok(())
+            }
+
             WebMessage::BackupRemove(path) => {
                 let mut context = self.context.write().await;
                 context.database.data.backups.remove(&path);
@@ -459,8 +698,9 @@ impl Operator {
                     let mut context = self.context.write().await;
                     context.database.restore(&path)?;
                 }
+                return self.init().await;
 
-                self.init().await
+                Ok(())
             }
 
             _ => Ok(()),

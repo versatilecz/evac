@@ -6,6 +6,8 @@ use warp::{filters::path::path, Filter, Rejection};
 pub mod operator;
 pub use operator::Operator;
 
+use crate::{database::entities::Role, message::web::WebMessage};
+
 type Result<T> = std::result::Result<T, Rejection>;
 
 pub struct Server {
@@ -64,10 +66,12 @@ impl Server {
         let (sender, mut receiver) =
             tokio::sync::mpsc::channel::<crate::message::web::WebMessage>(query_size);
 
-        let client = operator::Operator {
+        let mut client = operator::Operator {
             uuid,
             context,
             sender,
+            roles: Vec::new(),
+            username: String::from(operator::ANONYMOUS_USERNAME),
         };
 
         client.init().await?;
@@ -102,10 +106,12 @@ impl Server {
                             let text_msg = ws_msg.to_str().unwrap();
                             match serde_json::from_str::<crate::message::web::WebMessage>(text_msg) {
                                 Ok(message) => {
-                                    if let Err(err) = client.process(message).await {
-                                        tracing::error!("{}", err);
-                                    } else {
-                                        continue;
+                                    if client.has_role(&message) {
+                                        if let Err(err) = client.process(message).await {
+                                            tracing::error!("{}", err);
+                                        } else {
+                                            continue;
+                                        }
                                     }
                                 }
                                 Err(err) => {
@@ -120,13 +126,17 @@ impl Server {
 
                 // Send local message to WS
                 Some(msg) = receiver.recv() => {
+
                     if msg == crate::message::web::WebMessage::Close {
                         let _ = ws_sender.close().await;
                         break;
                     }
-                    if let Ok(message_json) = Self::encode(&msg) {
-                        if let Err(err) = ws_sender.send(message_json).await {
-                            tracing::error!("Unable to send message: {} {:?}", err, msg);
+
+                    if client.has_role(&msg) {
+                        if let Ok(message_json) = Self::encode(&msg) {
+                            if let Err(err) = ws_sender.send(message_json).await {
+                                tracing::error!("Unable to send message: {} {:?}", err, msg);
+                            }
                         }
                     }
                 }
@@ -138,9 +148,11 @@ impl Server {
                         break;
                     }
 
-                    if let Ok(message_json) = Self::encode(&msg) {
-                        if let Err(err) = ws_sender.send(message_json).await {
-                            tracing::error!("Unable to send message: {} {:?}", err, msg);
+                    if client.has_role(&msg) {
+                        if let Ok(message_json) = Self::encode(&msg) {
+                            if let Err(err) = ws_sender.send(message_json).await {
+                                tracing::error!("Unable to send message: {} {:?}", err, msg);
+                            }
                         }
                     }
                 }

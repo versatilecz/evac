@@ -33,13 +33,11 @@ export const useAlarmStore = defineStore('alarm', () => {
     mainStore.send('AlarmSet', scanner)
   }
 
-  function create(name, subject, text, html, buzzer, led) {
+  function create(name, email, buzzer, led) {
     save({
       uuid: uuidv4(),
       name,
-      subject,
-      text,
-      html,
+      email,
       buzzer,
       led,
     })

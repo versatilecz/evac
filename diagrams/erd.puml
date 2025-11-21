@@ -36,7 +36,7 @@ package Structure {
     }
 }
 
-package Location {
+package LocationEvents {
     dataclass Activities {
         map: BTreeMap<uuid::Uuid, Vec<DeviceActivity>>,
     }
@@ -96,7 +96,7 @@ package Notification {
     }
 
 
-    dataclass ContacGroup {
+    dataclass ContactGroup {
         uuid: Uuid
         name: String
         contacts: Vec<uuid::Uuid>

@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::collections::{BTreeMap, HashSet};
 
-use crate::database::entities::{Activities, Alarm, Contact, EventKind};
+use crate::database::entities::{Activities, Alarm, Contact, EventKind, Role, Token, User};
 
 pub mod config;
 pub mod entities;
@@ -25,11 +25,33 @@ pub trait LoadSave {
     }
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Auth {
     pub users: BTreeMap<String, entities::User>,
     pub tokens: BTreeMap<String, entities::Token>,
+}
+
+impl Default for Auth {
+    fn default() -> Self {
+        let user1 = User {
+            username: String::from("admin"),
+            password: String::from("admin"),
+            roles: vec![Role::Admin],
+        };
+
+        let token1 = Token {
+            created: chrono::Utc::now(),
+            is_valid: true,
+            username: user1.username.clone(),
+            nonce: String::from("asjodhasjdasjdhajsdhajskd"),
+        };
+
+        Self {
+            users: BTreeMap::from_iter([(user1.username.clone(), user1)]),
+            tokens: BTreeMap::from_iter([(token1.nonce.clone(), token1)]),
+        }
+    }
 }
 
 impl LoadSave for Auth {}

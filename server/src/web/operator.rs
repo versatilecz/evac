@@ -463,7 +463,6 @@ impl Operator {
 
                 if let Some(saved) = context.database.data.alarms.get_mut(&alarm.uuid) {
                     saved.name = alarm.name;
-                    saved.subject = alarm.subject;
                     saved.email = alarm.email;
                     saved.led = alarm.led;
                     saved.buzzer = alarm.buzzer;

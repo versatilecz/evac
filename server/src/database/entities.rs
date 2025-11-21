@@ -189,7 +189,6 @@ pub enum EventKind {
 pub struct Alarm {
     pub uuid: uuid::Uuid,
     pub name: String,
-    pub subject: String,
     pub buzzer: bool,
     pub led: bool,
     pub email: uuid::Uuid,

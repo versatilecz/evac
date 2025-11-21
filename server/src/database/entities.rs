@@ -255,7 +255,7 @@ pub struct User {
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Token {
     pub nonce: String,
-    pub user: String,
+    pub username: String,
     pub is_valid: bool,
     pub created: chrono::DateTime<chrono::Utc>,
 }

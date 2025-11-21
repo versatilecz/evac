@@ -10,7 +10,7 @@ use anyhow::Context;
 use shared::messages::scanner::{ScannerEvent, ScannerMessage, State};
 use uuid::{timestamp::context, Uuid};
 
-pub const ANONYMOUS_USERNAME: &str = "Anonymouse";
+pub const ANONYMOUS_USERNAME: &str = "Anonymous";
 
 #[derive(Debug, Clone)]
 pub struct Operator {
@@ -98,7 +98,7 @@ impl Operator {
             WebMessage::UserRemove(..) => has_role(&[Role::Admin, Role::Service]),
             WebMessage::UserRemoved(..) => has_role(&[Role::Admin, Role::Service]),
 
-            WebMessage::TokenGet => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::TokenGet(..) => has_role(&[Role::Admin, Role::Service]),
             WebMessage::TokenDetail(..) => has_role(&[Role::Admin, Role::Service]),
             WebMessage::TokenGetForUser(..) => has_role(&[Role::Admin]),
 
@@ -243,6 +243,8 @@ impl Operator {
     }
 
     pub async fn process(&mut self, msg: crate::message::web::WebMessage) -> anyhow::Result<()> {
+        tracing::debug!("Process message: {:?}", msg);
+
         match msg {
             WebMessage::Login(auth) => {
                 tracing::debug!("Try to login: {:?}", auth);
@@ -256,8 +258,7 @@ impl Operator {
                             .database
                             .auth
                             .users
-                            .values()
-                            .find(|u| u.username.eq(&username))
+                            .get(&username)
                             .cloned()
                         {
                             self.username = user.username.clone();
@@ -286,7 +287,7 @@ impl Operator {
                                 .database
                                 .auth
                                 .users
-                                .get(&token.user)
+                                .get(&token.username)
                                 .cloned()
                             {
                                 self.username = user.username.clone();
@@ -664,6 +665,29 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(WebMessage::UserInfo(user_info))?;
+
+                Ok(())
+            }
+
+            WebMessage::TokenGet(token) => {
+                let mut context = self.context.write().await;
+
+                if let Some(token) = token {
+                    if let Some(token) = context.database.auth.tokens.get(&token) {
+                        self.sender
+                            .send(WebMessage::TokenDetail(Some(token.clone())))
+                            .await?;
+                    } else {
+                        self.sender.send(WebMessage::TokenDetail(None)).await?;
+                    }
+                } else {
+                    let token = crate::database::entities::Token {
+                        created: chrono::Utc::now(),
+                        is_valid: true,
+                        nonce: String::new(),
+                        username: self.username.clone(),
+                    };
+                }
 
                 Ok(())
             }

@@ -5,7 +5,7 @@ use mail_send::mail_auth::arc::parse;
 use serde::de;
 use serde_json::ser;
 use shared::messages::scanner::{
-    self, ScannerContent, ScannerEvent, ScannerMessage, ScannerWrapped, State,
+    self, ScannerContent, ScannerEvent, ScannerMessage, State,
 };
 use tokio::{
     net::UdpSocket,

@@ -5,7 +5,7 @@ use std::{
 };
 use uuid::Uuid;
 
-use crate::database::entities::Role;
+use crate::database::entities::{Role, Token};
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Activity {
@@ -116,8 +116,8 @@ pub enum WebMessage {
     UserRemoved(uuid::Uuid),
 
     TokenGetForUser(uuid::Uuid),
-    TokenGet,
-    TokenDetail(uuid::Uuid),
+    TokenGet(Option<String>),
+    TokenDetail(Option<Token>),
 
     ContactList(Vec<crate::database::entities::Contact>),
     ContactSet(crate::database::entities::Contact),

@@ -71,7 +71,6 @@ package Notification {
     dataclass Alarm {
         uuid: Uuid
         name: String
-        subject: String
         buzzer: bool
         led: bool
         email: Uuid
@@ -95,17 +94,22 @@ package Notification {
         type: ContactType
         value: String
     }
+
+
+    dataclass ContacGroup {
+        uuid: Uuid
+        name: String
+        contacts: Vec<uuid::Uuid>
+    }
 }
 
 package Auth {
     dataclass User {
-        uuid: Uuid
         username: String
         password: String
     }
 
     dataclass Token {
-        uuid: Uuid
         user: Uuid
         token: String
         valid_to: DateTime
@@ -132,5 +136,6 @@ Event::kind --> EventKind
 Token::user --> User
 Alarm::email --> Email
 Contact::type --> ContactType
+ContactGroup::contacts *-> Contact
 
 @enduml

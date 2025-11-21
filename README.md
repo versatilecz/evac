@@ -42,6 +42,7 @@ sudo systemctl restart evac-server.service
    ```json
    {
      "base": {
+       "authPath": "data/auth.json",
        "configPath": "data/server.json",
        "dataPath": "data/database.json",
        "frontendPath": "./frontend/dist",
@@ -65,8 +66,7 @@ sudo systemctl restart evac-server.service
 
 1. Navigate to `frontend` directory and follow instuctions from [Frotnend README.md](./frontend/README.md)
 
-
 # Cli application
 
-* `cargo run -p server --bin cli -- notification --uuid 51da4fe0-6670-404c-accf-b1ad3a8e86a7` - send notification to contact with this UUID
-* `cargo run -p server --bin cli -- device-position --device 6626f452-6386-4e18-8f6c-9b1c3bdd7099 --scanner e958f834-cf43-4488-b5d7-e7fa5aae6875 --msg 7cc6b673d714` - send advertisement for device
+- `cargo run -p server --bin cli -- notification --uuid 51da4fe0-6670-404c-accf-b1ad3a8e86a7` - send notification to contact with this UUID
+- `cargo run -p server --bin cli -- device-position --device 6626f452-6386-4e18-8f6c-9b1c3bdd7099 --scanner e958f834-cf43-4488-b5d7-e7fa5aae6875 --msg 7cc6b673d714` - send advertisement for device

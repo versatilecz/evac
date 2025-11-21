@@ -7,10 +7,12 @@ use crate::{
     message::web::{Auth, UserInfo, WebMessage},
 };
 use anyhow::Context;
+use mail_send::mail_builder::headers::content_type;
+use rand::distributions::DistString;
 use shared::messages::scanner::{ScannerEvent, ScannerMessage, State};
-use uuid::{timestamp::context, Uuid};
-
+use uuid::timestamp::context;
 pub const ANONYMOUS_USERNAME: &str = "Anonymous";
+pub const ANONYMOUS_UUID: uuid::Uuid = uuid::Uuid::nil();
 
 #[derive(Debug, Clone)]
 pub struct Operator {
@@ -22,6 +24,18 @@ pub struct Operator {
 }
 
 impl Operator {
+    pub fn new(
+        context: crate::context::ContextWrapped,
+        sender: tokio::sync::mpsc::Sender<crate::message::web::WebMessage>,
+    ) -> Self {
+        Self {
+            uuid: ANONYMOUS_UUID.clone(),
+            context,
+            sender,
+            roles: vec![Role::Anonymous],
+            username: String::from(ANONYMOUS_USERNAME),
+        }
+    }
     pub fn has_role(&self, msg: &crate::message::web::WebMessage) -> bool {
         let has_role = |roles: &[Role]| roles.iter().any(|r| self.roles.contains(r));
 
@@ -198,6 +212,7 @@ impl Operator {
                     .users
                     .values()
                     .map(|u| UserInfo {
+                        uuid: u.uuid.clone(),
                         username: u.username.clone(),
                         roles: u.roles.clone(),
                         password: None,
@@ -232,10 +247,7 @@ impl Operator {
 
         if let Some(alarm) = &context.alarm {
             self.sender
-                .send(crate::message::web::WebMessage::Alarm {
-                    alarm: alarm.clone(),
-                    group: context.group.unwrap_or_default(),
-                })
+                .send(crate::message::web::WebMessage::Alarm(alarm.clone()))
                 .await?;
         }
 
@@ -258,7 +270,8 @@ impl Operator {
                             .database
                             .auth
                             .users
-                            .get(&username)
+                            .values()
+                            .find(|u| u.username.eq(&username))
                             .cloned()
                         {
                             self.username = user.username.clone();
@@ -276,8 +289,7 @@ impl Operator {
                             .database
                             .auth
                             .tokens
-                            .values()
-                            .find(|t| t.nonce.eq(&token))
+                            .get(&token)
                             .cloned()
                         {
                             if let Some(user) = self
@@ -287,7 +299,7 @@ impl Operator {
                                 .database
                                 .auth
                                 .users
-                                .get(&token.username)
+                                .get(&token.user)
                                 .cloned()
                             {
                                 self.username = user.username.clone();
@@ -300,6 +312,7 @@ impl Operator {
 
                 self.sender
                     .send(crate::message::web::WebMessage::UserInfo(UserInfo {
+                        uuid: self.uuid.clone(),
                         username: self.username.clone(),
                         roles: self.roles.clone(),
                         password: None,
@@ -488,12 +501,27 @@ impl Operator {
                 Ok(())
             }
 
-            WebMessage::Alarm { alarm, group } => {
+            WebMessage::Alarm(info) => {
                 // Set the alarm
                 let mut context = self.context.write().await;
+                let alarm = context
+                    .database
+                    .data
+                    .alarms
+                    .get(&info.uuid)
+                    .cloned()
+                    .context("Alarm does not exist")?;
+                let email = context
+                    .database
+                    .data
+                    .emails
+                    .get(&alarm.email)
+                    .cloned()
+                    .context("Email does not exist")?;
 
-                context.alarm = Some(alarm.clone());
-                let contacts = context.database.data.get_contacts_by_group(group);
+                context.alarm = Some(info.clone());
+
+                let contacts = context.database.data.get_contacts_by_group(alarm.group);
 
                 context.database.data.scanners.values_mut().for_each(|s| {
                     s.buzzer = alarm.buzzer;
@@ -513,20 +541,17 @@ impl Operator {
                         },
                     })
                     .await?;
-                context.web_broadcast.send(WebMessage::Alarm {
-                    alarm: alarm.clone(),
-                    group: group,
-                })?;
+                context
+                    .web_broadcast
+                    .send(WebMessage::Alarm(info.clone()))?;
 
-                if let Some(email) = context.database.data.emails.get(&alarm.email) {
-                    for contact in contacts {
-                        context
-                            .database
-                            .config
-                            .notification
-                            .send_alarm(contact, email.clone(), alarm.clone())
-                            .await?;
-                    }
+                for contact in contacts {
+                    context
+                        .database
+                        .config
+                        .notification
+                        .send_alarm(contact, email.clone(), info.clone())
+                        .await?;
                 }
 
                 Ok(())
@@ -565,30 +590,18 @@ impl Operator {
                 Ok(())
             }
 
-            WebMessage::Email {
-                subject,
-                html,
-                text,
-                group,
-            } => {
+            WebMessage::Email { uuid, group } => {
                 let context = self.context.read().await;
-
-                for contact in context.database.data.get_contacts_by_group(group) {
-                    context
-                        .database
-                        .config
-                        .notification
-                        .send_notifications(
-                            contact,
-                            crate::database::entities::Email {
-                                subject: subject.clone(),
-                                html: html.clone(),
-                                text: text.clone(),
-                                ..Default::default()
-                            },
-                        )
-                        .await?;
-                    tracing::info!("Email has been send");
+                if let Some(email) = context.database.data.emails.get(&uuid).cloned() {
+                    for contact in context.database.data.get_contacts_by_group(group) {
+                        context
+                            .database
+                            .config
+                            .notification
+                            .send_notifications(contact, email.clone())
+                            .await?;
+                        tracing::info!("Email has been send");
+                    }
                 }
 
                 Ok(())
@@ -633,33 +646,36 @@ impl Operator {
                     .password
                     .map(|p| context.database.config.base.get_hashed(&p));
 
-                let user_info =
-                    if let Some(saved) = context.database.auth.users.get_mut(&user.username) {
-                        saved.roles = user.roles;
-                        if let Some(password) = password {
-                            saved.password = password;
-                        }
+                let user_info = if let Some(saved) = context.database.auth.users.get_mut(&user.uuid)
+                {
+                    saved.roles = user.roles;
+                    if let Some(password) = password {
+                        saved.password = password;
+                    }
 
-                        UserInfo {
-                            username: saved.username.clone(),
-                            roles: saved.roles.clone(),
-                            password: None,
-                        }
-                    } else {
-                        context.database.auth.users.insert(
-                            user.username.clone(),
-                            User {
-                                username: user.username.clone(),
-                                password: password.context("Password mus be provided")?,
-                                roles: user.roles.clone(),
-                            },
-                        );
-                        UserInfo {
-                            username: user.username,
-                            roles: user.roles,
-                            password: None,
-                        }
-                    };
+                    UserInfo {
+                        uuid: saved.uuid.clone(),
+                        username: saved.username.clone(),
+                        roles: saved.roles.clone(),
+                        password: None,
+                    }
+                } else {
+                    context.database.auth.users.insert(
+                        user.uuid.clone(),
+                        User {
+                            uuid: user.uuid.clone(),
+                            username: user.username.clone(),
+                            password: password.context("Password mus be provided")?,
+                            roles: user.roles.clone(),
+                        },
+                    );
+                    UserInfo {
+                        uuid: user.uuid.clone(),
+                        username: user.username,
+                        roles: user.roles,
+                        password: None,
+                    }
+                };
 
                 context
                     .web_broadcast
@@ -683,11 +699,27 @@ impl Operator {
                     let token = crate::database::entities::Token {
                         created: chrono::Utc::now(),
                         is_valid: true,
-                        nonce: String::new(),
-                        username: self.username.clone(),
+                        nonce: rand::distributions::Alphanumeric
+                            .sample_string(&mut rand::thread_rng(), 16),
+                        user: self.uuid.clone(),
                     };
+                    context
+                        .database
+                        .auth
+                        .tokens
+                        .insert(token.nonce.clone(), token.clone());
+                    self.sender
+                        .send(WebMessage::TokenDetail(Some(token)))
+                        .await?;
                 }
 
+                Ok(())
+            }
+
+            WebMessage::TokenGetForUser(uuid) => {
+                let context = self.context.write().await;
+
+                if let Some(user) = context.database.auth.users.get(&uuid).clone() {}
                 Ok(())
             }
 

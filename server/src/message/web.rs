@@ -16,14 +16,12 @@ pub struct Activity {
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
-pub struct Alarm {
+pub struct AlarmInfo {
+    pub uuid: uuid::Uuid,
     pub device: String,
     pub scanner: String,
     pub location: String,
     pub room: String,
-    pub email: Uuid,
-    pub buzzer: bool,
-    pub led: bool,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -35,6 +33,7 @@ pub enum Auth {
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct UserInfo {
     pub username: String,
+    pub uuid: uuid::Uuid,
     pub roles: Vec<Role>,
     pub password: Option<String>,
 }
@@ -90,16 +89,11 @@ pub enum WebMessage {
     AlarmDetail(crate::database::entities::Alarm),
     AlarmRemove(uuid::Uuid),
     AlarmRemoved(uuid::Uuid),
-    Alarm {
-        alarm: Alarm,
-        group: uuid::Uuid,
-    },
+    Alarm(AlarmInfo),
     AlarmStop(bool),
 
     Email {
-        subject: String,
-        html: String,
-        text: String,
+        uuid: uuid::Uuid,
         group: uuid::Uuid,
     },
 

@@ -182,9 +182,9 @@ impl Notification {
         &self,
         contact: Contact,
         email: crate::database::entities::Email,
-        alarm: crate::message::web::Alarm,
+        alarm: crate::message::web::AlarmInfo,
     ) -> anyhow::Result<()> {
-        let replace = |text: &String, alarm: &crate::message::web::Alarm| {
+        let replace = |text: &String, alarm: &crate::message::web::AlarmInfo| {
             text.replace("%device%", &alarm.device)
                 .replace("%scanner%", &alarm.scanner)
                 .replace("%location%", &alarm.location)

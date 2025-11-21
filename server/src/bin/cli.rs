@@ -1,11 +1,15 @@
 use ::server::database::LoadSave;
 use rand::random;
-use server::{context, database};
+use server::{
+    context, database,
+    message::web::{AlarmInfo, WebMessage},
+};
 use shared::messages::scanner::{ScanDevice, ScannerMessage};
 use std::{
     collections::BTreeMap,
     net::{IpAddr, Ipv4Addr, SocketAddr},
 };
+use uuid::uuid;
 
 use clap::{Parser, Subcommand};
 use tracing_subscriber::prelude::*;
@@ -27,6 +31,7 @@ struct Args {
 enum Commands {
     Notification(Notification),
     DevicePosition(DevicePosition),
+    Test,
 }
 
 #[derive(Parser)]
@@ -48,7 +53,7 @@ pub struct DevicePosition {
     #[arg(short, long)]
     scanner: uuid::Uuid,
 
-    #[arg(short, long, default_value_t = String::from("7cc6b673d714"))]
+    #[arg(short, long, default_value_t = String::from("0201060a16d2fc4400cb01563a00"))]
     msg: String,
 }
 
@@ -141,6 +146,22 @@ async fn main() -> anyhow::Result<()> {
                 //
                 tracing::debug!("Sending scanner message!!!");
             }
+        }
+        Commands::Test => {
+            let msg = WebMessage::Alarm(AlarmInfo {
+                uuid: database.data.alarms.keys().nth(0).unwrap().clone(),
+                device: String::from("device"),
+                scanner: String::from("Scanner"),
+                location: String::from("Location"),
+                room: String::from("room"),
+            });
+
+            tracing::debug!("{}", serde_json::to_string_pretty(&msg).unwrap());
+
+            tracing::debug!(
+                "{}",
+                hex::encode(vec![2u8, 1, 6, 10, 22, 210, 252, 68, 0, 203, 1, 86, 58, 0])
+            );
         }
     }
 

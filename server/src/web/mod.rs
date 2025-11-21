@@ -66,13 +66,7 @@ impl Server {
         let (sender, mut receiver) =
             tokio::sync::mpsc::channel::<crate::message::web::WebMessage>(query_size);
 
-        let mut client = operator::Operator {
-            uuid,
-            context,
-            sender,
-            roles: Vec::new(),
-            username: String::from(operator::ANONYMOUS_USERNAME),
-        };
+        let mut client = operator::Operator::new(context, sender);
 
         client.init().await?;
 

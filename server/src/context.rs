@@ -10,7 +10,7 @@ pub struct Context {
     pub web_broadcast: tokio::sync::broadcast::Sender<WebMessage>,
     pub scanner_sender: tokio::sync::mpsc::Sender<ScannerEvent>,
     pub database: crate::database::Database,
-    pub alarm: Option<crate::message::web::Alarm>,
+    pub alarm: Option<crate::message::web::AlarmInfo>,
     pub group: Option<uuid::Uuid>,
 }
 impl Context {

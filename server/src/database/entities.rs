@@ -192,6 +192,7 @@ pub struct Alarm {
     pub buzzer: bool,
     pub led: bool,
     pub email: uuid::Uuid,
+    pub group: uuid::Uuid,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -246,6 +247,7 @@ pub enum Role {
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct User {
+    pub uuid: uuid::Uuid,
     pub username: String,
     pub password: String,
     pub roles: Vec<Role>,
@@ -254,7 +256,7 @@ pub struct User {
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Token {
     pub nonce: String,
-    pub username: String,
+    pub user: uuid::Uuid,
     pub is_valid: bool,
     pub created: chrono::DateTime<chrono::Utc>,
 }

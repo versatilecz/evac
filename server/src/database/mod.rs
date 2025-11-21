@@ -30,13 +30,14 @@ pub trait LoadSave {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Auth {
-    pub users: BTreeMap<String, entities::User>,
+    pub users: BTreeMap<uuid::Uuid, entities::User>,
     pub tokens: BTreeMap<String, entities::Token>,
 }
 
 impl Default for Auth {
     fn default() -> Self {
         let user1 = User {
+            uuid: uuid::Uuid::new_v4(),
             username: String::from("admin"),
             password: String::from("admin"),
             roles: vec![Role::Admin],
@@ -45,12 +46,12 @@ impl Default for Auth {
         let token1 = Token {
             created: chrono::Utc::now(),
             is_valid: true,
-            username: user1.username.clone(),
+            user: user1.uuid,
             nonce: String::from("asjodhasjdasjdhajsdhajskd"),
         };
 
         Self {
-            users: BTreeMap::from_iter([(user1.username.clone(), user1)]),
+            users: BTreeMap::from_iter([(user1.uuid.clone(), user1)]),
             tokens: BTreeMap::from_iter([(token1.nonce.clone(), token1)]),
         }
     }
@@ -319,15 +320,15 @@ impl Default for Data {
                 (
                     contact_group2.clone(),
                     ContactGroup {
-                        uuid: contact_group1.clone(),
+                        uuid: contact_group2.clone(),
                         name: String::from("Skupina2"),
                         contacts: vec![contact2.clone()],
                     },
                 ),
                 (
-                    contact_group2.clone(),
+                    contact_group3.clone(),
                     ContactGroup {
-                        uuid: contact_group1.clone(),
+                        uuid: contact_group3.clone(),
                         name: String::from("Skupina3"),
                         contacts: vec![contact1.clone(), contact2.clone()],
                     },

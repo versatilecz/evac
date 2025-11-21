@@ -40,9 +40,9 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
             <input id="alarm-name" v-model="formData.name" class="input w-full" type="text" />
           </label>
 
-          <label class="label" for="room-location">
-            <span class="label-text">{{ t('entity.location') }}</span>
-            <Email.Select id="room-location" v-model="formData.email" class="input w-full" />
+          <label class="label" for="alarm-email">
+            <span class="label-text">{{ t('entity.email') }}</span>
+            <Email.Select id="alarm-email" v-model="formData.email" class="input w-full" />
           </label>
 
           <div class="flex gap-4 justify-around">

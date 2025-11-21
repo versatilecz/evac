@@ -56,9 +56,7 @@ function collectActiveAlarmData(): $ActiveAlarm {
     room: roomsData.value.get(formData.room)!.name,
     scanner: scannersData.value.get(formData.scanner)!.name,
     device: devicesData.value.get(formData.device)!.name,
-    subject: alarm.subject,
-    text: alarm.text,
-    html: alarm.html,
+    email: alarm.email,
     buzzer: alarm.buzzer,
     led: alarm.led,
   } satisfies $ActiveAlarm

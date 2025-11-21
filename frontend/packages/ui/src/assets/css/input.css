@@ -77,4 +77,15 @@
       flex-shrink: 0;
     }
   }
+
+  @scope (.headline) {
+    .input {
+      font-size: inherit;
+      font-weight: inherit;
+      border: none;
+      background: transparent;
+      color: inherit;
+      width: 100%;
+    }
+  }
 }

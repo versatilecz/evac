@@ -2,7 +2,7 @@ import { logger } from '@evac/shared'
 import { syncStorageWithSubject } from '@evac/utils'
 import { useSubject } from '@vueuse/rxjs'
 import type { Storage } from 'unstorage'
-import { inject, type App, type Ref, type ToRefs } from 'vue'
+import { inject, readonly, ref, type App, type Ref, type ToRefs } from 'vue'
 import { isAuthenticated$$, isAdmin$$, isDebug$$, isUser$$, isExternal$$ } from './data'
 import type { Auth } from './definitions'
 
@@ -63,15 +63,11 @@ export function createAuth({ storage }: PluginOptions) {
 }
 
 export function useAuth(): ToRefs<Auth> {
-  const isDebug = inject<Ref<boolean>>(SYMBOL.DEBUG)
-  const isAuthenticated = inject<Ref<boolean>>(SYMBOL.AUTH)
-  const isAdmin = inject<Ref<boolean>>(SYMBOL.ADMIN)
-  const isUser = inject<Ref<boolean>>(SYMBOL.USER)
-  const isExternal = inject<Ref<boolean>>(SYMBOL.EXTERNAL)
-
-  if (!isDebug || !isAuthenticated || !isAdmin || !isUser || !isExternal) {
-    throw new Error('Auth not provided')
-  }
+  const isDebug = inject<Ref<boolean>>(SYMBOL.DEBUG, readonly(ref(false)))
+  const isAuthenticated = inject<Ref<boolean>>(SYMBOL.AUTH, readonly(ref(false)))
+  const isAdmin = inject<Ref<boolean>>(SYMBOL.ADMIN, readonly(ref(false)))
+  const isUser = inject<Ref<boolean>>(SYMBOL.USER, readonly(ref(false)))
+  const isExternal = inject<Ref<boolean>>(SYMBOL.EXTERNAL, readonly(ref(false)))
 
   return {
     isAdmin,

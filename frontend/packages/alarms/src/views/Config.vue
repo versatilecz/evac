@@ -12,8 +12,7 @@ const auth = useAuth()
 const fields = defineListFields(
   { key: 'name' },
   { key: 'uuid', visible: () => auth.isDebug.value },
-  { key: 'subject' },
-  { key: 'text', fill: true },
+  { key: 'email', fill: true },
   { key: 'buzzer' },
   { key: 'led' }
 )

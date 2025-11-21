@@ -8,7 +8,7 @@ export { default as BooleanIcon } from './BooleanIcon.vue'
 
 // Helper components
 export * as List from './List'
-export { default as EntityBreadcrumbs } from './EntityBreadcrumbs.vue'
+export * as Entity from './Entity'
 
 // Layout components
 export { default as ContentHeader } from './ContentHeader.vue'

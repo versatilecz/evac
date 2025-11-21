@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Badge, BooleanIcon, EntityBreadcrumbs, Icon } from '@evac/ui'
+import { Badge, BooleanIcon, Entity, Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import type { $ActiveAlarm } from '@/definitions'
 
@@ -15,10 +15,10 @@ const { t } = useI18n()
 
       <span class="grow" />
       <Badge v-if="alarm.location">
-        <EntityBreadcrumbs :location="alarm.location" :room="alarm.room" :scanner="alarm.scanner" :device="alarm.device" v-slot="{ delimiter, rest, last }">
+        <Entity.Breadcrumbs :location="alarm.location" :room="alarm.room" :scanner="alarm.scanner" :device="alarm.device" v-slot="{ delimiter, rest, last }">
           <template v-if="rest.length">{{ rest + delimiter }}</template
           ><strong>{{ last }}</strong>
-        </EntityBreadcrumbs>
+        </Entity.Breadcrumbs>
       </Badge>
       <Badge>{{ t('entity.led') }}: <BooleanIcon :value="alarm.led" /></Badge>
       <Badge>{{ t('entity.buzzer') }}: <BooleanIcon :value="alarm.buzzer" /></Badge>

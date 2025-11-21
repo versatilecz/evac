@@ -1,9 +1,10 @@
 import * as z from 'zod'
 
-export type $BaseConfig = z.infer<typeof $BaseConfig>
+export type $BaseConfig = z.output<typeof $BaseConfig>
 
 export const $BaseConfig = z.object({
   activityDiff: z.number().min(0).default(15),
+  authPath: z.string().default('data/server.json'),
   configPath: z.string().default('data/server.json'),
   dataPath: z.string().default('data/database.json'),
   frontendPath: z.string().default('./frontend/dist'),

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Email } from '@evac/emails'
 import { ContentHeader, Dialog, DialogActions, Icon, Switch } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useAlarmForm } from '@/composables'
@@ -38,13 +39,10 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
             <span class="label-text">{{ t('entity.name') }}</span>
             <input id="alarm-name" v-model="formData.name" class="input w-full" type="text" />
           </label>
-          <label class="label" for="alarm-subject">
-            <span class="label-text">{{ t('entity.subject') }}</span>
-            <input id="alarm-subject" v-model="formData.subject" class="input w-full" type="text" />
-          </label>
-          <label class="label" for="alarm-text">
-            <span class="label-text">{{ t('entity.text') }}</span>
-            <textarea id="alarm-text" v-model="formData.text" class="input w-full" type="text" />
+
+          <label class="label" for="room-location">
+            <span class="label-text">{{ t('entity.location') }}</span>
+            <Email.Select id="room-location" v-model="formData.email" class="input w-full" />
           </label>
 
           <div class="flex gap-4 justify-around">

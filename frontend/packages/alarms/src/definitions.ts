@@ -13,9 +13,7 @@ export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.
 export const $Alarm = z.object({
   name: z.string(),
   uuid: z.uuidv4(),
-  subject: z.string(),
-  text: z.string(),
-  html: z.string(),
+  email: z.uuidv4(),
   buzzer: z.boolean(),
   led: z.boolean(),
 })

@@ -4,7 +4,7 @@ import { useDevice } from '@evac/devices'
 import { useLocation } from '@evac/locations'
 import { useRoom } from '@evac/rooms'
 import { useScanner } from '@evac/scanners'
-import { Badge, EntityBreadcrumbs } from '@evac/ui'
+import { Badge, Entity } from '@evac/ui'
 import type { $Event } from '@/definitions'
 import IconByKind from './IconByKind.vue'
 
@@ -30,12 +30,12 @@ const { location } = useLocation(() => room.value?.location ?? '')
     </template>
 
     <Badge class="col-span-2 justify-end">
-      <EntityBreadcrumbs :location="location?.name" :room="room?.name" :scanner="scanner?.name" :device="device?.name" v-slot="{ delimiter, rest, last }">
+      <Entity.Breadcrumbs :location="location?.name" :room="room?.name" :scanner="scanner?.name" :device="device?.name" v-slot="{ delimiter, rest, last }">
         <span class="whitespace-nowrap block px-1 overflow-x-auto">
           <template v-if="rest.length">{{ rest + delimiter }}</template>
           <strong>{{ last }}</strong>
         </span>
-      </EntityBreadcrumbs>
+      </Entity.Breadcrumbs>
     </Badge>
 
   </figure>

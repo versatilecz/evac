@@ -1,162 +1,166 @@
 {
-  "folders": [
-    {
-      "name": "EVAC",
-      "path": "."
-    },
-    {
-      "name": "FE",
-      "path": "./frontend"
-    },
-    {
-      "name": "FE / Apps",
-      "path": "./frontend/apps"
-    },
-    {
-      "name": "FE / Apps / POW",
-      "path": "./frontend/apps/pow"
-    },
-    {
-      "name": "FE / Apps / MVP",
-      "path": "./frontend/apps/mvp"
-    },
-    {
-      "name": "FE / Packages",
-      "path": "./frontend/packages"
-    },
-    {
-      "name": "FE / Packages / Activity",
-      "path": "./frontend/packages/activity"
-    },
-    {
-      "name": "FE / Packages / Alarms",
-      "path": "./frontend/packages/alarms"
-    },
-    {
-      "name": "FE / Packages / Auth",
-      "path": "./frontend/packages/auth"
-    },
-    {
-      "name": "FE / Packages / Config",
-      "path": "./frontend/packages/config"
-    },
-    {
-      "name": "FE / Packages / Dashboard",
-      "path": "./frontend/packages/dashboard"
-    },
-    {
-      "name": "FE / Packages / Devices",
-      "path": "./frontend/packages/devices"
-    },
-    {
-      "name": "FE / Packages / Emails",
-      "path": "./frontend/packages/emails"
-    },
-    {
-      "name": "FE / Packages / Events",
-      "path": "./frontend/packages/events"
-    },
-    {
-      "name": "FE / Packages / Fonts",
-      "path": "./frontend/packages/fonts"
-    },
-    {
-      "name": "FE / Packages / Icons",
-      "path": "./frontend/packages/icons"
-    },
-    {
-      "name": "FE / Packages / Locations",
-      "path": "./frontend/packages/locations"
-    },
-    {
-      "name": "FE / Packages / Rooms",
-      "path": "./frontend/packages/rooms"
-    },
-    {
-      "name": "FE / Packages / Scanners",
-      "path": "./frontend/packages/scanners"
-    },
-    {
-      "name": "FE / Packages / Shared",
-      "path": "./frontend/packages/shared"
-    },
-    {
-      "name": "FE / Packages / UI",
-      "path": "./frontend/packages/ui"
-    },
-    {
-      "name": "FE / Packages / Utils",
-      "path": "./frontend/packages/utils"
-    }
-  ],
-  "extensions": {
-    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
-  },
-  "settings": {
-    "typescript.tsdk": "./frontend/node_modules/typescript/lib",
-    "typescript.enablePromptUseWorkspaceTsdk": true,
-    "vue.server.hybridMode": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit"
-    },
-    "editor.formatOnSave": true,
-    "gitlens.views.repositories.files.layout": "list",
-    "eslint.lintTask.enable": false,
-    "eslint.workingDirectories": [
-      { "directory": "frontend/apps", "changeProcessCWD": true },
-      { "directory": "frontend/packages", "changeProcessCWD": true }
-    ],
-    "eslint.validate": [
-      "javascript",
-      "javascriptreact",
-      "typescript",
-      "typescriptreact"
-    ],
-    "prettier.enable": true,
-    "prettier.configPath": "frontend/.prettierrc",
-    "prettier.ignorePath": "frontend/.prettierignore",
-    "prettier.requireConfig": true,
-    "prettier.resolveGlobalModules": false,
-    "[typescript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[vue]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "files.watcherExclude": {
-      "**/node_modules/**": true,
-      "**/dist/**": true,
-      "**/build/**": true
-    },
-    "search.exclude": {
-      "**/node_modules": true,
-      "**/dist": true,
-      "**/build": true
-    },
-    "nxConsole.nxWorkspacePath": "frontend",
-    "mcp": {
-      "servers": {
-        "figma-desktop": {
-          "url": "http://127.0.0.1:3845/mcp",
-          "type": "http"
-        }
-      },
-      "inputs": []
-    },
-    "chat.mcp.serverSampling": {
-      "evac.code-workspace: figma-desktop": {
-        "allowedModels": [
-          "copilot/claude-sonnet-4",
-          "copilot/claude-sonnet-4.5",
-          "copilot/gpt-5",
-          "copilot/gpt-5-mini",
-          "copilot/gpt-5-codex"
-        ]
-      }
-    }
-  }
+	"folders": [
+		{
+			"name": "EVAC",
+			"path": "."
+		},
+		{
+			"name": "FE",
+			"path": "./frontend"
+		},
+		{
+			"name": "FE / Apps",
+			"path": "./frontend/apps"
+		},
+		{
+			"name": "FE / Apps / POW",
+			"path": "./frontend/apps/pow"
+		},
+		{
+			"name": "FE / Apps / MVP",
+			"path": "./frontend/apps/mvp"
+		},
+		{
+			"name": "FE / Packages",
+			"path": "./frontend/packages"
+		},
+		{
+			"name": "FE / Packages / Activity",
+			"path": "./frontend/packages/activity"
+		},
+		{
+			"name": "FE / Packages / Alarms",
+			"path": "./frontend/packages/alarms"
+		},
+		{
+			"name": "FE / Packages / Auth",
+			"path": "./frontend/packages/auth"
+		},
+		{
+			"name": "FE / Packages / Config",
+			"path": "./frontend/packages/config"
+		},
+		{
+			"name": "FE / Packages / Dashboard",
+			"path": "./frontend/packages/dashboard"
+		},
+		{
+			"name": "FE / Packages / Devices",
+			"path": "./frontend/packages/devices"
+		},
+		{
+			"name": "FE / Packages / Emails",
+			"path": "./frontend/packages/emails"
+		},
+		{
+			"name": "FE / Packages / Events",
+			"path": "./frontend/packages/events"
+		},
+		{
+			"name": "FE / Packages / Fonts",
+			"path": "./frontend/packages/fonts"
+		},
+		{
+			"name": "FE / Packages / Icons",
+			"path": "./frontend/packages/icons"
+		},
+		{
+			"name": "FE / Packages / Locations",
+			"path": "./frontend/packages/locations"
+		},
+		{
+			"name": "FE / Packages / Rooms",
+			"path": "./frontend/packages/rooms"
+		},
+		{
+			"name": "FE / Packages / Scanners",
+			"path": "./frontend/packages/scanners"
+		},
+		{
+			"name": "FE / Packages / Shared",
+			"path": "./frontend/packages/shared"
+		},
+		{
+			"name": "FE / Packages / UI",
+			"path": "./frontend/packages/ui"
+		},
+		{
+			"name": "FE / Packages / Utils",
+			"path": "./frontend/packages/utils"
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"dbaeumer.vscode-eslint",
+			"esbenp.prettier-vscode"
+		]
+	},
+	"settings": {
+		"typescript.tsdk": "./frontend/node_modules/typescript/lib",
+		"typescript.enablePromptUseWorkspaceTsdk": true,
+		"vue.server.hybridMode": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit"
+		},
+		"editor.formatOnSave": true,
+		"gitlens.views.repositories.files.layout": "list",
+		"eslint.lintTask.enable": false,
+		"eslint.workingDirectories": [
+			{
+				"directory": "frontend/apps",
+				"changeProcessCWD": true
+			},
+			{
+				"directory": "frontend/packages",
+				"changeProcessCWD": true
+			}
+		],
+		"eslint.validate": [
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact"
+		],
+		"prettier.enable": true,
+		"prettier.configPath": "frontend/.prettierrc",
+		"prettier.ignorePath": "frontend/.prettierignore",
+		"prettier.requireConfig": true,
+		"prettier.resolveGlobalModules": false,
+		"[typescript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[typescriptreact]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[vue]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"files.watcherExclude": {
+			"**/node_modules/**": true,
+			"**/dist/**": true,
+			"**/build/**": true
+		},
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/build": true
+		},
+		"nxConsole.nxWorkspacePath": "frontend",
+		"mcp": {
+			"inputs": [],
+			"servers": {}
+		},
+		"chat.mcp.serverSampling": {
+			"evac.code-workspace: figma-desktop": {
+				"allowedModels": [
+					"copilot/claude-sonnet-4",
+					"copilot/claude-sonnet-4.5",
+					"copilot/gpt-5",
+					"copilot/gpt-5-mini",
+					"copilot/gpt-5-codex"
+				]
+			}
+		}
+	}
 }

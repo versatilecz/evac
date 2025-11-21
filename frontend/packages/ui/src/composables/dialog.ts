@@ -53,7 +53,7 @@ export function useDialogForm<Tc extends object, Tu extends object = Tc>(options
   } satisfies DialogForm<Tc | Tu>
 
   async function reset() {
-    if (options.seed) {
+    if (!isUpdate(input.value) && options.seed) {
       const seedData = await options.seed()
       Object.assign(formData, seedData)
       return

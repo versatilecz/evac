@@ -1,5 +1,5 @@
 import { useAction, useDialogForm } from '@evac/ui'
-import { computed, type MaybeRefOrGetter } from 'vue'
+import { computed, toValue, type MaybeRefOrGetter } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { $Location, $LocationFormData } from '@/definitions'
 import { service } from '@/service'
@@ -16,8 +16,7 @@ export function useLocationForm(input: MaybeRefOrGetter<$Location | $LocationFor
   })
 
   const title = computed(() => {
-    const currentData = { ...dialogForm.formData }
-    if (!dialogForm.isUpdate(currentData)) {
+    if (!dialogForm.isUpdate(toValue(input))) {
       return t('location.dialog.create', '')
     }
     return dialogForm.hasChanges.value ? t('location.dialog.edit', '') : t('location.dialog.title', '')

@@ -119,6 +119,7 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
       const parsed = identity.parse(stored)
       return parsed
     } catch (cause) {
+      await storage?.removeItem(STORAGE_KEY.STATE).catch(logger.error)
       logger.error(new Error(`[${name}] Failed to retrieve stored state`, { cause }))
     }
   }

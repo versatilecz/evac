@@ -16,6 +16,10 @@ const readonly = ref(true)
       <span class="label-text">Config path</span>
       <input id="config-configPath" v-model="formData.configPath" class="input w-full" :readonly="readonly" type="text" />
     </label>
+    <label class="label" for="config-authPath">
+      <span class="label-text">Auth path</span>
+      <input id="config-authPath" v-model="formData.authPath" class="input w-full" :readonly="readonly" type="text" />
+    </label>
     <label class="label" for="config-dataPath">
       <span class="label-text">Data path</span>
       <input id="config-dataPath" v-model="formData.dataPath" class="input w-full" :readonly="readonly" type="text" />
@@ -25,7 +29,7 @@ const readonly = ref(true)
       <input id="config-frontendPath" v-model="formData.frontendPath" class="input w-full" :readonly="readonly" type="text" />
     </label>
 
-    <label class="label" for="config-portBroadcast">
+    <label class="label col-start-1" for="config-portBroadcast">
       <span class="label-text">Port broadcast</span>
       <input id="config-portBroadcast" v-model="formData.portBroadcast" class="input w-full" :readonly="readonly" type="text" />
     </label>
@@ -38,7 +42,7 @@ const readonly = ref(true)
       <input id="config-portWeb" v-model="formData.portWeb" class="input w-full" :readonly="readonly" type="text" />
     </label>
 
-    <label class="label" for="config-activityDiff">
+    <label class="label col-start-1" for="config-activityDiff">
       <span class="label-text">Activity Diff</span>
       <input id="config-activityDiff" v-model="formData.activityDiff" class="input w-full" :readonly="readonly" type="text" />
     </label>

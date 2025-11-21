@@ -1,5 +1,6 @@
 import { service as activityService } from '@evac/activity'
 import { service as alarmsService, activeAlarmService } from '@evac/alarms'
+import { service as authService } from '@evac/auth'
 import { service as configService, backupService } from '@evac/config'
 import { service as devicesService } from '@evac/devices'
 import { service as emailsService } from '@evac/emails'
@@ -11,6 +12,7 @@ import { defineWebSocketServices, orchestrateWebSocketAndServices } from '@evac/
 import type { Storage } from 'unstorage'
 
 const services = defineWebSocketServices(
+  authService,
   configService,
   backupService,
   locationsService,

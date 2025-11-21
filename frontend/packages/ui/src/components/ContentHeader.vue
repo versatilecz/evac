@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import Icon from './Icon.vue'
+
 defineProps<{
   title?: string
   description?: string
+  icon?: string
 }>()
 
 defineSlots<{
@@ -14,16 +17,19 @@ defineSlots<{
 <template>
   <header class="px-6 pt-8 pb-4" data-scope="content">
     <slot>
-      <div v-if="!!$slots.title || title" class="flex gap-4 items-center h-12">
+      <div v-if="!!$slots.title || title || icon" class="flex gap-4 items-center h-12">
+        <template v-if="icon">
+          <Icon class="size-8" :icon="icon" />
+        </template>
         <slot name="title">
           <h1 class="headline">{{ title }}</h1>
         </slot>
       </div>
-      <template v-if="!!$slots.description || description">
-        <p class="paragraph description mt-3">
-          <slot name="description">{{ description }}</slot>
-        </p>
-      </template>
+      <div v-if="!!$slots.description || description" class="mt-3">
+        <slot name="description">
+          <p class="paragraph description">{{ description }}</p>
+        </slot>
+      </div>
     </slot>
   </header>
 </template>

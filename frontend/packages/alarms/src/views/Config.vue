@@ -7,11 +7,11 @@ import { useAlarms } from '@/composables'
 import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
-const auth = useAuth()
+const { isDebug} = useAuth()
 
 const fields = defineListFields(
   { key: 'name' },
-  { key: 'uuid', visible: () => auth.isDebug.value },
+  { key: 'uuid', visible: () => isDebug.value },
   { key: 'email', fill: true },
   { key: 'buzzer' },
   { key: 'led' }

@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { Backup } from '@/components'
 
 const { t } = useI18n({ useScope: 'global' })
-const { isDebug } = useAuth()
+const { auth, debugEnabled } = useAuth()
 </script>
 
 <template>
@@ -18,7 +18,7 @@ const { isDebug } = useAuth()
     <form class="px-6">
       <label class="flex items-center gap-4">
         <strong>{{ t('config.tools.debug') }}</strong>
-        <Switch.Root id="debug-mode" v-model="isDebug" class="btn switch">
+        <Switch.Root id="debug-mode" v-model="debugEnabled" class="btn switch">
           <Switch.Thumb class="thumb" />
         </Switch.Root>
       </label>

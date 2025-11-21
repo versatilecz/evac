@@ -7,12 +7,12 @@ import { useDevices } from '@/composables'
 import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
-const auth = useAuth()
+const { isDebug} = useAuth()
 
 const fields = defineListFields(
   { key: 'name', fill: true },
-  { key: 'uuid', visible: () => auth.isDebug.value },
-  { key: 'mac', visible: () => auth.isDebug.value },
+  { key: 'uuid', visible: () => isDebug.value },
+  { key: 'mac', visible: () => isDebug.value },
   { key: 'battery' },
   { key: 'lastActivity' },
   { key: 'enabled' }

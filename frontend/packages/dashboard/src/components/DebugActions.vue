@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ActiveAlarm } from '@evac/alarms'
+import { ActiveAlarm, ICON } from '@evac/alarms'
 import { useAuth } from '@evac/auth'
-import { TOOLS_ICON } from '@evac/config'
 import { Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 
@@ -14,8 +13,8 @@ const { isDebug } = useAuth()
     <ActiveAlarm.Dialog>
       <template #trigger>
         <button type="button" class="btn">
-          <Icon :icon="TOOLS_ICON" />
-          {{ t('alarm.dialog.create') }}
+          <Icon :icon="ICON" />
+          {{ t('alarm.dialog.run') }}
         </button>
       </template>
     </ActiveAlarm.Dialog>

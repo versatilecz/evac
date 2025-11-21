@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Email } from '@evac/emails'
-import { ContentHeader, Dialog, DialogActions, Icon, Switch } from '@evac/ui'
+import { ContentHeader, Dialog, DialogActions, Entity, Icon, Switch } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useAlarmForm } from '@/composables'
 import { ICON, $Alarm, $AlarmFormData } from '@/definitions'
@@ -23,23 +23,22 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
     </Dialog.Trigger>
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
-      <Dialog.Content class="dialog">
-        <ContentHeader>
+      <Dialog.Content class="dialog" as="form">
+        <ContentHeader :icon="ICON">
           <template #title>
-            <Icon class="size-8" :icon="ICON" />
-            <Dialog.Title class="headline">{{ title }}</Dialog.Title>
+            <Dialog.Title class="headline grow">
+              <input id="alarm-name" v-model="formData.name" class="input" type="text" :placeholder="title" :tabindex="formData.name ? -1 : 0" />
+            </Dialog.Title>
           </template>
           <template #description>
             <Dialog.Description class="description">{{ t('alarm.dialog.description', '') }}</Dialog.Description>
           </template>
+          <template #row>
+            <Entity.UuidBadge :entity="alarm" />
+          </template>
         </ContentHeader>
 
         <form class="px-6 grid gap-4">
-          <label class="labe" for="alarm-name">
-            <span class="label-text">{{ t('entity.name') }}</span>
-            <input id="alarm-name" v-model="formData.name" class="input w-full" type="text" />
-          </label>
-
           <label class="label" for="alarm-email">
             <span class="label-text">{{ t('entity.email') }}</span>
             <Email.Select id="alarm-email" v-model="formData.email" class="input w-full" />

@@ -11,6 +11,7 @@ defineSlots<{
   default(): never
   title(): never
   description(): never
+  row(): never
 }>()
 </script>
 
@@ -30,6 +31,7 @@ defineSlots<{
           <p class="paragraph description">{{ description }}</p>
         </slot>
       </div>
+      <slot name="row" />
     </slot>
   </header>
 </template>

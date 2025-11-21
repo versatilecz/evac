@@ -4,6 +4,7 @@
     "dialog": {
       "title": "Detail alarmu",
       "description": "",
+      "run": "Spustit alarm",
       "create": "Vytvořit alarm",
       "edit": "Upravit alarm",
       "confirmDelete": "Opravdu chcete smazat tento alarm?"

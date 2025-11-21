@@ -1,5 +1,5 @@
 import { defineService } from '@evac/shared'
-import { SCOPE, UserInfo } from './definitions'
+import { SCOPE, UserInfo, UserInfoMessage } from './definitions'
 
 export const service = defineService({
   name: SCOPE,
@@ -7,7 +7,7 @@ export const service = defineService({
 }).withSources(
   async function* onUserInfo(source) {
     for await (const message of source) {
-      const parsed = UserInfo.safeParse(message)
+      const parsed = UserInfoMessage.safeParse(message)
       if (!parsed.success) continue
       yield parsed.data
     }

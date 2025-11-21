@@ -1,3 +1,5 @@
 export * from './definitions'
+export * from './data'
+export * from './composables'
 export * from './service'
 export * from './vue'

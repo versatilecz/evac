@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useAuth } from '@evac/auth'
-import { Badge, ContentHeader, Dialog, DialogActions, Entity, Icon } from '@evac/ui'
+import { ContentHeader, Dialog, DialogActions, Entity, Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useLocationForm } from '@/composables'
 import { ICON, $Location, $LocationFormData } from '@/definitions'
@@ -8,7 +7,6 @@ import { ICON, $Location, $LocationFormData } from '@/definitions'
 const props = defineProps<{ location?: $Location | $LocationFormData }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
-const { isDebug } = useAuth()
 const { title, formData, hasData, hasChanges, reset, create, remove, update } = useLocationForm(() => props.location)
 </script>
 
@@ -34,13 +32,10 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
           <template #description>
             <Dialog.Description class="paragraph description">{{ t('location.dialog.description', '') }}</Dialog.Description>
           </template>
+          <template #row>
+            <Entity.UuidBadge :entity="location" />
+          </template>
         </ContentHeader>
-
-        <Entity.Uuid v-if="isDebug" :entity="location" v-slot="{ uuid }">
-          <div class="px-6 grid place-content-center">
-            <Badge>{{ uuid }}</Badge>
-          </div>
-        </Entity.Uuid>
 
         <DialogActions
           class="px-6"

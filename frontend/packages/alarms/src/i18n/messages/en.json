@@ -4,6 +4,7 @@
     "dialog": {
       "title": "Alarm detail",
       "description": "",
+      "run": "Run alarm",
       "create": "Create alarm",
       "edit": "Edit alarm",
       "confirmDelete": "Are you sure you want to delete this alarm?"

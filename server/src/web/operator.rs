@@ -275,6 +275,7 @@ impl Operator {
                             .cloned()
                         {
                             self.username = user.username.clone();
+                            self.uuid = user.uuid.clone();
                             self.roles = user.roles.clone();
 
                             self.login().await?;
@@ -304,6 +305,7 @@ impl Operator {
                             {
                                 self.username = user.username.clone();
                                 self.roles = user.roles.clone();
+                                self.uuid = user.uuid.clone();
                                 self.login().await?;
                             }
                         }
@@ -324,6 +326,7 @@ impl Operator {
             WebMessage::Logout => {
                 self.username = String::from(ANONYMOUS_USERNAME);
                 self.roles = vec![Role::Anonymous];
+                self.uuid = ANONYMOUS_UUID.clone();
                 Ok(())
             }
 
@@ -428,6 +431,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(WebMessage::ScannerDetail(scanner.clone()))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
                 Ok(())
             }
             WebMessage::ScannerRemove(uuid) => {
@@ -713,13 +720,39 @@ impl Operator {
                         .await?;
                 }
 
+                context
+                    .database
+                    .auth
+                    .save(&context.database.config.base.auth_path)?;
+
                 Ok(())
             }
 
             WebMessage::TokenGetForUser(uuid) => {
-                let context = self.context.write().await;
+                let mut context = self.context.write().await;
 
-                if let Some(user) = context.database.auth.users.get(&uuid).clone() {}
+                if let Some(user) = context.database.auth.users.get(&uuid).cloned() {
+                    let token = crate::database::entities::Token {
+                        created: chrono::Utc::now(),
+                        is_valid: true,
+                        nonce: rand::distributions::Alphanumeric
+                            .sample_string(&mut rand::thread_rng(), 16),
+                        user: user.uuid.clone(),
+                    };
+                    context
+                        .database
+                        .auth
+                        .tokens
+                        .insert(token.nonce.clone(), token.clone());
+                    self.sender
+                        .send(WebMessage::TokenDetail(Some(token)))
+                        .await?;
+
+                    context
+                        .database
+                        .auth
+                        .save(&context.database.config.base.auth_path)?;
+                }
                 Ok(())
             }
 

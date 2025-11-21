@@ -11,12 +11,12 @@ export type $AppConfig = z.infer<typeof $AppConfig>
 
 export const $AppConfig = z.object({
   base: $BaseConfig,
-  email: EmailConfig,
+  //email: EmailConfig,
 })
 
 const $AppConfigCodec = z.object({
   base: $BaseConfig,
-  email: EmailConfigCodec,
+  //email: EmailConfigCodec,
 })
 
 export const $ConfigMessage = z.object({

@@ -4,7 +4,9 @@ use chrono::{DateTime, Utc};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::collections::{BTreeMap, HashSet};
 
-use crate::database::entities::{Activities, Alarm, Contact, EventKind, Role, Token, User};
+use crate::database::entities::{
+    Activities, Alarm, Contact, ContactGroup, EventKind, Role, Token, User,
+};
 
 pub mod config;
 pub mod entities;
@@ -90,6 +92,11 @@ impl Default for Data {
         let scanner8 = uuid::Uuid::new_v4();
         let device1 = uuid::Uuid::new_v4();
         let device2 = uuid::Uuid::new_v4();
+        let contact1 = uuid::Uuid::new_v4();
+        let contact2 = uuid::Uuid::new_v4();
+        let contact_group1 = uuid::Uuid::new_v4();
+        let contact_group2 = uuid::Uuid::new_v4();
+        let contact_group3 = uuid::Uuid::new_v4();
 
         Data {
             locations: BTreeMap::from_iter(vec![
@@ -280,8 +287,53 @@ impl Default for Data {
             ]),
             alarms: BTreeMap::new(),
             emails: BTreeMap::new(),
-            contacts: BTreeMap::new(),
-            contact_group: BTreeMap::new(),
+            contacts: BTreeMap::from_iter([
+                (
+                    contact1.clone(),
+                    Contact {
+                        uuid: contact1.clone(),
+                        kind: entities::ContactKind::Email {
+                            email: String::from("miksanik@gmail.com"),
+                        },
+                    },
+                ),
+                (
+                    contact2.clone(),
+                    Contact {
+                        uuid: contact2.clone(),
+                        kind: entities::ContactKind::Sms {
+                            number: String::from("+420602623934"),
+                        },
+                    },
+                ),
+            ]),
+            contact_group: BTreeMap::from_iter([
+                (
+                    contact_group1.clone(),
+                    ContactGroup {
+                        uuid: contact_group1.clone(),
+                        name: String::from("Skupina1"),
+                        contacts: vec![contact1.clone()],
+                    },
+                ),
+                (
+                    contact_group2.clone(),
+                    ContactGroup {
+                        uuid: contact_group1.clone(),
+                        name: String::from("Skupina2"),
+                        contacts: vec![contact2.clone()],
+                    },
+                ),
+                (
+                    contact_group2.clone(),
+                    ContactGroup {
+                        uuid: contact_group1.clone(),
+                        name: String::from("Skupina3"),
+                        contacts: vec![contact1.clone(), contact2.clone()],
+                    },
+                ),
+            ]),
+
             backups: HashSet::new(),
         }
     }

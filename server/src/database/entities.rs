@@ -224,6 +224,7 @@ impl Default for ContactKind {
 #[serde(rename_all = "camelCase", default)]
 pub struct Contact {
     pub uuid: uuid::Uuid,
+    pub name: String,
     pub kind: ContactKind,
 }
 

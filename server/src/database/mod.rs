@@ -293,6 +293,7 @@ impl Default for Data {
                     contact1.clone(),
                     Contact {
                         uuid: contact1.clone(),
+                        name: String::from("Martin1"),
                         kind: entities::ContactKind::Email {
                             email: String::from("miksanik@gmail.com"),
                         },
@@ -302,6 +303,7 @@ impl Default for Data {
                     contact2.clone(),
                     Contact {
                         uuid: contact2.clone(),
+                        name: String::from("Martin2"),
                         kind: entities::ContactKind::Sms {
                             number: String::from("+420602623934"),
                         },

@@ -4,7 +4,7 @@ use crate::{
         entities::{self, Alarm, Device, Role, User},
         LoadSave,
     },
-    message::web::{Auth, UserInfo, WebMessage},
+    message::web::{Auth, UserInfo, Version, WebMessage},
 };
 use anyhow::Context;
 use mail_send::mail_builder::headers::content_type;
@@ -40,7 +40,8 @@ impl Operator {
         let has_role = |roles: &[Role]| roles.iter().any(|r| self.roles.contains(r));
 
         match msg {
-            WebMessage::Login(..)
+            WebMessage::Version { .. }
+            | WebMessage::Login(..)
             | WebMessage::Logout
             | WebMessage::UserInfo(..)
             | WebMessage::Ping
@@ -126,6 +127,16 @@ impl Operator {
     }
     pub async fn init(&self) -> anyhow::Result<()> {
         Ok(())
+    }
+
+    pub async fn version(&self) -> anyhow::Result<()> {
+        Ok(self
+            .sender
+            .send(WebMessage::Version(Version {
+                commit: String::from(env!("GIT_COMMIT")),
+                number: String::from(env!("CARGO_PKG_VERSION")),
+            }))
+            .await?)
     }
     pub async fn login(&self) -> anyhow::Result<()> {
         let context = self.context.read().await;
@@ -348,6 +359,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(WebMessage::LocationDetail(location.clone()))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -358,6 +373,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::LocationRemoved(uuid))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -379,6 +398,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(WebMessage::RoomDetail(room.clone()))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -390,6 +413,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::RoomRemoved(uuid))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -443,6 +470,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::ScannerRemoved(uuid))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -454,6 +485,10 @@ impl Operator {
                     saved.enabled = device.enabled;
 
                     web_broadcast.send(WebMessage::DeviceDetail(saved.clone()))?;
+                    context
+                        .database
+                        .data
+                        .save(&context.database.config.base.data_path)?;
                 }
 
                 Ok(())
@@ -464,6 +499,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::DeviceRemoved(uuid))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
                 Ok(())
             }
 
@@ -497,6 +536,11 @@ impl Operator {
                     web_broadcast.send(WebMessage::AlarmDetail(alarm))?;
                 }
 
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
+
                 Ok(())
             }
             WebMessage::AlarmRemove(uuid) => {
@@ -505,6 +549,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::AlarmRemoved(uuid))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
                 Ok(())
             }
 
@@ -610,6 +658,10 @@ impl Operator {
                         tracing::info!("Email has been send");
                     }
                 }
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -633,6 +685,10 @@ impl Operator {
 
                     web_broadcast.send(WebMessage::EmailDetail(email))?;
                 }
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -643,6 +699,10 @@ impl Operator {
                 context
                     .web_broadcast
                     .send(crate::message::web::WebMessage::EmailRemoved(uuid))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 Ok(())
             }
@@ -683,6 +743,11 @@ impl Operator {
                         password: None,
                     }
                 };
+
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
 
                 context
                     .web_broadcast

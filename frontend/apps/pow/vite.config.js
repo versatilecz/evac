@@ -11,6 +11,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/operator': { ...backend, ws: true },
+      '/api/version': { ...backend },
     },
   },
   plugins: [vue()],

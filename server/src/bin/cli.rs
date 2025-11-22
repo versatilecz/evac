@@ -29,6 +29,7 @@ struct Args {
 }
 #[derive(Subcommand)]
 enum Commands {
+    Version,
     Notification(Notification),
     DevicePosition(DevicePosition),
     Test,
@@ -93,6 +94,13 @@ async fn main() -> anyhow::Result<()> {
     };
 
     match &args.command {
+        Commands::Version => {
+            println!(
+                "Version: {} commit: {}",
+                env!("CARGO_PKG_VERSION"),
+                env!("GIT_COMMIT")
+            );
+        }
         Commands::Notification(notification) => {
             if let Some(contact) = database.data.contacts.get(&notification.uuid) {
                 tracing::debug!("Sending sms: {:?}", config.notification.sms);

@@ -1,12 +1,15 @@
 use chrono::prelude::DateTime;
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
-use warp::{filters::path::path, Filter, Rejection};
+use warp::{filters::path::path, reply::json, Filter, Rejection};
 
 pub mod operator;
 pub use operator::Operator;
 
-use crate::{database::entities::Role, message::web::WebMessage};
+use crate::{
+    database::entities::Role,
+    message::web::{Version, WebMessage},
+};
 
 type Result<T> = std::result::Result<T, Rejection>;
 
@@ -68,7 +71,7 @@ impl Server {
 
         let mut client = operator::Operator::new(context, sender);
 
-        client.init().await?;
+        client.version().await?;
 
         loop {
             tokio::select! {
@@ -171,15 +174,24 @@ impl Server {
         &self,
         config: crate::database::config::Server,
     ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
-        // WebSocket route
-        Self::websocket_route(self.context.clone())
-            // Serve web pages
-            .or(warp::fs::dir(config.base.frontend_path.clone()))
-            // Default serve index
-            .or(warp::fs::file(format!(
-                "{}/index.html",
-                config.base.frontend_path
-            )))
+        warp::path!("api" / "version")
+            .map(|| {
+                json(&Version {
+                    commit: String::from(env!("GIT_COMMIT")),
+                    number: String::from(env!("CARGO_PKG_VERSION")),
+                })
+            })
+            .or(
+                // WebSocket route
+                Self::websocket_route(self.context.clone())
+                    // Serve web pages
+                    .or(warp::fs::dir(config.base.frontend_path.clone()))
+                    // Default serve index
+                    .or(warp::fs::file(format!(
+                        "{}/index.html",
+                        config.base.frontend_path
+                    ))),
+            )
     }
 
     pub async fn run(&mut self) -> anyhow::Result<()> {

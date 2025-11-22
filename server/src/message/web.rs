@@ -39,9 +39,17 @@ pub struct UserInfo {
 }
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Version {
+    pub commit: String,
+    pub number: String,
+}
+
+#[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum WebMessage {
     #[default]
     Close,
+
+    Version(Version),
 
     Login(Auth),
     Logout,

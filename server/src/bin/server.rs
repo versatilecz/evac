@@ -77,8 +77,7 @@ async fn main() -> anyhow::Result<()> {
         web_broadcast: tokio::sync::broadcast::Sender::new(config.base.query_size),
         scanner_sender,
         database,
-        alarm: None,
-        group: None,
+        alarms: BTreeMap::new(),
     };
 
     let global_sender = context.global_broadcast.clone();

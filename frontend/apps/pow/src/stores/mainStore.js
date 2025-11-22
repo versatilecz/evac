@@ -1,5 +1,6 @@
 import { inject, watch, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { v4 as uuidv4 } from 'uuid'
 
 export const useMainStore = defineStore('main', () => {
   const websocket = inject('$websocket')
@@ -16,13 +17,14 @@ export const useMainStore = defineStore('main', () => {
     websocket.send(JSON.stringify({ [tag]: content }))
   }
 
-  function alarm(device, scanner, location, room, uuid) {
+  function alarm(device, scanner, location, room, alarm) {
     send('Alarm', {
       device,
       scanner,
       location,
       room,
-      uuid
+      alarm,
+      uuid: uuidv4(),
     })
   }
 

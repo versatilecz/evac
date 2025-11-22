@@ -18,6 +18,7 @@ pub struct Activity {
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct AlarmInfo {
     pub uuid: uuid::Uuid,
+    pub alarm: uuid::Uuid,
     pub device: String,
     pub scanner: String,
     pub location: String,
@@ -98,7 +99,7 @@ pub enum WebMessage {
     AlarmRemove(uuid::Uuid),
     AlarmRemoved(uuid::Uuid),
     Alarm(AlarmInfo),
-    AlarmStop(bool),
+    AlarmStop(uuid::Uuid),
 
     Email {
         uuid: uuid::Uuid,

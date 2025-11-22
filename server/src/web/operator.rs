@@ -256,7 +256,7 @@ impl Operator {
             ))
             .await?;
 
-        if let Some(alarm) = &context.alarm {
+        for alarm in context.alarms.values() {
             self.sender
                 .send(crate::message::web::WebMessage::Alarm(alarm.clone()))
                 .await?;
@@ -563,7 +563,7 @@ impl Operator {
                     .database
                     .data
                     .alarms
-                    .get(&info.uuid)
+                    .get(&info.alarm)
                     .cloned()
                     .context("Alarm does not exist")?;
                 let email = context
@@ -574,7 +574,7 @@ impl Operator {
                     .cloned()
                     .context("Email does not exist")?;
 
-                context.alarm = Some(info.clone());
+                context.alarms.insert(info.uuid, info.clone());
 
                 let contacts = context.database.data.get_contacts_by_group(alarm.group);
 
@@ -612,10 +612,10 @@ impl Operator {
                 Ok(())
             }
 
-            WebMessage::AlarmStop(bool) => {
+            WebMessage::AlarmStop(alarm) => {
                 let mut context = self.context.write().await;
                 // Mark alarm as done
-                context.alarm = None;
+                context.alarms.remove(&alarm);
                 // Set scanners to silent mode
                 context.database.data.scanners.values_mut().for_each(|s| {
                     s.buzzer = false;
@@ -640,7 +640,7 @@ impl Operator {
                 // Send message to web clients
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::AlarmStop(bool))?;
+                    .send(crate::message::web::WebMessage::AlarmStop(alarm))?;
 
                 Ok(())
             }

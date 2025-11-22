@@ -157,7 +157,8 @@ async fn main() -> anyhow::Result<()> {
         }
         Commands::Test => {
             let msg = WebMessage::Alarm(AlarmInfo {
-                uuid: database.data.alarms.keys().nth(0).unwrap().clone(),
+                uuid: uuid::Uuid::new_v4(),
+                alarm: database.data.alarms.keys().nth(0).unwrap().clone(),
                 device: String::from("device"),
                 scanner: String::from("Scanner"),
                 location: String::from("Location"),

@@ -141,7 +141,7 @@ function getUnlocatedDevices() {
       <button
         @click="
           () => {
-            mainStore.send('AlarmStop', true)
+            mainStore.send('AlarmStop', mainStore.activeAlarm.uuid)
           }
         "
       >

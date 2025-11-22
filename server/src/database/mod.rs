@@ -67,7 +67,7 @@ pub struct Data {
     pub locations: BTreeMap<uuid::Uuid, entities::Location>,
     pub rooms: BTreeMap<uuid::Uuid, entities::Room>,
     pub alarms: BTreeMap<uuid::Uuid, Alarm>,
-    pub emails: BTreeMap<uuid::Uuid, entities::Email>,
+    pub notifications: BTreeMap<uuid::Uuid, entities::Notification>,
     pub contacts: BTreeMap<uuid::Uuid, entities::Contact>,
     pub contact_group: BTreeMap<uuid::Uuid, entities::ContactGroup>,
 
@@ -287,7 +287,7 @@ impl Default for Data {
                 ),
             ]),
             alarms: BTreeMap::new(),
-            emails: BTreeMap::new(),
+            notifications: BTreeMap::new(),
             contacts: BTreeMap::from_iter([
                 (
                     contact1.clone(),
@@ -355,6 +355,34 @@ impl Data {
             .filter(|c| contacts.contains(&c.uuid))
             .cloned()
             .collect()
+    }
+
+    pub fn notification_exists(&self, uuid: &uuid::Uuid) -> bool {
+        self.notifications.contains_key(uuid)
+    }
+
+    pub fn alarm_exists(&self, uuid: &uuid::Uuid) -> bool {
+        self.alarms.contains_key(&uuid)
+    }
+
+    pub fn contact_exists(&self, uuid: &uuid::Uuid) -> bool {
+        self.contacts.contains_key(uuid)
+    }
+
+    pub fn is_location_used(&self, uuid: &uuid::Uuid) -> bool {
+        false
+    }
+
+    pub fn is_room_used(&self, uuid: &uuid::Uuid) -> bool {
+        false
+    }
+
+    pub fn is_contact_used(&self, uuid: &uuid::Uuid) -> bool {
+        false
+    }
+
+    pub fn is_notification_used(&self, uuid: &uuid::Uuid) -> bool {
+        false
     }
 }
 

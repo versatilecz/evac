@@ -104,17 +104,17 @@ async fn main() -> anyhow::Result<()> {
         Commands::Notification(notification) => {
             if let Some(contact) = database.data.contacts.get(&notification.uuid) {
                 tracing::debug!("Sending sms: {:?}", config.notification.sms);
-                let email = database::entities::Email {
+                let notification = database::entities::Notification {
                     uuid: uuid::Uuid::new_v4(),
                     name: String::new(),
                     subject: notification.subject.clone(),
-                    html: notification.text.clone(),
-                    text: notification.text.clone(),
+                    long: notification.text.clone(),
+                    short: notification.text.clone(),
                 };
 
                 config
                     .notification
-                    .send_notifications(contact.clone(), email)
+                    .send_notifications(contact.clone(), notification)
                     .await?;
             }
         }

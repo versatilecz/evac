@@ -16,8 +16,8 @@ const new_email = ref({})
         <th>Uuid</th>
         <th>Název</th>
         <th>Předmět</th>
-        <th>Text</th>
-        <th>Html</th>
+        <th>Short</th>
+        <th>Long</th>
       </tr>
     </thead>
 
@@ -26,8 +26,8 @@ const new_email = ref({})
         <td>{{ email.uuid }}</td>
         <td><input v-model="email.name" /></td>
         <td><input v-model="email.subject" /></td>
-        <td><textarea v-model="email.text"></textarea></td>
-        <td><textarea v-model="email.html"></textarea></td>
+        <td><textarea v-model="email.short"></textarea></td>
+        <td><textarea v-model="email.long"></textarea></td>
         <td>
           <input type="submit" value="Save" @click="emailStore.save(email)" />
           <input type="submit" value="Remove" @click="emailStore.remove(email.uuid)" />
@@ -37,8 +37,8 @@ const new_email = ref({})
             @click="
               mainStore.send('Email', {
                 subject: email.subject,
-                text: email.text,
-                html: email.html,
+                short: email.short,
+                long: email.long,
               })
             "
           />
@@ -57,15 +57,15 @@ const new_email = ref({})
       <td><input v-model="new_email.subject" /></td>
     </tr>
     <tr>
-      <th>Text</th>
-      <td><textarea v-model="new_email.text" /></td>
+      <th>Short</th>
+      <td><textarea v-model="new_email.short" /></td>
     </tr>
     <tr>
-      <th>Html</th>
-      <td><textarea v-model="new_email.html" /></td>
+      <th>Long</th>
+      <td><textarea v-model="new_email.long" /></td>
     </tr>
   </table>
-  <button @click="emailStore.create(new_email.name, new_email.subject, new_email.text, new_email.html)">Vytvořit</button>
+  <button @click="emailStore.create(new_email.name, new_email.subject, new_email.short, new_email.long)">Vytvořit</button>
 </template>
 
 <style scoped>

@@ -191,18 +191,18 @@ pub struct Alarm {
     pub name: String,
     pub buzzer: bool,
     pub led: bool,
-    pub email: uuid::Uuid,
+    pub notification: uuid::Uuid,
     pub group: uuid::Uuid,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
-pub struct Email {
+pub struct Notification {
     pub uuid: uuid::Uuid,
     pub name: String,
     pub subject: String,
-    pub html: String,
-    pub text: String,
+    pub long: String,
+    pub short: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]

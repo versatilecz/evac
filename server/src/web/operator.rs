@@ -4,7 +4,7 @@ use crate::{
         entities::{self, Alarm, Device, Role, User},
         LoadSave,
     },
-    message::web::{Auth, UserInfo, Version, WebMessage},
+    message::web::{Auth, Error, UserInfo, Version, WebMessage},
 };
 use anyhow::Context;
 use mail_send::mail_builder::headers::content_type;
@@ -46,7 +46,8 @@ impl Operator {
             | WebMessage::UserInfo(..)
             | WebMessage::Ping
             | WebMessage::Pong
-            | WebMessage::Close => true,
+            | WebMessage::Close
+            | WebMessage::Error(..) => true,
 
             WebMessage::Activity(..) => has_role(&[Role::Admin, Role::Service]),
             WebMessage::ActivityList(..) => has_role(&[Role::Admin, Role::Service]),
@@ -80,12 +81,12 @@ impl Operator {
             WebMessage::EventRemove(..) => has_role(&[Role::Admin, Role::Service]),
             WebMessage::EventRemoved(..) => has_role(&[Role::Admin, Role::Service]),
 
-            WebMessage::EmailDetail(..) => has_role(&[Role::Admin, Role::Service]),
-            WebMessage::EmailList(..) => has_role(&[Role::Admin, Role::Service]),
-            WebMessage::EmailSet(..) => has_role(&[Role::Admin, Role::Service]),
-            WebMessage::Email { .. } => has_role(&[Role::Admin, Role::Service]),
-            WebMessage::EmailRemove(..) => has_role(&[Role::Admin, Role::Service]),
-            WebMessage::EmailRemoved(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::NotificationDetail(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::NotificationList(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::NotificationSet(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::Notify { .. } => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::NotificationRemove(..) => has_role(&[Role::Admin, Role::Service]),
+            WebMessage::NotificationRemoved(..) => has_role(&[Role::Admin, Role::Service]),
 
             WebMessage::AlarmDetail(..) => has_role(&[Role::Admin, Role::Service]),
             WebMessage::AlarmList(..) => has_role(&[Role::Admin, Role::Service]),
@@ -210,8 +211,14 @@ impl Operator {
             .await?;
 
         self.sender
-            .send(crate::message::web::WebMessage::EmailList(
-                context.database.data.emails.values().cloned().collect(),
+            .send(crate::message::web::WebMessage::NotificationList(
+                context
+                    .database
+                    .data
+                    .notifications
+                    .values()
+                    .cloned()
+                    .collect(),
             ))
             .await?;
 
@@ -268,7 +275,7 @@ impl Operator {
     pub async fn process(&mut self, msg: crate::message::web::WebMessage) -> anyhow::Result<()> {
         tracing::debug!("Process message: {:?}", msg);
 
-        match msg {
+        match &msg {
             WebMessage::Login(auth) => {
                 tracing::debug!("Try to login: {:?}", auth);
 
@@ -282,7 +289,7 @@ impl Operator {
                             .auth
                             .users
                             .values()
-                            .find(|u| u.username.eq(&username))
+                            .find(|u| u.username.eq(username))
                             .cloned()
                         {
                             self.username = user.username.clone();
@@ -301,7 +308,7 @@ impl Operator {
                             .database
                             .auth
                             .tokens
-                            .get(&token)
+                            .get(token)
                             .cloned()
                         {
                             if let Some(user) = self
@@ -353,7 +360,7 @@ impl Operator {
                             .data
                             .locations
                             .insert(location.uuid.clone(), location.clone());
-                        location
+                        location.clone()
                     };
 
                 context
@@ -369,14 +376,23 @@ impl Operator {
 
             WebMessage::LocationRemove(uuid) => {
                 let mut context = self.context.write().await;
-                context.database.data.locations.remove(&uuid);
-                context
-                    .web_broadcast
-                    .send(crate::message::web::WebMessage::LocationRemoved(uuid))?;
-                context
-                    .database
-                    .data
-                    .save(&context.database.config.base.data_path)?;
+                if !context.database.data.is_location_used(uuid) {
+                    context.database.data.locations.remove(&uuid);
+                    context.web_broadcast.send(
+                        crate::message::web::WebMessage::LocationRemoved(uuid.clone()),
+                    )?;
+                    context
+                        .database
+                        .data
+                        .save(&context.database.config.base.data_path)?;
+                } else {
+                    self.sender
+                        .send(WebMessage::Error(Error::IntegrityError(Box::new(
+                            msg.clone(),
+                        ))))
+                        .await?;
+                    self.sender.send(WebMessage::Close).await?;
+                }
 
                 Ok(())
             }
@@ -392,7 +408,7 @@ impl Operator {
                         .data
                         .rooms
                         .insert(room.uuid.clone(), room.clone());
-                    room
+                    room.clone()
                 };
 
                 context
@@ -412,7 +428,7 @@ impl Operator {
                 context.database.data.rooms.remove(&uuid);
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::RoomRemoved(uuid))?;
+                    .send(crate::message::web::WebMessage::RoomRemoved(uuid.clone()))?;
                 context
                     .database
                     .data
@@ -436,7 +452,7 @@ impl Operator {
                             .data
                             .scanners
                             .insert(scanner.uuid, scanner.clone());
-                        scanner
+                        scanner.clone()
                     };
 
                 // Send new config to scanner
@@ -469,7 +485,9 @@ impl Operator {
                 context.database.data.scanners.remove(&uuid);
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::ScannerRemoved(uuid))?;
+                    .send(crate::message::web::WebMessage::ScannerRemoved(
+                        uuid.clone(),
+                    ))?;
                 context
                     .database
                     .data
@@ -498,7 +516,7 @@ impl Operator {
                 context.database.data.devices.remove(&uuid);
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::DeviceRemoved(uuid))?;
+                    .send(crate::message::web::WebMessage::DeviceRemoved(uuid.clone()))?;
                 context
                     .database
                     .data
@@ -511,7 +529,7 @@ impl Operator {
                 context.database.events.remove(&uuid);
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::EventRemoved(uuid))?;
+                    .send(crate::message::web::WebMessage::EventRemoved(uuid.clone()))?;
 
                 Ok(())
             }
@@ -521,10 +539,11 @@ impl Operator {
                 let web_broadcast = context.web_broadcast.clone();
 
                 if let Some(saved) = context.database.data.alarms.get_mut(&alarm.uuid) {
-                    saved.name = alarm.name;
-                    saved.email = alarm.email;
+                    saved.name = alarm.name.clone();
+                    saved.notification = alarm.notification;
                     saved.led = alarm.led;
                     saved.buzzer = alarm.buzzer;
+                    saved.group = alarm.group;
 
                     web_broadcast.send(WebMessage::AlarmDetail(saved.clone()))?;
                 } else {
@@ -533,7 +552,7 @@ impl Operator {
                         .data
                         .alarms
                         .insert(alarm.uuid.clone(), alarm.clone());
-                    web_broadcast.send(WebMessage::AlarmDetail(alarm))?;
+                    web_broadcast.send(WebMessage::AlarmDetail(alarm.clone()))?;
                 }
 
                 context
@@ -548,7 +567,7 @@ impl Operator {
                 context.database.data.alarms.remove(&uuid);
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::AlarmRemoved(uuid))?;
+                    .send(crate::message::web::WebMessage::AlarmRemoved(uuid.clone()))?;
                 context
                     .database
                     .data
@@ -566,11 +585,11 @@ impl Operator {
                     .get(&info.alarm)
                     .cloned()
                     .context("Alarm does not exist")?;
-                let email = context
+                let notification = context
                     .database
                     .data
-                    .emails
-                    .get(&alarm.email)
+                    .notifications
+                    .get(&alarm.notification)
                     .cloned()
                     .context("Email does not exist")?;
 
@@ -605,7 +624,7 @@ impl Operator {
                         .database
                         .config
                         .notification
-                        .send_alarm(contact, email.clone(), info.clone())
+                        .send_alarm(contact, notification.clone(), info.clone())
                         .await?;
                 }
 
@@ -640,22 +659,22 @@ impl Operator {
                 // Send message to web clients
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::AlarmStop(alarm))?;
+                    .send(crate::message::web::WebMessage::AlarmStop(alarm.clone()))?;
 
                 Ok(())
             }
 
-            WebMessage::Email { uuid, group } => {
+            WebMessage::Notify { uuid, group } => {
                 let context = self.context.read().await;
-                if let Some(email) = context.database.data.emails.get(&uuid).cloned() {
-                    for contact in context.database.data.get_contacts_by_group(group) {
+                if let Some(notification) = context.database.data.notifications.get(uuid).cloned() {
+                    for contact in context.database.data.get_contacts_by_group(group.clone()) {
                         context
                             .database
                             .config
                             .notification
-                            .send_notifications(contact, email.clone())
+                            .send_notifications(contact, notification.clone())
                             .await?;
-                        tracing::info!("Email has been send");
+                        tracing::info!("Notification has been send");
                     }
                 }
                 context
@@ -666,24 +685,29 @@ impl Operator {
                 Ok(())
             }
 
-            WebMessage::EmailSet(email) => {
+            WebMessage::NotificationSet(notification) => {
                 let mut context = self.context.write().await;
                 let web_broadcast = context.web_broadcast.clone();
-                if let Some(saved) = context.database.data.emails.get_mut(&email.uuid) {
-                    saved.name = email.name;
-                    saved.subject = email.subject;
-                    saved.html = email.html;
-                    saved.text = email.text;
+                if let Some(saved) = context
+                    .database
+                    .data
+                    .notifications
+                    .get_mut(&notification.uuid)
+                {
+                    saved.name = notification.name.clone();
+                    saved.subject = notification.subject.clone();
+                    saved.short = notification.short.clone();
+                    saved.long = notification.long.clone();
 
-                    web_broadcast.send(WebMessage::EmailDetail(saved.clone()))?;
+                    web_broadcast.send(WebMessage::NotificationDetail(saved.clone()))?;
                 } else {
                     context
                         .database
                         .data
-                        .emails
-                        .insert(email.uuid.clone(), email.clone());
+                        .notifications
+                        .insert(notification.uuid.clone(), notification.clone());
 
-                    web_broadcast.send(WebMessage::EmailDetail(email))?;
+                    web_broadcast.send(WebMessage::NotificationDetail(notification.clone()))?;
                 }
                 context
                     .database
@@ -693,12 +717,12 @@ impl Operator {
                 Ok(())
             }
 
-            WebMessage::EmailRemove(uuid) => {
+            WebMessage::NotificationRemove(uuid) => {
                 let mut context = self.context.write().await;
-                context.database.data.emails.remove(&uuid);
-                context
-                    .web_broadcast
-                    .send(crate::message::web::WebMessage::EmailRemoved(uuid))?;
+                context.database.data.notifications.remove(&uuid);
+                context.web_broadcast.send(
+                    crate::message::web::WebMessage::NotificationRemoved(uuid.clone()),
+                )?;
                 context
                     .database
                     .data
@@ -711,11 +735,12 @@ impl Operator {
                 let mut context = self.context.write().await;
                 let password = user
                     .password
-                    .map(|p| context.database.config.base.get_hashed(&p));
+                    .as_ref()
+                    .map(|p| context.database.config.base.get_hashed(p));
 
                 let user_info = if let Some(saved) = context.database.auth.users.get_mut(&user.uuid)
                 {
-                    saved.roles = user.roles;
+                    saved.roles = user.roles.clone();
                     if let Some(password) = password {
                         saved.password = password;
                     }
@@ -738,8 +763,8 @@ impl Operator {
                     );
                     UserInfo {
                         uuid: user.uuid.clone(),
-                        username: user.username,
-                        roles: user.roles,
+                        username: user.username.clone(),
+                        roles: user.roles.clone(),
                         password: None,
                     }
                 };
@@ -760,7 +785,7 @@ impl Operator {
                 let mut context = self.context.write().await;
 
                 if let Some(token) = token {
-                    if let Some(token) = context.database.auth.tokens.get(&token) {
+                    if let Some(token) = context.database.auth.tokens.get(token) {
                         self.sender
                             .send(WebMessage::TokenDetail(Some(token.clone())))
                             .await?;
@@ -823,10 +848,10 @@ impl Operator {
 
             WebMessage::BackupRemove(path) => {
                 let mut context = self.context.write().await;
-                context.database.data.backups.remove(&path);
+                context.database.data.backups.remove(path);
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::BackupRemove(path))?;
+                    .send(crate::message::web::WebMessage::BackupRemove(path.clone()))?;
 
                 Ok(())
             }
@@ -841,7 +866,7 @@ impl Operator {
 
                 context
                     .web_broadcast
-                    .send(crate::message::web::WebMessage::Backup(path))?;
+                    .send(crate::message::web::WebMessage::Backup(path.clone()))?;
 
                 Ok(())
             }

@@ -2,6 +2,7 @@ use serde::{de, Deserialize, Serialize};
 use std::{
     default,
     net::{Ipv4Addr, SocketAddrV4},
+    rc::Rc,
 };
 use uuid::Uuid;
 
@@ -45,10 +46,17 @@ pub struct Version {
     pub number: String,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub enum Error {
+    PermissionError,
+    IntegrityError(Box<WebMessage>),
+}
+
 #[derive(Default, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum WebMessage {
     #[default]
     Close,
+    Error(Error),
 
     Version(Version),
 
@@ -101,16 +109,16 @@ pub enum WebMessage {
     Alarm(AlarmInfo),
     AlarmStop(uuid::Uuid),
 
-    Email {
+    Notify {
         uuid: uuid::Uuid,
         group: uuid::Uuid,
     },
 
-    EmailList(Vec<crate::database::entities::Email>),
-    EmailSet(crate::database::entities::Email),
-    EmailDetail(crate::database::entities::Email),
-    EmailRemove(uuid::Uuid),
-    EmailRemoved(uuid::Uuid),
+    NotificationList(Vec<crate::database::entities::Notification>),
+    NotificationSet(crate::database::entities::Notification),
+    NotificationDetail(crate::database::entities::Notification),
+    NotificationRemove(uuid::Uuid),
+    NotificationRemoved(uuid::Uuid),
 
     UserList(Vec<UserInfo>),
     UserSet(UserInfo),

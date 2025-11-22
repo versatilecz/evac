@@ -35,18 +35,14 @@ impl Default for Email {
 }
 
 impl Email {
-    pub async fn send(
-        &self,
-        email: String,
-        subject: String,
-        html: String,
-        text: String,
-    ) -> anyhow::Result<()> {
+    pub async fn send(&self, email: String, subject: String, text: String) -> anyhow::Result<()> {
+        let markdown = markdown::to_html(&text);
+
         let message = MessageBuilder::new()
             .from((self.from.0.as_str(), self.from.1.as_str()))
             .to(vec![email])
             .subject(subject)
-            .html_body(html)
+            .html_body(markdown)
             .text_body(text);
 
         let credentials = Credentials::new(&self.username, &self.password);
@@ -159,19 +155,19 @@ impl Notification {
     pub async fn send_notifications(
         &self,
         contact: Contact,
-        email: crate::database::entities::Email,
+        email: crate::database::entities::Notification,
     ) -> anyhow::Result<()> {
         match contact.kind {
             ContactKind::Email {
                 email: email_contact,
             } => {
                 self.email
-                    .send(email_contact, email.subject, email.html, email.text)
+                    .send(email_contact, email.subject, email.long)
                     .await?;
             }
 
             ContactKind::Sms { number } => {
-                self.sms.send(number, email.text).await?;
+                self.sms.send(number, email.short).await?;
             }
         }
 
@@ -181,7 +177,7 @@ impl Notification {
     pub async fn send_alarm(
         &self,
         contact: Contact,
-        email: crate::database::entities::Email,
+        notification: crate::database::entities::Notification,
         alarm: crate::message::web::AlarmInfo,
     ) -> anyhow::Result<()> {
         let replace = |text: &String, alarm: &crate::message::web::AlarmInfo| {
@@ -191,13 +187,13 @@ impl Notification {
                 .replace("%room%", &alarm.room)
         };
 
-        let email = crate::database::entities::Email {
-            html: replace(&email.html, &alarm),
-            text: replace(&email.text, &alarm),
-            ..email
+        let notification = crate::database::entities::Notification {
+            short: replace(&notification.short, &alarm),
+            long: replace(&notification.long, &alarm),
+            ..notification
         };
 
-        self.send_notifications(contact, email).await
+        self.send_notifications(contact, notification).await
     }
 }
 

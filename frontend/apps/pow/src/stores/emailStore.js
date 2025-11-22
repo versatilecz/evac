@@ -10,7 +10,7 @@ export const useEmailStore = defineStore('email', () => {
   const data = ref({})
   const oldData = ref({})
 
-  mainStore.on('EmailList', (value) => {
+  mainStore.on('NotificationList', (value) => {
     for (let email of value) {
       data.value[email.uuid] = email
     }
@@ -19,27 +19,27 @@ export const useEmailStore = defineStore('email', () => {
     console.log(data.value)
   })
 
-  mainStore.on('EmailDetail', (value) => {
+  mainStore.on('NotificationDetail', (value) => {
     data.value[value.uuid] = value
     oldData.value[value.uuid] = deepCopy(value)
   })
 
-  mainStore.on('EmailRemoved', (value) => {
+  mainStore.on('NotificationRemoved', (value) => {
     delete data.value[value]
     delete oldData[value]
   })
 
   function save(scanner) {
-    mainStore.send('EmailSet', scanner)
+    mainStore.send('NotificationSet', scanner)
   }
 
-  function create(name, subject, text, html) {
+  function create(name, subject, short, long) {
     save({
       uuid: uuidv4(),
       name,
       subject,
-      text,
-      html,
+      short,
+      long,
     })
   }
 
@@ -48,7 +48,7 @@ export const useEmailStore = defineStore('email', () => {
   }
 
   function remove(uuid) {
-    mainStore.send('EmailRemove', uuid)
+    mainStore.send('NotificationRemove', uuid)
   }
 
   return {

@@ -29,15 +29,16 @@ export const useAlarmStore = defineStore('alarm', () => {
     delete oldData[value]
   })
 
-  function save(scanner) {
-    mainStore.send('AlarmSet', scanner)
+  function save(alarm) {
+    mainStore.send('AlarmSet', alarm)
   }
 
-  function create(name, email, buzzer, led) {
+  function create(name, notification, group, buzzer, led) {
     save({
       uuid: uuidv4(),
       name,
-      email,
+      notification,
+      group,
       buzzer,
       led,
     })

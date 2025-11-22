@@ -12,7 +12,8 @@ const new_alarm = ref({})
       <tr>
         <th>Uuid</th>
         <th>Název</th>
-        <th>Email</th>
+        <th>Notifikace</th>
+        <th>Group</th>
         <th>Buzzer</th>
         <th>Led</th>
       </tr>
@@ -22,7 +23,8 @@ const new_alarm = ref({})
       <tr v-for="alarm of Object.values(alarmStore.data)" :key="alarm.uuid">
         <td>{{ alarm.uuid }}</td>
         <td><input v-model="alarm.name" /></td>
-        <td><input v-model="alarm.email"></td>
+        <td><input v-model="alarm.notification"></td>
+        <td><input type="text" v-model="alarm.group"></td>
         <td>
           <input v-model="alarm.buzzer" type="checkbox" />
         </td>
@@ -43,8 +45,12 @@ const new_alarm = ref({})
       <td><input v-model="new_alarm.name" /></td>
     </tr>
     <tr>
-      <th>Email</th>
-      <td><input v-model="new_alarm.email" /></td>
+      <th>Notifikation</th>
+      <td><input v-model="new_alarm.notification" /></td>
+    </tr>
+    <tr>
+      <th>Group</th>
+      <td><input v-model="new_alarm.group" /></td>
     </tr>
     <tr>
       <th>Buzzer</th>
@@ -59,7 +65,7 @@ const new_alarm = ref({})
       </td>
     </tr>
   </table>
-  <button @click="alarmStore.create(new_alarm.name, new_alarm.email, new_alarm.buzzer, new_alarm.led)">Vytvořit</button>
+  <button @click="alarmStore.create(new_alarm.name, new_alarm.notification, new_alarm.group, new_alarm.buzzer, new_alarm.led)">Vytvořit</button>
 </template>
 
 <style scoped>

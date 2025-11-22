@@ -28,7 +28,7 @@ export const $Devices = z.map(z.uuidv4(), $Device)
 
 export const $SourceType = z.enum(['all', 'room', 'location', 'unallocated'])
 
-const $DeviceCodec = $Device.omit({ mac: true, lastActivity: true }).extend({
+const $DeviceCodec = $Device.extend({
   mac: macCodec,
   lastActivity: isoDatetimeToDate,
 })

@@ -1,12 +1,16 @@
-import { $ConfigMessage } from '@evac/config'
+import { $ConfigMessage, baseConfig$ } from '@evac/config'
 import { defineService } from '@evac/shared'
 import * as def from './definitions'
 import * as Rx from 'rxjs'
 
 const CLEAN_INTERVAL = 1_000 // 1s
 
-const activityDiff$$ = new Rx.BehaviorSubject<number>(0)
-const cleanActivity$ = activityDiff$$.pipe(
+const activityDiff$ = baseConfig$.pipe(
+  Rx.map((config) => (config.activityDiff ?? 0) * 1000),
+  Rx.distinctUntilChanged()
+)
+
+const cleanActivity$ = activityDiff$.pipe(
   Rx.switchMap((diff) => (diff > 0 ? Rx.interval(CLEAN_INTERVAL).pipe(Rx.map(() => diff)) : Rx.NEVER)),
   Rx.switchMap((diff) => service.clean(diff))
 )
@@ -39,9 +43,6 @@ export const service = defineService({
       for await (const message of source) {
         const parsed = $ConfigMessage.safeParse(message)
         if (!parsed.success) continue
-
-        const diffSec = parsed.data.Config.base.activityDiff ?? 0
-        activityDiff$$.next(diffSec * 1000)
 
         const state = await this.get()
         const next = new Map(state ?? [])
@@ -78,7 +79,7 @@ service.addEventListener('stop', () => {
 function* filterOutdatedActivities(activities: Map<def.$Activity['device'], def.$Activity>, threshold: number): Generator<[def.$Activity['device'], def.$Activity]> {
   const now = Date.now()
   for (const [device, activity] of activities) {
-    const current = typeof activity.timestamp === 'string' ? Date.parse(activity.timestamp) : activity.timestamp
+    const current = activity.timestamp.getTime()
     if (now - current > threshold) continue
     yield [device, activity]
   }

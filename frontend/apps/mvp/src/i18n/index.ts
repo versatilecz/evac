@@ -2,7 +2,7 @@ import { messages } from '@evac/shared'
 import { messages as alarmsMessages } from '@evac/alarms'
 import { messages as configMessages } from '@evac/config'
 import { messages as devicesMessages } from '@evac/devices'
-import { messages as emailsMessages } from '@evac/emails'
+import { messages as notificationsMessages } from '@evac/notifications'
 import { messages as eventsMessages } from '@evac/events'
 import { messages as locationsMessages } from '@evac/locations'
 import { messages as roomsMessages } from '@evac/rooms'
@@ -13,7 +13,7 @@ export default createI18n({
   legacy: false,
   locale: 'cs',
   fallbackLocale: 'en',
-  messages: mergeMessages(messages, eventsMessages, configMessages, alarmsMessages, devicesMessages, emailsMessages, locationsMessages, roomsMessages, scannersMessages),
+  messages: mergeMessages(messages, eventsMessages, configMessages, alarmsMessages, devicesMessages, notificationsMessages, locationsMessages, roomsMessages, scannersMessages),
 })
 
 function mergeMessages(...sources: Record<string, any>[]) {

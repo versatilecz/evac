@@ -134,3 +134,24 @@ yarn test:e2e -- --debug
 ```sh
 yarn lint
 ```
+
+### Assigning device to scanner
+
+```sh
+cargo run -p server --bin cli -- device-position --device <deviceUuid> --scanner <scannerUuid>
+```
+
+We can also propagate event on device
+
+```sh
+cargo run -p server --bin cli -- device-position --device <deviceUuid> --scanner <scannerUuid> --msg 0201060a16d2fc4400cb01563a01
+```
+
+| Message ID                   | Action       |
+| ---------------------------- | ------------ |
+| 0201060a16d2fc4400cb01563a01 | Single press |
+| 0201060a16d2fc4400cb01563a02 | Double press |
+| 0201060a16d2fc4400cb01563a03 | Triple press |
+| 0201060a16d2fc4400cb01563a04 | Long press   |
+
+More info at [Shelly BLU Button specs](https://shelly-api-docs.shelly.cloud/docs-ble/Devices/BLU/button/#button-press-events)

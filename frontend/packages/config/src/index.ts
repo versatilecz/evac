@@ -5,5 +5,5 @@ export * from './components'
 export * as Views from './views'
 
 export * from './base'
-export * from './email'
+export * from './notification'
 export * from './tools/backup'

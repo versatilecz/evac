@@ -132,9 +132,7 @@ function getUnlocatedDevices() {
         <tr>
           <th>Text</th>
           <td>
-            {{
-              mainStore.activeAlarm
-            }}
+            {{ mainStore.activeAlarm }}
           </td>
         </tr>
       </table>

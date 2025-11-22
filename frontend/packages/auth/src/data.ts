@@ -6,7 +6,7 @@ export const userInfo$ = Rx.from(service)
 export const debugEnabled$$ = new Rx.BehaviorSubject<boolean>(false)
 export const auth$ = Rx.combineLatest([userInfo$, debugEnabled$$]).pipe(
   Rx.map(([userInfo, debugEnabled]) => authFromUserInfo(userInfo, debugEnabled)),
-  Rx.shareReplay(1),
+  Rx.shareReplay(1)
 )
 
 export function authFromUserInfo(userInfo: def.UserInfo | null | undefined, debugEnabled: boolean): def.Auth {

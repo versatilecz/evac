@@ -13,7 +13,7 @@ const { t } = useI18n({ useScope: 'global' })
 </script>
 
 <template>
-  <Uuid v-if="isDebug" :entity="entity" v-slot="{ uuid }">
+  <Uuid v-if="isDebug" v-slot="{ uuid }" :entity="entity">
     <Badge>{{ t('entity.uuid') }} {{ uuid }}</Badge>
   </Uuid>
 </template>

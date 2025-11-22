@@ -8,7 +8,7 @@ export type $EventFormData = z.infer<typeof $EventFormData>
 
 export const ICON = 'report'
 export const SCOPE = 'events'
-export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
+export const DEFAULT_SORT: $SortRule = { key: 'timestamp', direction: $SortDirection.enum.Descending }
 
 export const ICON_BY_KIND: Record<$EventKind, string> = {
   advertisement: 'bluetooth',

@@ -46,12 +46,12 @@ function resolveSource(options: Options) {
 
   if (sourceType === $SourceType.enum.room) {
     if (!room) throw new Error('Room UUID must be provided when sourceType is "room"')
-    return from(toRef(room)).pipe(Rx.filter(Boolean), mapRoomToDevices())
+    return from(toRef(room), { immediate: true }).pipe(Rx.filter(Boolean), mapRoomToDevices())
   }
 
   if (sourceType === $SourceType.enum.location) {
     if (!location) throw new Error('Location UUID must be provided when sourceType is "location"')
-    return from(toRef(location)).pipe(Rx.filter(Boolean), mapLocationToDevices())
+    return from(toRef(location), { immediate: true }).pipe(Rx.filter(Boolean), mapLocationToDevices())
   }
 
   throw new Error(`Unsupported source type: ${sourceType}`)

@@ -24,15 +24,15 @@ export function mapLocationToDevices() {
 
 export function devicesByRoom(roomUuid: $Room['uuid']) {
   return Rx.combineLatest([activity$, devices$, scanners$]).pipe(
-    Rx.map(([activity, devices, scanners]) => Iterator.from(collectDevicesByRoom(roomUuid, { activity, devices, scanners: scanners.values() }))),
+    Rx.map(([activity, devices, scanners]) => Iterator.from(collectDevicesByRoom(roomUuid, { activity, devices, scanners: new Set(scanners.values()) }))),
     Rx.map((it) => new Map(it.map((x) => [x.uuid, x])) satisfies $Devices) // Actually it's Map<string, $DeviceWithActivity> but we want to make sure it's compatible with $Devices
   )
 }
 
 export function devicesByLocation(locationUuid: $Location['uuid']) {
-  return Rx.combineLatest([activity$, devices$, rooms$, scanners$]).pipe(
-    Rx.map(([activity, devices, rooms, scanners]) =>
-      Iterator.from(collectDevicesByLocation(locationUuid, { activity, devices, rooms: rooms.values(), scanners: scanners.values() }))
+  return Rx.combineLatest([activity$, devices$, scanners$, rooms$]).pipe(
+    Rx.map(([activity, devices, scanners, rooms]) =>
+      Iterator.from(collectDevicesByLocation(locationUuid, { activity, devices, rooms: new Set(rooms.values()), scanners: new Set(scanners.values()) }))
     ),
     Rx.map((it) => new Map(it.map((x) => [x.uuid, x])) satisfies $Devices) // Actually it's Map<string, $DeviceWithActivity> but we want to make sure it's compatible with $Devices
   )

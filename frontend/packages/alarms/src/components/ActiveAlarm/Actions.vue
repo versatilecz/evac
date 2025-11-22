@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { useEmails } from '@evac/emails'
+import { useNotifications } from '@evac/notifications'
 import { Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useActiveAlarm } from '@/composables'
 
 const { t } = useI18n()
 const { stop } = useActiveAlarm()
-const { list: emails, send: sendEmail } = useEmails()
+const { list: notifications, send: sendNotification } = useNotifications()
 </script>
 
 <template>
   <div class="flex flex-wrap gap-4 justify-between items-center">
-    <template v-for="email of emails" :key="email.uuid">
-      <button type="button" class="btn btn-filled" @click="sendEmail.submit(email)">
+    <template v-for="notification of notifications" :key="notification.uuid">
+      <button type="button" class="btn btn-filled" @click="sendNotification.submit(notification)">
         <Icon icon="mail" />
-        {{ email.name }}
+        {{ notification.name }}
       </button>
     </template>
 

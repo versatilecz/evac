@@ -1,0 +1,21 @@
+{
+  "notification": {
+    "title": "Notification",
+    "dialog": {
+      "title": "Notification detail",
+      "description": "",
+      "create": "Create notification",
+      "edit": "Edit notification",
+      "confirmDelete": "Are you sure you want to delete this notification?"
+    },
+    "select": {
+      "placeholder": "Select notification"
+    }
+  },
+  "notifications": {
+    "config": {
+      "title": "Notifications",
+      "description": "Manage notifications in the system"
+    }
+  }
+}

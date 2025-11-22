@@ -23,10 +23,11 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
       <Dialog.Content class="dialog" as="form">
+        <input type="text" autofocus tabindex="0" class="sr-only" :aria-label="title" />
         <ContentHeader :icon="ICON">
           <template #title>
             <Dialog.Title class="headline grow">
-              <input id="location-name" v-model="formData.name" class="input" type="text" :placeholder="title" :tabindex="formData.name ? -1 : 0" />
+              <input id="location-name" v-model="formData.name" class="input" type="text" :placeholder="title" />
             </Dialog.Title>
           </template>
           <template #description>

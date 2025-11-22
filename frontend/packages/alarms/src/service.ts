@@ -56,7 +56,7 @@ export const service = defineService({
     seed(): def.$AlarmFormData {
       return {
         name: '',
-        email: '',
+        notification: '',
         buzzer: false,
         led: false,
       } satisfies def.$AlarmFormData

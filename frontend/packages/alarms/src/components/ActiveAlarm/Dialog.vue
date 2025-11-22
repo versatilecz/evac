@@ -56,7 +56,7 @@ function collectActiveAlarmData(): $ActiveAlarm {
     room: roomsData.value.get(formData.room)!.name,
     scanner: scannersData.value.get(formData.scanner)!.name,
     device: devicesData.value.get(formData.device)!.name,
-    email: alarm.email,
+    notification: alarm.notification,
     buzzer: alarm.buzzer,
     led: alarm.led,
   } satisfies $ActiveAlarm
@@ -88,7 +88,7 @@ function seed() {
     </Dialog.Trigger>
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
-      <Dialog.Content class="dialog">
+      <Dialog.Content class="dialog" as="form">
         <ContentHeader>
           <template #title>
             <Icon class="size-8" :icon="ICON" />
@@ -99,7 +99,7 @@ function seed() {
           </template>
         </ContentHeader>
 
-        <form class="px-6 grid gap-4">
+        <div class="px-6 grid gap-4">
           <label class="label" for="active-alarm-location">
             <span class="label-text">{{ t('location.title') }}</span>
 
@@ -154,7 +154,7 @@ function seed() {
               </template>
             </select>
           </label>
-        </form>
+        </div>
         <DialogActions class="px-6" @cancel="reset()" @close="close" @create="create.submit().then(close)" />
       </Dialog.Content>
     </Dialog.Portal>

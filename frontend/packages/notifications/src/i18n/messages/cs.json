@@ -1,0 +1,21 @@
+{
+  "notification": {
+    "title": "Notifikace",
+    "dialog": {
+      "title": "Detail notifikace",
+      "description": "",
+      "create": "Vytvořit notifikaci",
+      "edit": "Upravit notifikaci",
+      "confirmDelete": "Opravdu chcete smazat tuto notifikaci?"
+    },
+    "select": {
+      "placeholder": "Vyberte notifikaci"
+    }
+  },
+  "notifications": {
+    "config": {
+      "title": "Notifikace",
+      "description": "Spravujte notifikace systému Evac"
+    }
+  }
+}

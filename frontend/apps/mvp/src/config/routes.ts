@@ -1,8 +1,8 @@
 import { Views as Alarms } from '@evac/alarms'
 import { Views as Config } from '@evac/config'
 import { Views as Devices } from '@evac/devices'
-import { Views as Emails } from '@evac/emails'
 import { Views as Locations } from '@evac/locations'
+import { Views as Notifications } from '@evac/notifications'
 import { Views as Rooms } from '@evac/rooms'
 import { Views as Scanners } from '@evac/scanners'
 import type { RouteRecordRaw } from 'vue-router'
@@ -34,9 +34,9 @@ export default [
     component: Alarms.Config,
   },
   {
-    path: 'emails',
-    name: 'config.emails',
-    component: Emails.Config,
+    path: 'notifications',
+    name: 'config.notifications',
+    component: Notifications.Config,
   },
   {
     path: 'tools',

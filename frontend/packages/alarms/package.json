@@ -35,8 +35,8 @@
   "dependencies": {
     "@evac/auth": "*",
     "@evac/devices": "*",
-    "@evac/emails": "*",
     "@evac/locations": "*",
+    "@evac/notifications": "*",
     "@evac/rooms": "*",
     "@evac/scanners": "*",
     "@evac/shared": "*",

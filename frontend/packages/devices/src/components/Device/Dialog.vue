@@ -25,10 +25,11 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
       <Dialog.Content class="dialog" as="form">
+        <input type="text" autofocus tabindex="0" class="sr-only" :aria-label="title" />
         <ContentHeader :icon="ICON">
           <template #title>
             <Dialog.Title class="headline grow">
-              <input id="device-name" v-model="formData.name" class="input" type="text" :placeholder="title" :tabindex="formData.name ? -1 : 0" />
+              <input id="device-name" v-model="formData.name" class="input" type="text" :placeholder="title" />
             </Dialog.Title>
           </template>
           <template #description>
@@ -39,7 +40,7 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
           </template>
         </ContentHeader>
 
-        <form class="px-6 grid gap-4">
+        <div class="px-6 grid gap-4">
           <div class="flex gap-4 justify-between">
             <Badge>{{ t('entity.mac') }} {{ formData.mac }}</Badge>
             <Badge>{{ t('entity.activity') }} {{ formatter.dateTime.format(formData.lastActivity) }}</Badge>
@@ -56,7 +57,7 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
               </Switch.Root>
             </label>
           </div>
-        </form>
+        </div>
         <DialogActions class="px-6" :has-data="hasData" :has-changes="hasChanges" @cancel="reset()" @close="close" @remove="remove.submit(close)" @update="update.submit()" />
       </Dialog.Content>
     </Dialog.Portal>

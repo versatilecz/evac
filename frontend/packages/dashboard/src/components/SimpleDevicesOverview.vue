@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useLocations, $FilterByReference } from '@evac/locations'
+import { $FilterByReference, useLocations } from '@evac/locations'
 import { useRooms } from '@evac/rooms'
-import { DevicesRoot, InlineDevices } from '@evac/devices'
+import { Device, DevicesRoot, InlineDevices } from '@evac/devices'
 import { Badge } from '@evac/ui'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+
 
 const { t } = useI18n({
   messages: {
@@ -27,13 +28,13 @@ const { byLocation } = useRooms()
 <template>
   <section>
     <header class="pt-4">
-      <h1 class="headline">{{ t('devicesOverview') }}</h1>
+      <h1 class="headline px-2">{{ t('devicesOverview') }}</h1>
     </header>
 
-    <div class="list overflow-y-auto">
+    <div class="list overflow-y-auto p-2">
       <template v-for="location of locations" :key="location.uuid">
         <DevicesRoot v-slot="{ count }" source-type="location" :location="location.uuid">
-          <header class="flex gap-4 items-center pt-4 pb-2">
+          <header class="flex gap-4 items-center pt-4 pb-2 first:pt-2">
             <h2 class="headline px-0" v-text="location.name" />
             <Badge>{{ count }}</Badge>
           </header>
@@ -45,7 +46,9 @@ const { byLocation } = useRooms()
               <h3 class="paragraph font-semibold" v-text="room.name" />
               <Badge>{{ count }}</Badge>
               <InlineDevices v-slot="{ device }" :devices="devices" class="justify-end grow">
-                <Badge class="badge-accent-blue">{{ device.name }}</Badge>
+                <slot name="device" :device="device" :room="room" :location="location">
+                  <Device.Badge :device="device" />
+                </slot>
               </InlineDevices>
             </div>
           </DevicesRoot>
@@ -58,7 +61,9 @@ const { byLocation } = useRooms()
             <Badge>{{ count }}</Badge>
           </header>
           <InlineDevices v-slot="{ device }" :devices="devices" class="mt-2">
-            <Badge>{{ device.name }}</Badge>
+            <slot name="device" :device="device" :room="null" :location="null">
+              <Device.Badge :device="device" />
+            </slot>
           </InlineDevices>
         </div>
       </DevicesRoot>

@@ -153,7 +153,7 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
     for await (const data of source) {
       await storeValue(data)
       eventTarget.dispatchEvent(new CustomEvent('data', { detail: data }))
-      logger.info(`[${name}] received data`, data)
+      logger.info(`[${name}] received`, data)
     }
 
     logger.warn(`[${name}] observation ended`)
@@ -182,7 +182,10 @@ export function defineService<C extends ServiceConfig<any>>(config: C): WebSocke
   }
 
   async function setValue(value: Partial<FromConfig<NoInfer<C>>>): Promise<void> {
-    await storeValue(identity.parse(value))
+    const data = identity.parse(value)
+    await storeValue(data)
+    logger.info(`[${name}] updated`, data)
+    eventTarget.dispatchEvent(new CustomEvent('data', { detail: data }))
   }
 
   async function storeValue(value: FromConfig<NoInfer<C>>) {

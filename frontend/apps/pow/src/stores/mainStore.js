@@ -16,17 +16,13 @@ export const useMainStore = defineStore('main', () => {
     websocket.send(JSON.stringify({ [tag]: content }))
   }
 
-  function alarm(device, scanner, location, room, subject, html, text, buzzer, led) {
+  function alarm(device, scanner, location, room, uuid) {
     send('Alarm', {
       device,
       scanner,
       location,
       room,
-      subject,
-      html,
-      text,
-      buzzer,
-      led,
+      uuid
     })
   }
 

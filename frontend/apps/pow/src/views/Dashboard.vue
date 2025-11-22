@@ -133,11 +133,7 @@ function getUnlocatedDevices() {
           <th>Text</th>
           <td>
             {{
-              mainStore.activeAlarm.html
-                .replace('%device%', mainStore.activeAlarm.device)
-                .replace('%scanner%', mainStore.activeAlarm.scanner)
-                .replace('%room%', mainStore.activeAlarm.room)
-                .replace('%location%', mainStore.activeAlarm.location)
+              mainStore.activeAlarm
             }}
           </td>
         </tr>
@@ -181,11 +177,7 @@ function getUnlocatedDevices() {
                   scannerStore.name(event.scanner),
                   scannerStore.location(event.scanner),
                   scannerStore.room(event.scanner),
-                  event.alarm.subject,
-                  event.alarm.html,
-                  event.alarm.text,
-                  event.alarm.buzzer,
-                  event.alarm.led
+                  event.alarm.uuid
                 )
               "
             >

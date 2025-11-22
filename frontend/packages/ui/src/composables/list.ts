@@ -1,4 +1,4 @@
-import { useSort, type $SortRule } from '@evac/shared'
+import { useSort, type SortRule } from '@evac/shared'
 import { computed, inject, provide, toValue, type ComputedRef, type MaybeRefOrGetter, type Ref, type StyleValue } from 'vue'
 
 type Field = {
@@ -8,7 +8,7 @@ type Field = {
 }
 
 type Options = {
-  initialSort: $SortRule
+  initialSort: SortRule
   fields?: Field[]
 }
 
@@ -17,7 +17,7 @@ const LIST_CONTEXT = Symbol('list')
 type ListContext = {
   gridStyle: ComputedRef<StyleValue>
   rowStyle: ComputedRef<StyleValue>
-  sort: Ref<$SortRule>
+  sort: Ref<SortRule>
   sortBy: ReturnType<typeof useSort>['sortBy']
   visible: ComputedRef<Record<string, boolean>>
 }

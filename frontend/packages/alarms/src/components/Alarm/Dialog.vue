@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Email } from '@evac/emails'
+import { Notification } from '@evac/entities'
 import { ContentHeader, Dialog, DialogActions, Entity, Icon, Switch } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useAlarmForm } from '@/composables'
@@ -24,24 +24,27 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
       <Dialog.Content class="dialog" as="form">
+        <input v-if="hasData" type="text" autofocus tabindex="0" class="sr-only" :aria-label="title" />
         <ContentHeader :icon="ICON">
           <template #title>
             <Dialog.Title class="headline grow">
-              <input id="alarm-name" v-model="formData.name" class="input" type="text" :placeholder="title" :tabindex="formData.name ? -1 : 0" />
+              <span class="sr-only" v-text="title" />
+              <label for="alarm-name" class="sr-only" v-text="t('entity.name')" />
+              <input id="alarm-name" v-model="formData.name" class="input" type="text" :placeholder="t('entity.name')" />
             </Dialog.Title>
           </template>
           <template #description>
-            <Dialog.Description class="description">{{ t('alarm.dialog.description', '') }}</Dialog.Description>
+            <Dialog.Description class="paragraph description">{{ t('alarm.dialog.description', '') }}</Dialog.Description>
           </template>
           <template #row>
             <Entity.UuidBadge :entity="alarm" />
           </template>
         </ContentHeader>
 
-        <form class="px-6 grid gap-4">
-          <label class="label" for="alarm-email">
-            <span class="label-text">{{ t('entity.email') }}</span>
-            <Email.Select id="alarm-email" v-model="formData.email" class="input w-full" />
+        <div class="px-6 grid gap-4">
+          <label class="label" for="alarm-notification">
+            <span class="label-text">{{ t('entity.notification') }}</span>
+            <Notification.Select id="alarm-notification" v-model="formData.notification" class="input w-full" />
           </label>
 
           <div class="flex gap-4 justify-around">
@@ -59,7 +62,7 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
               </Switch.Root>
             </label>
           </div>
-        </form>
+        </div>
 
         <DialogActions
           class="px-6"

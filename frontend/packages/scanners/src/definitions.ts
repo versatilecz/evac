@@ -1,4 +1,4 @@
-import { $MacAddress, macCodec, isoDatetimeToDate, $SortDirection, type $SortRule } from '@evac/shared'
+import { $MacAddress, macCodec, isoDatetimeToDate, SortDirection, type SortRule } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Scanner = z.infer<typeof $Scanner>
@@ -6,7 +6,7 @@ export type $Scanners = z.infer<typeof $Scanners>
 
 export const ICON = 'infrared'
 export const SCOPE = 'scanners'
-export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
+export const DEFAULT_SORT: SortRule = { key: 'name', direction: SortDirection.enum.Ascending }
 
 export const $PortNumber = z
   .number()
@@ -14,7 +14,7 @@ export const $PortNumber = z
   .max(2 ** 16 - 1)
 
 export const $Scanner = z.object({
-  uuid: z.uuidv4(),
+  uuid: z.uuid(),
   name: z.string().min(1, { message: 'validation.required' }),
   room: z.uuid().describe('The UUID of the room this scanner belongs to'),
   ip: z.ipv4().or(z.ipv6()),
@@ -26,7 +26,7 @@ export const $Scanner = z.object({
   lastActivity: z.date(),
 })
 
-export const $Scanners = z.map(z.uuidv4(), $Scanner)
+export const $Scanners = z.map(z.uuid(), $Scanner)
 
 const $ScannerCodec = $Scanner.omit({ mac: true, lastActivity: true }).extend({
   mac: macCodec,
@@ -38,12 +38,12 @@ export const $ScannersMessage = z.codec(z.object({ ScannerList: z.array($Scanner
   encode: (scanners) => ({ ScannerList: Array.from(scanners.values()) }),
 })
 
-export const $ScannerRemoveMessage = z.codec(z.object({ ScannerRemove: z.uuidv4() }), z.uuidv4(), {
+export const $ScannerRemoveMessage = z.codec(z.object({ ScannerRemove: z.uuid() }), z.uuid(), {
   decode: (data) => data.ScannerRemove,
   encode: (uuid) => ({ ScannerRemove: uuid }),
 })
 
-export const $ScannerRemovedMessage = z.codec(z.object({ ScannerRemoved: z.uuidv4() }), z.uuidv4(), {
+export const $ScannerRemovedMessage = z.codec(z.object({ ScannerRemoved: z.uuid() }), z.uuid(), {
   decode: (data) => data.ScannerRemoved,
   encode: (uuid) => ({ ScannerRemoved: uuid }),
 })

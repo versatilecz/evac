@@ -4,9 +4,9 @@ import type { $Event } from '@/definitions'
 
 const props = defineProps<{ uuid: $Event['uuid'] }>()
 
-const { event } = useEvent(() => props.uuid)
+const { event, device, scanner, room, location, kindLabel, remove } = useEvent(() => props.uuid)
 </script>
 
 <template>
-  <slot :event="event" />
+  <slot :event="event" :device="device" :scanner="scanner" :room="room" :location="location" :kind-label="kindLabel" :remove="remove" />
 </template>

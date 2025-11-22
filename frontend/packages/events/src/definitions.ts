@@ -1,4 +1,4 @@
-import { $SortDirection, type $SortRule } from '@evac/shared'
+import { SortDirection, type SortRule } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Event = z.infer<typeof $Event>
@@ -8,7 +8,7 @@ export type $EventFormData = z.infer<typeof $EventFormData>
 
 export const ICON = 'report'
 export const SCOPE = 'events'
-export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
+export const DEFAULT_SORT: SortRule = { key: 'timestamp', direction: SortDirection.enum.Descending }
 
 export const ICON_BY_KIND: Record<$EventKind, string> = {
   advertisement: 'bluetooth',
@@ -51,11 +51,11 @@ export const $EventMessage = z.codec(z.object({ Event: $EventCodec }), $Event, {
   decode: (input) => input.Event,
   encode: (data) => ({ Event: data }),
 })
-export const $EventRemoveMessage = z.codec(z.object({ EventRemove: z.uuidv4() }), z.uuidv4(), {
+export const $EventRemoveMessage = z.codec(z.object({ EventRemove: z.uuid() }), z.uuid(), {
   decode: (input) => input.EventRemove,
   encode: (uuid) => ({ EventRemove: uuid }),
 })
-export const $EventRemovedMessage = z.codec(z.object({ EventRemoved: z.uuidv4() }), z.uuidv4(), {
+export const $EventRemovedMessage = z.codec(z.object({ EventRemoved: z.uuid() }), z.uuid(), {
   decode: (input) => input.EventRemoved,
   encode: (uuid) => ({ EventRemoved: uuid }),
 })

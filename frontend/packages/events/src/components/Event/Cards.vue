@@ -9,8 +9,10 @@ defineProps<{
 
 <template>
   <div class="list">
-    <template v-for="event of events" :key="event.uuid">
-      <Card :event="event" />
+    <template v-for="(event, index) of events" :key="event.uuid">
+      <slot name="event" :event="event" :index="index">
+        <Card :event="event" />
+      </slot>
     </template>
     <slot />
   </div>

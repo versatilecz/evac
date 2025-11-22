@@ -16,7 +16,6 @@ export default mergeConfig(
         '@': resolve(import.meta.dirname, './src'),
         '@evac/shared': resolve(import.meta.dirname, '../../packages/shared/src'),
         '@evac/ui': resolve(import.meta.dirname, '../../packages/ui/src'),
-        '@evac/utils': resolve(import.meta.dirname, '../../packages/utils/src'),
       },
     },
   })

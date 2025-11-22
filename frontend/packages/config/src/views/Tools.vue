@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { Backup } from '@/components'
 
 const { t } = useI18n({ useScope: 'global' })
-const { auth, debugEnabled } = useAuth()
+const { debugEnabled } = useAuth()
 </script>
 
 <template>

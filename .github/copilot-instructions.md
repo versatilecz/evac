@@ -71,7 +71,7 @@ Create `data/server.json` for backend configuration:
 ### Nx Monorepo Structure
 
 - **Apps**: Independent Vue applications (`@evac/mvp`, `@evac/pow`)
-- **Packages**: Scoped libraries (`@evac/shared`, `@evac/ui`, `@evac/utils`, domain packages)
+- **Packages**: Scoped libraries (`@evac/shared`, `@evac/ui`, domain packages)
 - **Dependency Graph**: Apps depend on packages; packages can depend on each other
 - **Dev Target**: All packages have a `dev` target that runs `vite build --watch` for hot reloading
 
@@ -95,35 +95,35 @@ Create `data/server.json` for backend configuration:
 ```typescript
 // Modern service definition with fluent API
 export const service = defineService({
-  name: "serviceName",
+  name: 'serviceName',
   identity: SomeZodSchema,
-  storage: (storage) => prefixStorage(storage, "namespace"),
+  storage: (storage) => prefixStorage(storage, 'namespace'),
 })
   .withSources(async function* (source) {
     for await (const message of source) {
-      const parsed = SomeMessageSchema.safeParse(message);
-      if (!parsed.success) continue;
-      yield parsed.data;
+      const parsed = SomeMessageSchema.safeParse(message)
+      if (!parsed.success) continue
+      yield parsed.data
     }
   })
   .withActions({
     async someAction(source, param: string) {
       // `this` is typed as WebSocketService
       // `source` is typed as WebSocketConnection
-      await source.send({ type: "action", param });
+      await source.send({ type: 'action', param })
     },
-  });
+  })
 
 // Service lifecycle in app
 service.start({
   connection,
   storage,
   signal: abortSignal,
-});
+})
 
 // Consume service data
 for await (const data of service) {
-  console.log(data);
+  console.log(data)
 }
 ```
 
@@ -142,7 +142,6 @@ for await (const data of service) {
 - All apps depend on `@evac/shared` for core types and services
 - Domain packages (config, devices, locations, rooms, scanners) export services and types
 - UI components in `@evac/ui` use Reka UI + custom components
-- Utils in `@evac/utils` provide reactive helpers and async utilities
 - Fonts in `@evac/fonts` provide custom Vite plugin for font handling
 
 ## Critical Development Notes

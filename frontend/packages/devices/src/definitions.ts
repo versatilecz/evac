@@ -1,5 +1,5 @@
 import { $Activity } from '@evac/activity'
-import { $MacAddress, macCodec, isoDatetimeToDate, $SortDirection, type $SortRule } from '@evac/shared'
+import { $MacAddress, macCodec, isoDatetimeToDate, SortDirection, type SortRule } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Device = z.infer<typeof $Device>
@@ -10,11 +10,11 @@ export type $SourceType = z.infer<typeof $SourceType>
 
 export const ICON = 'devices_wearables'
 export const SCOPE = 'devices'
-export const DEFAULT_SORT: $SortRule = { key: 'name', direction: $SortDirection.enum.Ascending }
+export const DEFAULT_SORT: SortRule = { key: 'name', direction: SortDirection.enum.Ascending }
 
 export const $Device = z.object({
   name: z.string(),
-  uuid: z.uuidv4(),
+  uuid: z.uuid(),
   mac: $MacAddress,
   lastActivity: z.date(),
   enabled: z.boolean(),
@@ -24,11 +24,11 @@ export const $DeviceWithActivity = $Device.extend({
   rssi: $Activity.shape.rssi,
   timestamp: $Activity.shape.timestamp,
 })
-export const $Devices = z.map(z.uuidv4(), $Device)
+export const $Devices = z.map(z.uuid(), $Device)
 
 export const $SourceType = z.enum(['all', 'room', 'location', 'unallocated'])
 
-const $DeviceCodec = $Device.omit({ mac: true, lastActivity: true }).extend({
+const $DeviceCodec = $Device.extend({
   mac: macCodec,
   lastActivity: isoDatetimeToDate,
 })
@@ -38,12 +38,12 @@ export const $DevicesMessage = z.codec(z.object({ DeviceList: z.array($DeviceCod
   encode: (data) => ({ DeviceList: Array.from(data.values()) }),
 })
 
-export const $DeviceRemoveMessage = z.codec(z.object({ DeviceRemove: z.uuidv4() }), z.uuidv4(), {
+export const $DeviceRemoveMessage = z.codec(z.object({ DeviceRemove: z.uuid() }), z.uuid(), {
   decode: (input) => input.DeviceRemove,
   encode: (uuid) => ({ DeviceRemove: uuid }),
 })
 
-export const $DeviceRemovedMessage = z.codec(z.object({ DeviceRemoved: z.uuidv4() }), z.uuidv4(), {
+export const $DeviceRemovedMessage = z.codec(z.object({ DeviceRemoved: z.uuid() }), z.uuid(), {
   decode: (input) => input.DeviceRemoved,
   encode: (uuid) => ({ DeviceRemoved: uuid }),
 })

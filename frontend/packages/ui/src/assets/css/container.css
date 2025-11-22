@@ -1,5 +1,13 @@
-@layer components {
-  .container {
-    height: 100%;
+@layer utilities {
+  .container-type-size {
+    container-type: size;
+  }
+
+  .container-type-inline-size {
+    container-type: inline-size;
+  }
+
+  .container-type-normal {
+    container-type: normal;
   }
 }

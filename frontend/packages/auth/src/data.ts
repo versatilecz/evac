@@ -2,11 +2,10 @@ import * as Rx from 'rxjs'
 import { service } from '@/service'
 import * as def from './definitions'
 
-export const userInfo$ = Rx.from(service)
+export const userInfo$ = Rx.from(service).pipe(Rx.shareReplay(1))
 export const debugEnabled$$ = new Rx.BehaviorSubject<boolean>(false)
 export const auth$ = Rx.combineLatest([userInfo$, debugEnabled$$]).pipe(
   Rx.map(([userInfo, debugEnabled]) => authFromUserInfo(userInfo, debugEnabled)),
-  Rx.shareReplay(1),
 )
 
 export function authFromUserInfo(userInfo: def.UserInfo | null | undefined, debugEnabled: boolean): def.Auth {

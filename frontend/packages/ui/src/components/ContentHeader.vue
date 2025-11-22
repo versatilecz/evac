@@ -16,7 +16,7 @@ defineSlots<{
 </script>
 
 <template>
-  <header class="px-6 pt-8 pb-4" data-scope="content">
+  <header class="content-header" data-scope="content">
     <slot>
       <div v-if="!!$slots.title || title || icon" class="flex gap-4 items-center h-12">
         <template v-if="icon">

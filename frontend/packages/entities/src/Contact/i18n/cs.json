@@ -1,0 +1,27 @@
+{
+  "contact": {
+    "title": "Kontakt",
+    "dialog": {
+      "title": "Detail kontaktu",
+      "description": "",
+      "create": "Vytvořit kontakt",
+      "edit": "Upravit kontakt",
+      "confirmDelete": "Opravdu chcete smazat tento kontakt?"
+    },
+    "placeholder": "Vyberte kontakt",
+    "search": "Hledat kontakt",
+    "kind": {
+      "sms": "SMS",
+      "email": "E-mail",
+      "placeholder": "Vyberte druh kontaktu",
+      "label": "Druh kontaktu"
+    }
+  },
+  "contacts": {
+    "title": "Kontakty",
+    "config": {
+      "title": "Správa kontaktů",
+      "description": "Zde můžete vytvářet a spravovat své kontakty."
+    }
+  }
+}

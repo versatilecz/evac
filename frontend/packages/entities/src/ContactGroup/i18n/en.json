@@ -1,0 +1,19 @@
+{
+  "contactGroup": {
+    "title": "Contact Group",
+    "dialog": {
+      "title": "Contact Group Detail",
+      "description": "",
+      "create": "Create Contact Group",
+      "edit": "Edit Contact Group",
+      "confirmDelete": "Are you sure you want to delete this contact group?"
+    }
+  },
+  "contactGroups": {
+    "title": "Contact Groups",
+    "config": {
+      "title": "Manage Contact Groups",
+      "description": "Create and manage your contact groups here."
+    }
+  }
+}

@@ -1,10 +1,18 @@
 @layer component {
   .page {
     --page-sidebar-width: 16rem;
-    --page-sidebar-pre-width: var(--page-sidebar-width);
-    --page-sidebar-post-width: 1.5rem;
+    --page-no-sidebar-width: 1.5rem;
+    --page-sidebar-pre-width: var(--page-no-sidebar-width);
+    --page-sidebar-post-width: var(--page-no-sidebar-width);
     @apply grid bg-surface-subtle h-screen w-screen;
     grid-template-rows: theme(spacing.20) 1fr theme(spacing.12);
+    grid-template-columns:
+      [page-start] var(--page-sidebar-pre-width)
+      [content-start] 1fr [content-end]
+      var(--page-sidebar-post-width) [page-end];
+  }
+  .page-with-sidebar {
+    --page-sidebar-pre-width: var(--page-sidebar-width);
     grid-template-columns:
       [page-start] var(--page-sidebar-pre-width)
       [content-start] 1fr [content-end]
@@ -13,7 +21,8 @@
 
   @media screen and (min-width: theme(breakpoint.xl)) {
     .page {
-      --page-sidebar-post-width: var(--page-sidebar-width);
+      --page-sidebar-pre-width: var(--page-sidebar-width);
+      --page-sidebar-post-width: var(--page-sidebar-pre-width);
     }
   }
 }

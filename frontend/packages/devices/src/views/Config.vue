@@ -7,7 +7,7 @@ import { useDevices } from '@/composables'
 import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
-const { isDebug} = useAuth()
+const { isDebug } = useAuth()
 
 const fields = defineListFields(
   { key: 'name', fill: true },

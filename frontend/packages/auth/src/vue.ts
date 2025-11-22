@@ -1,9 +1,10 @@
-import { syncStorageWithSubject } from '@evac/utils'
+import { syncStorageWithSubject } from '@evac/shared'
 import { toReactive } from '@vueuse/core'
 import type { Storage } from 'unstorage'
 import { type App, type Reactive } from 'vue'
-import { debugEnabled$$ } from './data'
+
 import { useAuth } from '@/composables'
+import { debugEnabled$$ } from '@/data'
 import type { Auth } from '@/definitions'
 
 // Augment Vue's component instance type

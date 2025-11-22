@@ -25,14 +25,17 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useScann
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
       <Dialog.Content class="dialog" as="form">
+        <input v-if="hasData" type="text" autofocus tabindex="0" class="sr-only" :aria-label="title" />
         <ContentHeader :icon="ICON">
           <template #title>
             <Dialog.Title class="headline grow">
-              <input id="scanner-name" v-model="formData.name" class="input" type="text" :placeholder="title" :tabindex="formData.name ? -1 : 0" />
+              <span class="sr-only" v-text="title" />
+              <label for="scanner-name" class="sr-only" v-text="t('entity.name')" />
+              <input id="scanner-name" v-model="formData.name" class="input" type="text" :placeholder="t('entity.name')" />
             </Dialog.Title>
           </template>
           <template #description>
-            <Dialog.Description class="description">{{ t('scanner.dialog.description', '') }}</Dialog.Description>
+            <Dialog.Description class="paragraph description">{{ t('scanner.dialog.description', '') }}</Dialog.Description>
           </template>
           <template #row>
             <Entity.UuidBadge :entity="scanner" />

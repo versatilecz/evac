@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { useEntityUuid } from '@/composables';
+import { useEntityUuid } from '@/composables'
 
-  const props = defineProps<{ entity: unknown }>();
-  const { uuid, hasUuid } = useEntityUuid(() => props.entity);
+const props = defineProps<{ entity: unknown }>()
+const { uuid, hasUuid } = useEntityUuid(() => props.entity)
 </script>
 
 <template>

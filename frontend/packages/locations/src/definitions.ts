@@ -13,22 +13,22 @@ export const $LocationFormData = z.object({
 
 export const $Location = z.object({
   ...$LocationFormData.shape,
-  uuid: z.uuidv4(),
+  uuid: z.uuid(),
 })
 
-export const $Locations = z.map(z.uuidv4(), $Location)
+export const $Locations = z.map(z.uuid(), $Location)
 
 export const $LocationsMessage = z.codec(z.object({ LocationList: z.array($Location) }), $Locations, {
   decode: (data) => new Map(data.LocationList.map((item) => [item.uuid, item])),
   encode: (map) => ({ LocationList: Array.from(map.values()) }),
 })
 
-export const $LocationRemoveMessage = z.codec(z.object({ LocationRemove: z.uuidv4() }), z.uuidv4(), {
+export const $LocationRemoveMessage = z.codec(z.object({ LocationRemove: z.uuid() }), z.uuid(), {
   decode: (data) => data.LocationRemove,
   encode: (uuid) => ({ LocationRemove: uuid }),
 })
 
-export const $LocationRemovedMessage = z.codec(z.object({ LocationRemoved: z.uuidv4() }), z.uuidv4(), {
+export const $LocationRemovedMessage = z.codec(z.object({ LocationRemoved: z.uuid() }), z.uuid(), {
   decode: (data) => data.LocationRemoved,
   encode: (uuid) => ({ LocationRemoved: uuid }),
 })

@@ -1,32 +1,35 @@
 <script setup lang="ts">
-import { Badge, BooleanIcon, Entity, Icon } from '@evac/ui'
+import { Badge, Entity, Icon } from '@evac/ui'
+import { Notification } from '@evac/entities'
 import { useI18n } from 'vue-i18n'
-import type { $ActiveAlarm } from '@/definitions'
+import type { AlarmInfo } from '@/definitions'
+import { useAlarm } from '@/composables';
 
-const props = defineProps<{ alarm: $ActiveAlarm }>()
+const props = defineProps<{ alarmInfo: AlarmInfo }>()
 const { t } = useI18n()
+const { alarm } = useAlarm(() => props.alarmInfo.alarm)
+const { item: notification } = Notification.useItem(() => alarm.value?.notification)
 </script>
 
 <template>
-  <section class="p-4 shadow-md rounded-lg border-2 border-accent-red bg-accent-red/10 grid gap-4">
+  <section class="p-4 shadow-md rounded-lg border-2 border-accent-red bg-accent-red/10 grid gap-3">
     <header class="flex gap-4 items-center">
       <Icon class="size-8 fill-accent-red" icon="warning" />
-      <h2 class="headline" v-text="alarm.subject" />
-
+      <h1 class="headline" v-text="t('alarm.title')" />
       <span class="grow" />
-      <Badge v-if="alarm.location">
-        <Entity.Breadcrumbs :location="alarm.location" :room="alarm.room" :scanner="alarm.scanner" :device="alarm.device" v-slot="{ delimiter, rest, last }">
-          <template v-if="rest.length">{{ rest + delimiter }}</template
-          ><strong>{{ last }}</strong>
-        </Entity.Breadcrumbs>
-      </Badge>
-      <Badge>{{ t('entity.led') }}: <BooleanIcon :value="alarm.led" /></Badge>
-      <Badge>{{ t('entity.buzzer') }}: <BooleanIcon :value="alarm.buzzer" /></Badge>
+      <slot name="actions" />
     </header>
+    <Badge v-if="alarmInfo.location">
+      <Entity.Breadcrumbs v-slot="{ delimiter, rest, last }" :location="alarmInfo.location" :room="alarmInfo.room" :scanner="alarmInfo.scanner" :device="alarmInfo.device">
+        <template v-if="rest.length">{{ rest + delimiter }}</template
+        ><strong>{{ last }}</strong>
+      </Entity.Breadcrumbs>
+    </Badge>
 
-    <p v-if="alarm.text" v-text="alarm.text" />
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div v-else-if="alarm.html" v-html="alarm.html" />
+    <template v-if="notification">
+      <h2 class="font-bold text-lg" v-text="notification.subject" />
+      <div>{{ notification.long }}</div>
+    </template>
 
     <slot />
   </section>

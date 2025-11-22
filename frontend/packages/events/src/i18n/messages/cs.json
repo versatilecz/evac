@@ -1,6 +1,14 @@
 {
   "event": {
-    "title": "Událost"
+    "title": "Událost",
+    "dialog": {
+      "confirmDelete": "Opravdu chcete smazat tuto událost?"
+    },
+    "buttonPressed": "Tlačítko stisknuto",
+    "buttonDoublePressed": "Tlačítko dvojitě stisknuto",
+    "buttonTriplePressed": "Tlačítko třikrát stisknuto",
+    "buttonLongPressed": "Tlačítko dlouze stisknuto",
+    "buttonHold": "Tlačítko podrženo"
   },
   "events": {
     "title": "Události"

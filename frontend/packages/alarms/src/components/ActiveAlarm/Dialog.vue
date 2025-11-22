@@ -7,7 +7,7 @@ import { ContentHeader, Dialog, DialogActions, Icon, useAction } from '@evac/ui'
 import { computed, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAlarms } from '@/composables'
-import { $ActiveAlarm, ICON } from '@/definitions'
+import * as def from '@/definitions'
 import { activeAlarmService } from '@/service'
 
 defineOptions({ inheritAttrs: false })
@@ -48,18 +48,16 @@ const create = useAction(() => {
   activeAlarmService.alarm(alarmData)
 })
 
-function collectActiveAlarmData(): $ActiveAlarm {
+function collectActiveAlarmData(): def.AlarmInfoInput {
   const alarm = alarms.value.find((a) => a.uuid === formData.alarm)!
 
   return {
+    alarm: alarm.uuid,
     location: locationsData.value.get(formData.location)!.name,
     room: roomsData.value.get(formData.room)!.name,
     scanner: scannersData.value.get(formData.scanner)!.name,
     device: devicesData.value.get(formData.device)!.name,
-    email: alarm.email,
-    buzzer: alarm.buzzer,
-    led: alarm.led,
-  } satisfies $ActiveAlarm
+  } satisfies def.AlarmInfoInput
 }
 
 function reset() {
@@ -88,10 +86,10 @@ function seed() {
     </Dialog.Trigger>
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
-      <Dialog.Content class="dialog">
+      <Dialog.Content class="dialog" as="form">
         <ContentHeader>
           <template #title>
-            <Icon class="size-8" :icon="ICON" />
+            <Icon class="size-8" :icon="def.ICON" />
             <Dialog.Title class="headline">{{ t('alarm.dialog.create', '') }}</Dialog.Title>
           </template>
           <template #description>
@@ -99,7 +97,7 @@ function seed() {
           </template>
         </ContentHeader>
 
-        <form class="px-6 grid gap-4">
+        <div class="px-6 grid gap-4">
           <label class="label" for="active-alarm-location">
             <span class="label-text">{{ t('location.title') }}</span>
 
@@ -154,7 +152,7 @@ function seed() {
               </template>
             </select>
           </label>
-        </form>
+        </div>
         <DialogActions class="px-6" @cancel="reset()" @close="close" @create="create.submit().then(close)" />
       </Dialog.Content>
     </Dialog.Portal>

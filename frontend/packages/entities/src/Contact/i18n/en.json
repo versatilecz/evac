@@ -1,0 +1,27 @@
+{
+  "contact": {
+    "title": "Contact",
+    "dialog": {
+      "title": "Contact Detail",
+      "description": "",
+      "create": "Create Contact",
+      "edit": "Edit Contact",
+      "confirmDelete": "Are you sure you want to delete this contact?"
+    },
+    "placeholder": "Select contact",
+    "search": "Search contact",
+    "kind": {
+      "sms": "SMS",
+      "email": "E-mail",
+      "placeholder": "Select contact kind",
+      "label": "Contact Kind"
+    }
+  },
+  "contacts": {
+    "title": "Contacts",
+    "config": {
+      "title": "Manage Contacts",
+      "description": "Create and manage your contacts here."
+    }
+  }
+}

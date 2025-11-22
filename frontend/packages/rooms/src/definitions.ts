@@ -17,22 +17,22 @@ export const $RoomFormData = z.object({
 
 export const $Room = z.object({
   ...$RoomFormData.shape,
-  uuid: z.uuidv4(),
+  uuid: z.uuid(),
 })
 
-export const $Rooms = z.map(z.uuidv4(), $Room)
+export const $Rooms = z.map(z.uuid(), $Room)
 
 export const $RoomsMessage = z.codec(z.object({ RoomList: z.array($Room) }), $Rooms, {
   decode: (data) => new Map(data.RoomList.map((item) => [item.uuid, item])),
   encode: (map) => ({ RoomList: Array.from(map.values()) }),
 })
 
-export const $RoomRemoveMessage = z.codec(z.object({ RoomRemove: z.uuidv4() }), z.uuidv4(), {
+export const $RoomRemoveMessage = z.codec(z.object({ RoomRemove: z.uuid() }), z.uuid(), {
   decode: (data) => data.RoomRemove,
   encode: (uuid) => ({ RoomRemove: uuid }),
 })
 
-export const $RoomRemovedMessage = z.codec(z.object({ RoomRemoved: z.uuidv4() }), z.uuidv4(), {
+export const $RoomRemovedMessage = z.codec(z.object({ RoomRemoved: z.uuid() }), z.uuid(), {
   decode: (data) => data.RoomRemoved,
   encode: (uuid) => ({ RoomRemoved: uuid }),
 })

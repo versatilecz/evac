@@ -24,10 +24,19 @@
   --color-surface-subtle: light-dark(#f8f9fa, #1e1e1e);
   --color-surface-elevated: light-dark(var(--color-white), #2e2e2e);
 
-  --color-primary: light-dark(#111111, #ffffff);
+  --color-primary-light: #111111;
+  --color-primary-dark: #ffffff;
+
+  --color-primary: light-dark(
+    var(--color-primary-light),
+    var(--color-primary-dark)
+  );
   --color-secondary: light-dark(#444444, #dddddd);
   --color-muted: light-dark(#666666, #aaaaaa);
-  --color-inverse: light-dark(#ffffff, #111111);
+  --color-inverse: light-dark(
+    var(--color-primary-dark),
+    var(--color-primary-light)
+  );
 
   --color-border: var(--color-border-subtle);
   --color-border-subtle: light-dark(#e0e0e0, #2a2a2a);

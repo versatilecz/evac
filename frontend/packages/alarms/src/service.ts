@@ -56,7 +56,7 @@ export const service = defineService({
     seed(): def.$AlarmFormData {
       return {
         name: '',
-        email: '',
+        notification: '',
         buzzer: false,
         led: false,
       } satisfies def.$AlarmFormData
@@ -84,11 +84,11 @@ export const activeAlarmService = defineService({
     }
   )
   .withActions({
-    stop(source) {
-      source.send(def.$AlarmStopMessage.encode(true))
+    stop(source, uuid: string) {
+      source.send(def.$AlarmStopMessage.encode(uuid))
     },
-    alarm(source, input: def.$ActiveAlarm) {
-      const alarm = def.$ActiveAlarm.parse(input)
+    alarm(source, input: def.AlarmInfoInput) {
+      const alarm = def.AlarmInfoInput.parse(input)
       source.send(def.$AlarmMessage.encode(alarm))
     },
   })

@@ -12,7 +12,7 @@
     "select": {
       "placeholder": "Vyberte alarm"
     },
-    "stop": "Zastavit alarm"
+    "stop": "Zastavit"
   },
   "alarms": {
     "config": {

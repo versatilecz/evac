@@ -1,6 +1,5 @@
 import { useI18n } from 'vue-i18n'
-import { DEFAULT_LOCALE } from '@evac/shared'
-import { intl, formatCount } from '@evac/utils'
+import { DEFAULT_LOCALE, intl, formatCount } from '@evac/shared'
 import { reactive, watchEffect } from 'vue'
 
 type Formatters = {

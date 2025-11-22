@@ -1,0 +1,5 @@
+@layer components {
+  .content-header {
+    @apply px-6 pt-8 pb-4;
+  }
+}

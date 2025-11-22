@@ -14,7 +14,7 @@ const formatter = useFormat()
       'text-accent-red': !battery,
     }"
   >
-    {{ formatter.percent.format(battery) }}
+    {{ formatter.percent.format(battery / 100) }}
   </span>
   <span v-else class="text-center text-muted"> - </span>
 </template>

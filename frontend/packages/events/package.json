@@ -33,14 +33,15 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
+    "@evac/alarms": "*",
     "@evac/auth": "*",
     "@evac/devices": "*",
+    "@evac/entities": "*",
     "@evac/locations": "*",
     "@evac/rooms": "*",
     "@evac/scanners": "*",
     "@evac/shared": "*",
     "@evac/ui": "*",
-    "@evac/utils": "*",
     "@vueuse/core": "^13.9.0",
     "@vueuse/rxjs": "^13.9.0",
     "remeda": "^2.32.0",

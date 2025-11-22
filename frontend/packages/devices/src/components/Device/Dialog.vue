@@ -25,21 +25,24 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
       <Dialog.Content class="dialog" as="form">
+        <input v-if="hasData" type="text" autofocus tabindex="0" class="sr-only" :aria-label="title" />
         <ContentHeader :icon="ICON">
           <template #title>
             <Dialog.Title class="headline grow">
-              <input id="device-name" v-model="formData.name" class="input" type="text" :placeholder="title" :tabindex="formData.name ? -1 : 0" />
+              <span class="sr-only" v-text="title" />
+              <label for="device-name" class="sr-only" v-text="t('entity.name')" />
+              <input id="device-name" v-model="formData.name" class="input" type="text" :placeholder="t('entity.name')" />
             </Dialog.Title>
           </template>
           <template #description>
-            <Dialog.Description class="description">{{ t('device.dialog.description', '') }}</Dialog.Description>
+            <Dialog.Description class="paragraph description">{{ t('device.dialog.description', '') }}</Dialog.Description>
           </template>
           <template #row>
             <Entity.UuidBadge :entity="device" />
           </template>
         </ContentHeader>
 
-        <form class="px-6 grid gap-4">
+        <div class="px-6 grid gap-4">
           <div class="flex gap-4 justify-between">
             <Badge>{{ t('entity.mac') }} {{ formData.mac }}</Badge>
             <Badge>{{ t('entity.activity') }} {{ formatter.dateTime.format(formData.lastActivity) }}</Badge>
@@ -56,7 +59,7 @@ const { title, formData, hasData, hasChanges, reset, remove, update } = useDevic
               </Switch.Root>
             </label>
           </div>
-        </form>
+        </div>
         <DialogActions class="px-6" :has-data="hasData" :has-changes="hasChanges" @cancel="reset()" @close="close" @remove="remove.submit(close)" @update="update.submit()" />
       </Dialog.Content>
     </Dialog.Portal>

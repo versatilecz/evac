@@ -2,7 +2,7 @@
 import { ICON as ALARMS_ICON } from '@evac/alarms'
 import { CONFIG_ICON, TOOLS_ICON, Config } from '@evac/config'
 import { ICON as DEVICES_ICON } from '@evac/devices'
-import { ICON as EMAILS_ICON } from '@evac/emails'
+import { Contact, Notification } from '@evac/entities'
 import { ICON as LOCATIONS_ICON } from '@evac/locations'
 import { ICON as ROOMS_ICON } from '@evac/rooms'
 import { ICON as SCANNERS_ICON } from '@evac/scanners'
@@ -18,7 +18,8 @@ const { t } = useI18n({ useScope: 'global' })
     <Config.Link :icon="SCANNERS_ICON" :to="{ name: 'config.scanners' }">{{ t('scanners.config.title') }}</Config.Link>
     <Config.Link :icon="DEVICES_ICON" :to="{ name: 'config.devices' }">{{ t('devices.config.title') }}</Config.Link>
     <Config.Link :icon="ALARMS_ICON" :to="{ name: 'config.alarms' }">{{ t('alarms.config.title') }}</Config.Link>
-    <Config.Link :icon="EMAILS_ICON" :to="{ name: 'config.emails' }">{{ t('emails.config.title') }}</Config.Link>
+    <Config.Link :icon="Notification.ICON" :to="{ name: 'config.notifications' }">{{ t('notifications.config.title') }}</Config.Link>
+    <Config.Link :icon="Contact.ICON" :to="{ name: 'config.contacts' }">{{ t('contacts.title') }}</Config.Link>
     <Config.Link :icon="TOOLS_ICON" :to="{ name: 'config.tools' }">{{ t('config.tools.title') }}</Config.Link>
     <Config.Link :icon="CONFIG_ICON" :to="{ name: 'config.config' }">{{ t('config.config.title') }}</Config.Link>
   </div>

@@ -17,11 +17,14 @@
     "email": "E-mail",
     "ip": "IP",
     "mac": "MAC",
+    "notification": "Notifikace",
     "buzzer": "Bzučák",
     "led": "LED",
     "scan": "Skenovat",
     "subject": "Předmět",
     "text": "Text",
+    "shortText": "Krátký text",
+    "longText": "Dlouhý text",
     "html": "HTML"
   },
   "action": {

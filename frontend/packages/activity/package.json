@@ -37,7 +37,6 @@
     "@evac/config": "*",
     "@evac/shared": "*",
     "@evac/ui": "*",
-    "@evac/utils": "*",
     "@vueuse/core": "^13.9.0",
     "@vueuse/rxjs": "^13.9.0",
     "remeda": "^2.32.0",

@@ -8,3 +8,6 @@
 @import './page.css';
 @import './list.css';
 @import './dialog.css';
+
+@import './container.css';
+@import './content.css';

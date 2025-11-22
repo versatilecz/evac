@@ -1,6 +1,14 @@
 {
   "event": {
-    "title": "Event"
+    "title": "Event",
+    "dialog": {
+      "confirmDelete": "Are you sure you want to delete this event?"
+    },
+    "buttonPressed": "Button pressed",
+    "buttonDoublePressed": "Button double pressed",
+    "buttonTriplePressed": "Button triple pressed",
+    "buttonLongPressed": "Button long pressed",
+    "buttonHold": "Button hold"
   },
   "events": {
     "title": "Events"

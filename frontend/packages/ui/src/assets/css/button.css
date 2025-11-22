@@ -13,6 +13,13 @@
 
   --btn-surface-foreground: var(--color-primary);
   --btn-surface-background: var(--color-surface-subtle);
+
+  --btn-color-primary: var(--color-primary);
+  --btn-color-secondary: var(--color-secondary);
+  --btn-color-accent-blue: var(--color-accent-blue);
+  --btn-color-accent-green: var(--color-accent-green);
+  --btn-color-accent-red: var(--color-accent-red);
+  --btn-color-accent-orange: var(--color-accent-orange);
 }
 
 @layer components {
@@ -69,4 +76,12 @@
     --btn-background: var(--btn-surface-background);
     --btn-background-opacity: 1;
   }
+}
+
+@utility btn-* {
+  --btn-background: --value([color]);
+  --btn-background: --value(--btn-color-*);
+  --btn-foreground: oklch(
+    from var(--btn-background) calc(1 - round(l)) 0 0 / alpha
+  );
 }

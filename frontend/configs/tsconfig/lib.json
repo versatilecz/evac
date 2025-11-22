@@ -16,6 +16,6 @@
       "@/*": ["${configDir}/src/*"]
     }
   },
-  "include": ["${configDir}/src/**/*", "../../packages/*/src/i18n/messages/*.json"],
+  "include": ["${configDir}/src/**/*", "../../packages/*/src/i18n/messages/*.json", "../../packages/*/src/*/i18n/*.json"],
   "exclude": ["../../node_modules", "${configDir}/node_modules"]
 }

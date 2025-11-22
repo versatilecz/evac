@@ -1,0 +1,19 @@
+{
+  "contactGroup": {
+    "title": "Skupina kontaktů",
+    "dialog": {
+      "title": "Detail skupiny kontaktů",
+      "description": "",
+      "create": "Vytvořit novou skupinu kontaktů",
+      "edit": "Upravit skupinu kontaktů",
+      "confirmDelete": "Opravdu chcete smazat tuto skupinu kontaktů?"
+    }
+  },
+  "contactGroups": {
+    "title": "Skupiny kontaktů",
+    "config": {
+      "title": "Správa skupin kontaktů",
+      "description": "Zde můžete vytvářet a spravovat své skupiny kontaktů."
+    }
+  }
+}

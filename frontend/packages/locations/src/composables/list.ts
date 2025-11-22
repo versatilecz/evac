@@ -1,5 +1,4 @@
-import { applyFilters, logger, sortByRules, type $SortRule } from '@evac/shared'
-import { formatCount } from '@evac/utils'
+import { intersectFilters, formatCount, logger, sortByRules, type SortRule } from '@evac/shared'
 import { useObservable } from '@vueuse/rxjs'
 import { pipe } from 'remeda'
 import { computed, toValue, type MaybeRefOrGetter } from 'vue'
@@ -13,7 +12,7 @@ type FilterOptions = {
 
 type Options = {
   filter?: FilterOptions
-  sort?: MaybeRefOrGetter<$SortRule[]>
+  sort?: MaybeRefOrGetter<SortRule[]>
 }
 
 export function useLocations({ filter = {}, sort = [] }: Options = {}) {
@@ -21,7 +20,7 @@ export function useLocations({ filter = {}, sort = [] }: Options = {}) {
 
   const data = useObservable(locations$, { onError: logger.error, initialValue: new Map<string, $Location>() })
   const all = computed(() => pipe([...data.value.values()], sortByRules(toValue(sort) ?? [])))
-  const list = computed(() => pipe(data.value.values(), applyFilters([filterByReference(toValue(referenceFilter))]), sortByRules(toValue(sort) ?? [])))
+  const list = computed(() => pipe(data.value.values(), intersectFilters([filterByReference(toValue(referenceFilter))]), sortByRules(toValue(sort) ?? [])))
   const count = computed(() => formatCount(data.value.size, list.value.length))
 
   return {

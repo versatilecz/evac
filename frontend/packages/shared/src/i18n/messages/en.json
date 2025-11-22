@@ -17,11 +17,14 @@
     "email": "E-mail",
     "ip": "IP",
     "mac": "MAC",
+    "notification": "Notification",
     "buzzer": "Buzzer",
     "led": "LED",
     "scan": "Scan",
     "subject": "Subject",
     "text": "Text",
+    "shortText": "Short text",
+    "longText": "Long text",
     "html": "HTML"
   },
   "action": {

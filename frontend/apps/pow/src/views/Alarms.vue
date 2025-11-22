@@ -23,8 +23,8 @@ const new_alarm = ref({})
       <tr v-for="alarm of Object.values(alarmStore.data)" :key="alarm.uuid">
         <td>{{ alarm.uuid }}</td>
         <td><input v-model="alarm.name" /></td>
-        <td><input v-model="alarm.notification"></td>
-        <td><input type="text" v-model="alarm.group"></td>
+        <td><input v-model="alarm.notification" /></td>
+        <td><input v-model="alarm.group" type="text" /></td>
         <td>
           <input v-model="alarm.buzzer" type="checkbox" />
         </td>

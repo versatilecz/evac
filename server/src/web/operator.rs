@@ -846,6 +846,91 @@ impl Operator {
                 Ok(())
             }
 
+            WebMessage::ContactSet(contact) => {
+                let mut context = self.context.write().await;
+                let web_broadcast = context.web_broadcast.clone();
+                if let Some(saved) = context.database.data.contacts.get_mut(&contact.uuid) {
+                    saved.name = contact.name.clone();
+                    saved.kind = contact.kind.clone();
+
+                    web_broadcast.send(WebMessage::ContactDetail(saved.clone()))?;
+                } else {
+                    context
+                        .database
+                        .data
+                        .contacts
+                        .insert(contact.uuid.clone(), contact.clone());
+
+                    web_broadcast.send(WebMessage::ContactDetail(contact.clone()))?;
+                }
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
+
+                Ok(())
+            }
+
+            WebMessage::ContactRemove(uuid) => {
+                let mut context = self.context.write().await;
+                context.database.data.contacts.remove(&uuid);
+                context
+                    .web_broadcast
+                    .send(crate::message::web::WebMessage::ContactRemoved(
+                        uuid.clone(),
+                    ))?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
+
+                Ok(())
+            }
+
+            WebMessage::ContactGroupSet(contact_group) => {
+                let mut context = self.context.write().await;
+                let web_broadcast = context.web_broadcast.clone();
+                if let Some(saved) = context
+                    .database
+                    .data
+                    .contact_group
+                    .get_mut(&contact_group.uuid)
+                {
+                    saved.name = contact_group.name.clone();
+                    saved.contacts = contact_group.contacts.clone();
+
+                    web_broadcast.send(WebMessage::ContactGroupDetail(saved.clone()))?;
+                } else {
+                    context
+                        .database
+                        .data
+                        .contact_group
+                        .insert(contact_group.uuid.clone(), contact_group.clone());
+
+                    web_broadcast.send(WebMessage::ContactGroupDetail(contact_group.clone()))?;
+                }
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
+
+                Ok(())
+            }
+
+            WebMessage::ContactGroupRemove(uuid) => {
+                let mut context = self.context.write().await;
+                context.database.data.contact_group.remove(&uuid);
+                context.web_broadcast.send(
+                    crate::message::web::WebMessage::ContactGroupRemoved(uuid.clone()),
+                )?;
+                context
+                    .database
+                    .data
+                    .save(&context.database.config.base.data_path)?;
+
+                Ok(())
+            }
+
             WebMessage::BackupRemove(path) => {
                 let mut context = self.context.write().await;
                 context.database.data.backups.remove(path);

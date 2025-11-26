@@ -1,8 +1,8 @@
-import { from, map } from 'rxjs'
+import * as Rx from 'rxjs'
 import { service } from '../service'
 import { $BaseConfig } from './definitions'
 
-export const baseConfig$ = from(service).pipe(map((data) => data.base))
+export const baseConfig$ = Rx.from(service).pipe(Rx.map((data) => data.base), Rx.shareReplay(1))
 
 export async function setBaseConfig(base: $BaseConfig) {
   const state = await service.get()

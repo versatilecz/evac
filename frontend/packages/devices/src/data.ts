@@ -7,7 +7,7 @@ import type { $Device, $Devices, $DeviceWithActivity } from '@/definitions'
 import { collectDevicesByLocation, collectDevicesByRoom, collectUnallocatedDevices } from '@/misc'
 import { service } from '@/service'
 
-export const devices$ = Rx.from(service)
+export const devices$ = Rx.from(service).pipe(Rx.shareReplay(1))
 
 export const unallocatedDevices$ = Rx.combineLatest([activity$, devices$]).pipe(
   Rx.map(([activity, devices]) => Iterator.from(collectUnallocatedDevices({ activity, devices }))),

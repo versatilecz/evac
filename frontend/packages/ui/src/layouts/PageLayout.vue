@@ -10,6 +10,8 @@ import { PageFooter, PageHeader } from '../components'
       </template>
     </PageHeader>
     <slot />
-    <PageFooter class="row-start-3 col-span-3" />
+    <PageFooter class="row-start-3 col-span-3">
+      <slot name="footer" />
+    </PageFooter>
   </div>
 </template>

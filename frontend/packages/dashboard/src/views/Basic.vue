@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ActiveAlarm } from '@evac/alarms'
 import { Device } from '@evac/devices'
+import { Version } from '@evac/entities'
 import { Event, useEvents } from '@evac/events'
 import { PageContainer, PageLayout } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
@@ -62,5 +63,9 @@ const { highlightedDevice, highlightDevice } = useHighlightedDevice()
         </section>
       </PageContainer>
     </ActiveAlarm.Root>
+
+    <template #footer>
+      <Version.Info />
+    </template>
   </PageLayout>
 </template>

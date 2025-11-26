@@ -3,7 +3,7 @@ import { service as alarmsService, activeAlarmService } from '@evac/alarms'
 import { service as authService } from '@evac/auth'
 import { service as configService, backupService } from '@evac/config'
 import { service as devicesService } from '@evac/devices'
-import { Contact, ContactGroup, Notification } from '@evac/entities'
+import { Contact, ContactGroup, Notification, Version } from '@evac/entities'
 import { service as eventsService } from '@evac/events'
 import { service as locationsService } from '@evac/locations'
 import { service as roomsService } from '@evac/rooms'
@@ -25,7 +25,8 @@ const services = defineWebSocketServices(
   [activeAlarmService, storage.memory],
   [eventsService, storage.memory],
   [Contact.service, storage.memory],
-  [ContactGroup.service, storage.memory]
+  [ContactGroup.service, storage.memory],
+  [Version.service, storage.memory]
 )
 
 export default function handleServicesOverWebSocket(url: URL | string) {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Version } from '@evac/entities'
 import { PageContainer, PageLayout } from '@evac/ui'
 import { Navigation } from '../components'
 </script>
@@ -11,5 +12,8 @@ import { Navigation } from '../components'
       </template>
       <RouterView />
     </PageContainer>
+    <template #footer>
+      <Version.Info />
+    </template>
   </PageLayout>
 </template>

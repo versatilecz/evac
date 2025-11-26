@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useRooms } from '@/composables'
 import { $Room } from '@/definitions'
 
-const modelValue = defineModel<$Room['uuid']>()
+const modelValue = defineModel<$Room['uuid'] | null | undefined>()
 const { t } = useI18n({ useScope: 'global' })
 const { list } = useRooms({ sort: [{ key: 'name', direction: SortDirection.enum.Ascending }] })
 const value = computed({

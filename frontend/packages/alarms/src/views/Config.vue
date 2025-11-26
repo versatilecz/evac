@@ -9,7 +9,14 @@ import { DEFAULT_SORT } from '@/definitions'
 const { t } = useI18n({ useScope: 'global' })
 const { isDebug } = useAuth()
 
-const fields = defineListFields({ key: 'name' }, { key: 'uuid', visible: () => isDebug.value }, { key: 'notification' }, { key: 'group', fill: true }, { key: 'buzzer' }, { key: 'led' })
+const fields = defineListFields(
+  { key: 'name' },
+  { key: 'uuid', visible: () => isDebug.value },
+  { key: 'notification' },
+  { key: 'group', fill: true },
+  { key: 'buzzer' },
+  { key: 'led' }
+)
 const { sort } = useList({ initialSort: DEFAULT_SORT, fields })
 const { count, list: alarms } = useAlarms({ sort })
 </script>

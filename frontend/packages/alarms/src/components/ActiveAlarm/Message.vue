@@ -3,7 +3,7 @@ import { Badge, Entity, Icon } from '@evac/ui'
 import { Notification } from '@evac/entities'
 import { useI18n } from 'vue-i18n'
 import type { AlarmInfo } from '@/definitions'
-import { useAlarm } from '@/composables';
+import { useAlarm } from '@/composables'
 
 const props = defineProps<{ alarmInfo: AlarmInfo }>()
 const { t } = useI18n()

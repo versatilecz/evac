@@ -16,7 +16,7 @@ export const $PortNumber = z
 export const $Scanner = z.object({
   uuid: z.uuid(),
   name: z.string().min(1, { message: 'validation.required' }),
-  room: z.uuid().describe('The UUID of the room this scanner belongs to'),
+  room: z.uuid().nullish().describe('The UUID of the room this scanner belongs to'),
   ip: z.ipv4().or(z.ipv6()),
   port: $PortNumber,
   mac: $MacAddress,

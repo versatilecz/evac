@@ -12,7 +12,7 @@ const { data, list: options } = useState()
 const value = computed({
   get() {
     const uuid = modelValue.value
-    return uuid ? data.value.get(uuid) ?? null : null
+    return uuid ? (data.value.get(uuid) ?? null) : null
   },
   set(value: def.Detail | null) {
     modelValue.value = value?.uuid ?? null
@@ -28,28 +28,28 @@ const value = computed({
         <Icon icon="keyboard_arrow_down" />
       </Select.Icon>
     </Select.Trigger>
-      <Select.Content class="input p-0 h-auto bg-surface-elevated shadow-lg z-50" position="popper" align="center" side="bottom">
-        <Select.ScrollUpButton>
-          <Icon icon="keyboard_arrow_up" />
-        </Select.ScrollUpButton>
+    <Select.Content class="input p-0 h-auto bg-surface-elevated shadow-lg z-50" position="popper" align="center" side="bottom">
+      <Select.ScrollUpButton>
+        <Icon icon="keyboard_arrow_up" />
+      </Select.ScrollUpButton>
 
-        <Select.Viewport>
-          <template v-for="contactGroup of options" :key="contactGroup.uuid">
-            <Select.Item
-              :value="contactGroup"
-              class="flex gap-3 items-center px-3 py-2 hover:bg-emphasis-2 cursor-pointer first:rounded-t-(--input-corner-radius) last:rounded-b-(--input-corner-radius) data-highlighted:outline-none data-highlighted:bg-accent-blue"
-            >
-              <Select.ItemText v-text="contactGroup.name" />
-              <Select.ItemIndicator>
-                <Icon icon="check" />
-              </Select.ItemIndicator>
-            </Select.Item>
-          </template>
-        </Select.Viewport>
+      <Select.Viewport>
+        <template v-for="contactGroup of options" :key="contactGroup.uuid">
+          <Select.Item
+            :value="contactGroup"
+            class="flex gap-3 items-center px-3 py-2 hover:bg-emphasis-2 cursor-pointer first:rounded-t-(--input-corner-radius) last:rounded-b-(--input-corner-radius) data-highlighted:outline-none data-highlighted:bg-accent-blue"
+          >
+            <Select.ItemText>{{ contactGroup.name }}</Select.ItemText>
+            <Select.ItemIndicator>
+              <Icon icon="check" />
+            </Select.ItemIndicator>
+          </Select.Item>
+        </template>
+      </Select.Viewport>
 
-        <Select.ScrollDownButton>
-          <Icon icon="keyboard_arrow_down" />
-        </Select.ScrollDownButton>
-      </Select.Content>
+      <Select.ScrollDownButton>
+        <Icon icon="keyboard_arrow_down" />
+      </Select.ScrollDownButton>
+    </Select.Content>
   </Select.Root>
 </template>

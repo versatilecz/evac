@@ -10,7 +10,6 @@ export function unionFilters<T>(...args: [Filter<T>[]] | [Iterable<T>, Filter<T>
   }
 }
 
-
 export function intersectFilters<T>(filters: Filter<T>[]): (input: Iterable<T>) => Generator<T>
 export function intersectFilters<T>(input: Iterable<T>, filters: Filter<T>[]): Generator<T>
 export function intersectFilters<T>(...args: [Filter<T>[]] | [Iterable<T>, Filter<T>[]]) {
@@ -22,7 +21,6 @@ export function intersectFilters<T>(...args: [Filter<T>[]] | [Iterable<T>, Filte
 }
 
 type FilterType = 'union' | 'intersection'
-
 
 function* filter<T>(type: FilterType, input: Iterable<T>, filters: Filter<T>[]): Generator<T> {
   const method = type === 'union' ? 'some' : 'every'

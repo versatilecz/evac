@@ -56,7 +56,7 @@ function collectActiveAlarmData(): def.AlarmInfoInput {
     location: locationsData.value.get(formData.location)!.name,
     room: roomsData.value.get(formData.room)!.name,
     scanner: scannersData.value.get(formData.scanner)!.name,
-    device: devicesData.value.get(formData.device)!.name,
+    device: devicesData.value.get(formData.device)!.name ?? '',
   } satisfies def.AlarmInfoInput
 }
 

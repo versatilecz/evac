@@ -2,7 +2,7 @@
 import { useRoom } from '@/composables'
 import type { $Room } from '@/definitions'
 
-const props = defineProps<{ uuid: $Room['uuid'] }>()
+const props = defineProps<{ uuid: $Room['uuid'] | undefined | null }>()
 const { room } = useRoom(() => props.uuid)
 </script>
 

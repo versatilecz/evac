@@ -2,7 +2,7 @@
 import { Badge } from '@evac/ui'
 import { useFormat } from '@evac/ui'
 
-defineProps<{ battery: number | null }>()
+defineProps<{ battery: number | null | undefined }>()
 const formatter = useFormat()
 </script>
 

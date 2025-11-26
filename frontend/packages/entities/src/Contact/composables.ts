@@ -10,7 +10,6 @@ import * as def from './definitions'
 import { service } from './service'
 import { getKind } from './misc'
 
-
 type FilterOptions = {
   name?: MaybeRefOrGetter<string>
   kind?: MaybeRefOrGetter<string>
@@ -24,7 +23,9 @@ type Options = {
 export function useState({ filter, sort = [def.DEFAULT_SORT] }: Options = {}) {
   const data = useObservable(state$, { onError: logger.error, initialValue: new Map<string, def.Detail>() })
   const all = computed(() => pipe([...data.value.values()], sortByRules(toValue(sort) ?? [])))
-  const list = computed(() => pipe(data.value.values(), unionFilters([filterByName(toValue(filter?.name) ?? ''), filterByKind(toValue(filter?.kind) ?? '')]), sortByRules(toValue(sort) ?? [])))
+  const list = computed(() =>
+    pipe(data.value.values(), unionFilters([filterByName(toValue(filter?.name) ?? ''), filterByKind(toValue(filter?.kind) ?? '')]), sortByRules(toValue(sort) ?? []))
+  )
   const count = computed(() => formatCount(data.value.size, list.value.length))
 
   return {

@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n'
 import Picker from '@/Contact/components/Picker.vue'
 import { useForm } from '../composables'
 import * as def from '../definitions'
-import { computed } from 'vue'
 
 const props = defineProps<{ contactGroup?: def.FormData }>()
 defineOptions({ inheritAttrs: false })

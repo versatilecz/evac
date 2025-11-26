@@ -13,12 +13,12 @@ export const SCOPE = 'devices'
 export const DEFAULT_SORT: SortRule = { key: 'name', direction: SortDirection.enum.Ascending }
 
 export const $Device = z.object({
-  name: z.string(),
   uuid: z.uuid(),
+  name: z.string().nullish(),
   mac: $MacAddress,
   lastActivity: z.date(),
   enabled: z.boolean(),
-  battery: z.number().min(0).max(100).nullable(),
+  battery: z.number().min(0).max(100).nullish(),
 })
 export const $DeviceWithActivity = $Device.extend({
   rssi: $Activity.shape.rssi,

@@ -13,8 +13,6 @@ const { t } = useI18n({ useScope: 'global' })
 const { count: contactCount, list: contacts } = useState()
 const { count: groupCount, list: groups } = ContactGroup.useState()
 const tab = ref(DEFAULT_TAB)
-
-const selected = ref(new Set<def.Detail>())
 </script>
 
 <template>

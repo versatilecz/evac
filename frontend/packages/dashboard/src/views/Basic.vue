@@ -54,13 +54,11 @@ const { highlightedDevice, highlightDevice } = useHighlightedDevice()
           </Event.Cards>
 
           <!-- Actions Section -->
-          <template v-if="activeAlarm" class="align-self-end">
-            <ActiveAlarm.Message :alarm-info="activeAlarm">
-              <template #actions>
-                <ActiveAlarm.Actions :alarm-info="activeAlarm" />
-              </template>
-            </ActiveAlarm.Message>
-          </template>
+          <ActiveAlarm.Message v-if="activeAlarm" class="align-self-end" :alarm-info="activeAlarm">
+            <template #actions>
+              <ActiveAlarm.Actions :alarm-info="activeAlarm" />
+            </template>
+          </ActiveAlarm.Message>
         </section>
       </PageContainer>
     </ActiveAlarm.Root>

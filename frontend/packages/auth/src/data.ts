@@ -4,9 +4,7 @@ import * as def from './definitions'
 
 export const userInfo$ = Rx.from(service).pipe(Rx.shareReplay(1))
 export const debugEnabled$$ = new Rx.BehaviorSubject<boolean>(false)
-export const auth$ = Rx.combineLatest([userInfo$, debugEnabled$$]).pipe(
-  Rx.map(([userInfo, debugEnabled]) => authFromUserInfo(userInfo, debugEnabled)),
-)
+export const auth$ = Rx.combineLatest([userInfo$, debugEnabled$$]).pipe(Rx.map(([userInfo, debugEnabled]) => authFromUserInfo(userInfo, debugEnabled)))
 
 export function authFromUserInfo(userInfo: def.UserInfo | null | undefined, debugEnabled: boolean): def.Auth {
   const isAuthenticated = !!userInfo && checkRoles(def.validRoles, userInfo.roles)

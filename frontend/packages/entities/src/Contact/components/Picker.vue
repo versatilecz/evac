@@ -22,12 +22,7 @@ const value = computed({
   <Listbox.Root v-model="value" class="grid gap-3" multiple>
     <Listbox.Filter :placeholder="t('contact.search', '')" as-child>
       <span class="input flex pr-0">
-        <input
-          type="text"
-          class="grow bg-transparent"
-          :placeholder="t('contact.search', '')"
-          v-model="search"
-        />
+        <input v-model="search" type="text" class="grow bg-transparent" :placeholder="t('contact.search', '')" />
         <button v-show="search" type="button" class="btn text-primary" @click="search = ''">
           <Icon icon="close" />
         </button>

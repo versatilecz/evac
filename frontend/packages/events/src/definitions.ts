@@ -27,7 +27,7 @@ export const $Event = z.object({
   kind: $EventKind.describe('Event kind'),
   timestamp: z.date().describe('Event timestamp'),
   scanner: z.uuid().describe('Relative scanner UUID'),
-  device: z.uuid().optional().nullable().describe('Relative device UUID'),
+  device: z.uuid().nullish().describe('Relative device UUID'),
 })
 
 export const $EventFormData = $Event.omit({ uuid: true, timestamp: true })

@@ -9,25 +9,25 @@ import { service as locationsService } from '@evac/locations'
 import { service as roomsService } from '@evac/rooms'
 import { service as scannersService } from '@evac/scanners'
 import { defineWebSocketServices, orchestrateWebSocketAndServices } from '@evac/shared'
-import type { Storage } from 'unstorage'
+import { storage } from './storage'
 
 const services = defineWebSocketServices(
-  authService,
-  configService,
-  backupService,
-  locationsService,
-  roomsService,
-  scannersService,
-  devicesService,
-  activityService,
-  Notification.service,
-  alarmsService,
-  activeAlarmService,
-  eventsService,
-  Contact.service,
-  ContactGroup.service
+  [authService, storage.memory],
+  [configService, storage.memory],
+  [backupService, storage.memory],
+  [locationsService, storage.memory],
+  [roomsService, storage.memory],
+  [scannersService, storage.memory],
+  [devicesService, storage.memory],
+  [activityService, storage.memory],
+  [Notification.service, storage.memory],
+  [alarmsService, storage.memory],
+  [activeAlarmService, storage.memory],
+  [eventsService, storage.memory],
+  [Contact.service, storage.memory],
+  [ContactGroup.service, storage.memory]
 )
 
-export default function handleServicesOverWebSocket(url: URL | string, storage: Storage) {
-  orchestrateWebSocketAndServices({ url, services, storage })
+export default function handleServicesOverWebSocket(url: URL | string) {
+  orchestrateWebSocketAndServices({ url, services })
 }

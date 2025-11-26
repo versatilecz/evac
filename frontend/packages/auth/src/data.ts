@@ -3,6 +3,7 @@ import { service } from '@/service'
 import * as def from './definitions'
 
 export const userInfo$ = Rx.from(service).pipe(Rx.shareReplay(1))
+// TODO: move to @evac/ui
 export const debugEnabled$$ = new Rx.BehaviorSubject<boolean>(false)
 export const auth$ = Rx.combineLatest([userInfo$, debugEnabled$$]).pipe(Rx.map(([userInfo, debugEnabled]) => authFromUserInfo(userInfo, debugEnabled)))
 

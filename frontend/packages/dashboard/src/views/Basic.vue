@@ -24,6 +24,7 @@ const { highlightedDevice, highlightDevice } = useHighlightedDevice()
         <SimpleDevicesOverview class="grid gap-0 content-start grow">
           <template #device="{ device, room }">
             <Device.Badge
+              v-if="device.enabled"
               :class="{
                 'badge-accent-blue': room && highlightedDevice !== device.uuid,
                 'badge-accent-orange': highlightedDevice === device.uuid,

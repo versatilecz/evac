@@ -7,29 +7,28 @@ import type { WebSocketConnection } from './definitions'
 
 type OrchestratorConfig = {
   url: URL | string
-  services?: Iterable<WebSocketService>
-  storage: Storage
+  services?: Iterable<[WebSocketService, Storage]>
 }
 
 export type MessageParser = (source: AsyncIterable<object>) => AsyncIterable<object>
 
 const RECONNECT_DELAY = 1000
 
-export function defineWebSocketServices(...services: WebSocketService[]): Set<WebSocketService> {
-  return new Set<WebSocketService>(services)
+export function defineWebSocketServices(...services: [WebSocketService, Storage][]): Map<WebSocketService, Storage> {
+  return new Map<WebSocketService, Storage>(services)
 }
 
 export async function orchestrateWebSocketAndServices(config: OrchestratorConfig): Promise<void> {
   const abortController = new AbortController()
   const runningServices = new Set<Disposable>()
   try {
-    const { services, storage, url } = config
+    const { services, url } = config
 
     using connection = connectToWebSocket<object>(url, { reconnect: true })
     await waitForConnectionToOpen(connection)
     logger.log('[ws] connection established')
 
-    for (const service of services ?? []) {
+    for (const [service, storage] of services ?? []) {
       runningServices.add(service.start({ connection, source: connection, storage, signal: abortController.signal }))
     }
 

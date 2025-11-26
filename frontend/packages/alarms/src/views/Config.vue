@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { useAuth } from '@evac/auth'
-import { Badge, ContentHeader, defineListFields, useList } from '@evac/ui'
+import { Badge, ContentHeader, defineListFields, useDebug, useList } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { Alarm } from '@/components'
 import { useAlarms } from '@/composables'
 import { DEFAULT_SORT } from '@/definitions'
 
 const { t } = useI18n({ useScope: 'global' })
-const { isDebug } = useAuth()
+const { enabled: debugEnabled } = useDebug()
 
 const fields = defineListFields(
   { key: 'name' },
-  { key: 'uuid', visible: () => isDebug.value },
+  { key: 'uuid', visible: () => debugEnabled.value },
   { key: 'notification' },
   { key: 'group', fill: true },
   { key: 'buzzer' },

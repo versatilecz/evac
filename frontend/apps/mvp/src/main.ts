@@ -1,6 +1,5 @@
-import { createAuth } from '@evac/auth'
 import { determineWebSocketURL } from '@evac/shared'
-import { type Storage } from 'unstorage'
+import { registerUI } from '@evac/ui'
 import { createApp, type App as VueApp } from 'vue'
 
 import App from './App.vue'
@@ -10,12 +9,12 @@ import handleServicesOverWebSocket from './services'
 import { storage } from './storage'
 import './style.css'
 
-initApp(storage.indexedDb)
+initApp()
 
-function initApp(storage: Storage) {
+function initApp() {
   let app: VueApp | null = null
   app = createApp(App)
-  app.use(createAuth({ storage }))
+  app.use(registerUI({ storage: storage.indexedDb }))
   app.use(router)
   app.use(i18n)
   app.mount('#app')

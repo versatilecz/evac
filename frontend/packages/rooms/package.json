@@ -35,7 +35,6 @@
   "dependencies": {
     "@evac/auth": "*",
     "@evac/entities": "*",
-    "@evac/locations": "*",
     "@evac/shared": "*",
     "@evac/ui": "*",
     "@vueuse/core": "^13.9.0",

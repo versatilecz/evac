@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { $Location } from '@/definitions'
+import type * as def from '../definitions'
 import Card from './Card.vue'
 
 defineProps<{
-  locations: Iterable<$Location>
+  locations: Iterable<def.Detail>
 }>()
 </script>
 

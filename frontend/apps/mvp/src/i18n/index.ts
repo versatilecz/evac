@@ -3,8 +3,7 @@ import { messages as alarmsMessages } from '@evac/alarms'
 import { messages as configMessages } from '@evac/config'
 import { messages as devicesMessages } from '@evac/devices'
 import { messages as eventsMessages } from '@evac/events'
-import { Contact, ContactGroup, Notification } from '@evac/entities'
-import { messages as locationsMessages } from '@evac/locations'
+import { Contact, ContactGroup, Location, Notification } from '@evac/entities'
 import { messages as roomsMessages } from '@evac/rooms'
 import { messages as scannersMessages } from '@evac/scanners'
 import { createI18n } from 'vue-i18n'
@@ -20,7 +19,7 @@ export default createI18n({
     alarmsMessages,
     devicesMessages,
     Notification.i18n,
-    locationsMessages,
+    Location.i18n,
     roomsMessages,
     scannersMessages,
     Contact.i18n,

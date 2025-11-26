@@ -8,7 +8,6 @@ import { useAlarm } from '@/composables'
 const props = defineProps<{ alarmInfo: AlarmInfo }>()
 const { t } = useI18n()
 const { alarm } = useAlarm(() => props.alarmInfo.alarm)
-const { item: notification } = Notification.useItem(() => alarm.value?.notification)
 </script>
 
 <template>
@@ -26,10 +25,12 @@ const { item: notification } = Notification.useItem(() => alarm.value?.notificat
       </Entity.Breadcrumbs>
     </Badge>
 
-    <template v-if="notification">
-      <h2 class="font-bold text-lg" v-text="notification.subject" />
-      <div>{{ notification.long }}</div>
-    </template>
+    <Notification.Root v-if="alarm" :uuid="alarm.notification" v-slot="{ detail }">
+      <template v-if="detail">
+        <h2 class="font-bold text-lg" v-text="detail.subject" />
+        <div>{{ detail.long }}</div>
+      </template>
+    </Notification.Root>
 
     <slot />
   </section>

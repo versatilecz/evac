@@ -5,6 +5,7 @@ export * from 'reka-ui/namespaced'
 export { default as Badge } from './Badge.vue'
 export { default as Icon } from './Icon.vue'
 export { default as BooleanIcon } from './BooleanIcon.vue'
+export { default as SimpleSelect } from './SimpleSelect.vue'
 
 // Helper components
 export * as List from './List'

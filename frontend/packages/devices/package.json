@@ -36,7 +36,6 @@
     "@evac/activity": "*",
     "@evac/auth": "*",
     "@evac/entities": "*",
-    "@evac/locations": "*",
     "@evac/rooms": "*",
     "@evac/scanners": "*",
     "@evac/shared": "*",

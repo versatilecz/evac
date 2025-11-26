@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useState } from '../composables'
-const { backend } = useState()
+const { state } = useState()
 </script>
 
 <template>
-  <slot :backend="backend" />
+  <slot :state="state" />
 </template>

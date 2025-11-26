@@ -1,35 +1,29 @@
-import { useObservable, useSubject } from '@vueuse/rxjs'
+import { useObservable } from '@vueuse/rxjs'
 import { logger } from '@evac/shared'
-import { computed, type ComputedRef, type Ref } from 'vue'
-import type { Auth } from '@/definitions'
-import { auth$, debugEnabled$$, defaultAuth } from '@/data'
+import { type Ref } from 'vue'
+import * as def from '@/definitions'
+import * as data from '@/data'
 
 type UseAuthReturn = {
-  auth: Ref<Auth>
-  debugEnabled: Ref<boolean>
-  isAuthenticated: ComputedRef<boolean>
-  isAdmin: ComputedRef<boolean>
-  isDebug: ComputedRef<boolean>
-  isService: ComputedRef<boolean>
-  isDashboard: ComputedRef<boolean>
+  isAuthenticated: Readonly<Ref<boolean>>
+  isAdmin: Readonly<Ref<boolean>>
+  isService: Readonly<Ref<boolean>>
+  isDashboard: Readonly<Ref<boolean>>
+  username: Readonly<Ref<string>>
 }
 
 export function useAuth(): UseAuthReturn {
-  const auth = useObservable(auth$, { onError: logger.error, initialValue: defaultAuth() })
-  const debugEnabled = useSubject(debugEnabled$$, { onError: logger.error })
-  const isAuthenticated = computed(() => auth.value.isAuthenticated)
-  const isAdmin = computed(() => auth.value.isAdmin)
-  const isDebug = computed(() => auth.value.isDebug)
-  const isService = computed(() => auth.value.isService)
-  const isDashboard = computed(() => auth.value.isDashboard)
+  const isAuthenticated = useObservable(data.isAuthenticated$, { onError: logger.error, initialValue: false })
+  const isAdmin = useObservable(data.isAdmin$, { onError: logger.error, initialValue: false })
+  const isService = useObservable(data.isService$, { onError: logger.error, initialValue: false })
+  const isDashboard = useObservable(data.isDashboard$, { onError: logger.error, initialValue: false })
+  const username = useObservable(data.username$, { onError: logger.error, initialValue: def.DEFAULT_USERNAME })
 
   return {
-    auth,
-    debugEnabled,
     isAuthenticated,
     isAdmin,
-    isDebug,
     isService,
     isDashboard,
+    username,
   }
 }

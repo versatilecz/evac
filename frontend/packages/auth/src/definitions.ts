@@ -1,6 +1,7 @@
 import * as z from 'zod'
 
 export const SCOPE = 'auth'
+export const DEFAULT_USERNAME = 'Anonymous'
 
 export type Auth = z.infer<typeof Auth>
 export type Role = z.infer<typeof Role>
@@ -29,7 +30,6 @@ export const UserInfoCodec = z.object({
 export const Auth = z.object({
   isAuthenticated: z.boolean(),
   isAdmin: z.boolean(),
-  isDebug: z.boolean(),
   isService: z.boolean(),
   isDashboard: z.boolean(),
 })

@@ -42,7 +42,6 @@
     "@evac/devices": "*",
     "@evac/entities": "*",
     "@evac/events": "*",
-    "@evac/locations": "*",
     "@evac/rooms": "*",
     "@evac/scanners": "*",
     "@evac/shared": "*",

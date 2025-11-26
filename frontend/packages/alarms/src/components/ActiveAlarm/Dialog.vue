@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { $SourceType, useDevices } from '@evac/devices'
-import { useLocations } from '@evac/locations'
+import { Location } from '@evac/entities'
 import { useRooms } from '@evac/rooms'
 import { useScanners } from '@evac/scanners'
 import { ContentHeader, Dialog, DialogActions, Icon, useAction } from '@evac/ui'
@@ -16,7 +16,7 @@ const { t } = useI18n({ useScope: 'global' })
 const formData = reactive(seed())
 
 const { list: alarms } = useAlarms()
-const { data: locationsData, list: locations } = useLocations()
+const { state: locationsState, list: locations } = Location.useState()
 const { data: roomsData, list: rooms } = useRooms({ location: () => formData.location })
 const { data: scannersData, list: scanners } = useScanners({ room: () => formData.room })
 const { data: devicesData } = useDevices()
@@ -53,7 +53,7 @@ function collectActiveAlarmData(): def.AlarmInfoInput {
 
   return {
     alarm: alarm.uuid,
-    location: locationsData.value.get(formData.location)!.name,
+    location: locationsState.value.get(formData.location)!.name,
     room: roomsData.value.get(formData.room)!.name,
     scanner: scannersData.value.get(formData.scanner)!.name,
     device: devicesData.value.get(formData.device)!.name ?? '',

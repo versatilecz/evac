@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useItem } from '../composables'
-import type { Detail } from '../definitions'
+import { useDetail } from '../composables'
+import type * as def from '../definitions'
 
-const props = defineProps<{ uuid: Detail['uuid'] }>()
-const { item } = useItem(() => props.uuid)
+const props = defineProps<{ uuid: def.Detail['uuid'] }>()
+const { detail } = useDetail(() => props.uuid)
 </script>
 
 <template>
-  <slot :item="item" />
+  <slot :detail="detail" />
 </template>

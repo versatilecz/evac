@@ -57,10 +57,6 @@
       "path": "./frontend/packages/events"
     },
     {
-      "name": "FE / Packages / Locations",
-      "path": "./frontend/packages/locations"
-    },
-    {
       "name": "FE / Packages / Rooms",
       "path": "./frontend/packages/rooms"
     },

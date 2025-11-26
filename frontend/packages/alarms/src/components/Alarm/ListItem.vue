@@ -15,13 +15,13 @@ const { visible } = useListContext(true)
       <strong v-if="visible.name" class="value text-left">{{ alarm.name }}</strong>
       <Badge v-if="visible.uuid">{{ alarm.uuid }}</Badge>
       <span v-if="visible.notification" class="value text-left font-normal">
-        <Notification.Root v-slot="{ notification }" :uuid="alarm.notification">
-          {{ notification?.name || '-' }}
+        <Notification.Root v-slot="{ detail }" :uuid="alarm.notification">
+          {{ detail?.name || '-' }}
         </Notification.Root>
       </span>
       <span v-if="visible.group" class="value text-left font-normal">
-        <ContactGroup.Root v-slot="{ item }" :uuid="alarm.group">
-          {{ item?.name || '-' }}
+        <ContactGroup.Root v-slot="{ detail }" :uuid="alarm.group">
+          {{ detail?.name || '-' }}
         </ContactGroup.Root>
       </span>
       <BooleanIcon v-if="visible.buzzer" class="justify-self-center" :value="alarm.buzzer" />

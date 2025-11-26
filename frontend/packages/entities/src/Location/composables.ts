@@ -1,4 +1,4 @@
-import { formatCount, logger, sortByRules, type SortRule } from '@evac/shared'
+import { formatCount, intersectFilters, logger, sortByRules, type SortRule } from '@evac/shared'
 import { useAction, useDialogForm } from '@evac/ui'
 import { useObservable } from '@vueuse/rxjs'
 import { pipe } from 'remeda'
@@ -8,15 +8,30 @@ import { useI18n } from 'vue-i18n'
 import { state$ } from './data'
 import * as def from './definitions'
 import { service } from './service'
+import * as filter from './misc/filter'
 
-type Options = {
-  sort?: MaybeRefOrGetter<SortRule[] | SortRule>
+type FilterOptions = {
+  name?: MaybeRefOrGetter<def.Detail['name']>
+  reference?: MaybeRefOrGetter<def.ReferenceFilter>
 }
 
-export function useState({ sort = [def.DEFAULT_SORT] }: Options = {}) {
-  const state = useObservable(state$, { onError: logger.error, initialValue: new Map<string, def.Detail>() })
-  const all = computed(() => [...state.value.values()])
-  const list = computed(() => pipe(state.value.values(), sortByRules(toValue(sort))))
+type Options = {
+  filter?: FilterOptions
+  sort?: MaybeRefOrGetter<SortRule[]>
+}
+
+export function useState(options: Options = {}) {
+  const sortFn = computed(() => toValue(options.sort) ?? [def.DEFAULT_SORT])
+  const state = useObservable(state$, { onError: logger.error, initialValue: new Map<def.Detail['uuid'], def.Detail>() })
+  const all = computed(() => pipe([...state.value.values()], sortByRules(sortFn.value)))
+  const list = computed(() => pipe(
+    state.value.values(),
+    intersectFilters([
+      filter.byName(toValue(options.filter?.name) ?? ''),
+      filter.byReference(toValue(options.filter?.reference) ?? def.ReferenceFilter.enum.all)
+    ]),
+    sortByRules(sortFn.value)
+  ))
   const count = computed(() => formatCount(state.value.size, list.value.length))
 
   return {
@@ -24,20 +39,19 @@ export function useState({ sort = [def.DEFAULT_SORT] }: Options = {}) {
     state,
     list,
     all,
-    send: useAction(service.send),
   }
 }
 
-export function useDetail(uuid: MaybeRefOrGetter<string | null | undefined>) {
+export function useDetail(uuid: MaybeRefOrGetter<def.Detail['uuid']>) {
   const { state } = useState()
-  const detail = computed(() => state.value.get(toValue(uuid) ?? '') ?? null)
+  const detail = computed(() => state.value.get(toValue(uuid)) ?? null)
 
   return {
     detail,
   }
 }
 
-export function useForm(input: MaybeRefOrGetter<def.FormData | undefined | null>) {
+export function useForm(input: MaybeRefOrGetter<def.FormData | null | undefined>) {
   const { t } = useI18n({ useScope: 'global' })
   const dialogForm = useDialogForm({
     data: input,
@@ -49,11 +63,10 @@ export function useForm(input: MaybeRefOrGetter<def.FormData | undefined | null>
   })
 
   const title = computed(() => {
-    const currentData = { ...dialogForm.formData }
-    if (!dialogForm.isUpdate(currentData)) {
-      return t('notification.dialog.create', '')
+    if (!dialogForm.isUpdate(toValue(input))) {
+      return t('location.dialog.create', '')
     }
-    return dialogForm.hasChanges.value ? t('notification.dialog.edit', '') : t('notification.dialog.title', '')
+    return dialogForm.hasChanges.value ? t('location.dialog.edit', '') : t('location.dialog.title', '')
   })
 
   return {
@@ -81,7 +94,7 @@ export function useForm(input: MaybeRefOrGetter<def.FormData | undefined | null>
   function confirmAndRemove(cb?: () => any) {
     return new Promise<void>((resolve) => {
       setTimeout(() => {
-        if (!confirm(t('notification.dialog.confirmDelete', ''))) {
+        if (!confirm(t('location.dialog.confirmDelete', ''))) {
           resolve()
           return
         }

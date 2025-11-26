@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { useAuth } from '@evac/auth'
-import { ContentHeader, Switch } from '@evac/ui'
+import { ContentHeader, Switch, useDebug } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { Backup } from '@/components'
 
 const { t } = useI18n({ useScope: 'global' })
-const { debugEnabled } = useAuth()
+const { state } = useDebug()
 </script>
 
 <template>
@@ -18,7 +17,7 @@ const { debugEnabled } = useAuth()
     <form class="px-6">
       <label class="flex items-center gap-4">
         <strong>{{ t('config.tools.debug') }}</strong>
-        <Switch.Root id="debug-mode" v-model="debugEnabled" class="btn switch">
+        <Switch.Root id="debug-mode" v-model="state" class="btn switch">
           <Switch.Thumb class="thumb" />
         </Switch.Root>
       </label>

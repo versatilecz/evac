@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ContentHeader, Dialog, DialogActions, Entity, Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
-import { useLocationForm } from '@/composables'
-import { ICON, $Location, $LocationFormData } from '@/definitions'
+import { useForm } from '../composables'
+import * as def from '../definitions'
 
-const props = defineProps<{ location?: $Location | $LocationFormData }>()
+const props = defineProps<{ location?: def.FormData }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
-const { title, formData, hasData, hasChanges, reset, create, remove, update } = useLocationForm(() => props.location)
+const { title, formData, hasData, hasChanges, reset, create, remove, update } = useForm(() => props.location)
 </script>
 
 <template>
@@ -24,7 +24,7 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
       <Dialog.Overlay class="overlay" />
       <Dialog.Content class="dialog" as="form">
         <input v-if="hasData" type="text" autofocus tabindex="0" class="sr-only" :aria-label="title" />
-        <ContentHeader :icon="ICON">
+        <ContentHeader :icon="def.ICON">
           <template #title>
             <Dialog.Title class="headline grow">
               <span class="sr-only" v-text="title" />

@@ -14,25 +14,25 @@ type Options = {
 }
 
 export function useState({ sort = [def.DEFAULT_SORT] }: Options = {}) {
-  const data = useObservable(state$, { onError: logger.error, initialValue: new Map<string, def.Detail>() })
-  const all = computed(() => pipe([...data.value.values()], sortByRules(toValue(sort) ?? [])))
-  const list = computed(() => pipe(data.value.values(), sortByRules(toValue(sort) ?? [])))
-  const count = computed(() => formatCount(data.value.size, list.value.length))
+  const state = useObservable(state$, { onError: logger.error, initialValue: new Map<string, def.Detail>() })
+  const all = computed(() => pipe([...state.value.values()], sortByRules(toValue(sort) ?? [])))
+  const list = computed(() => pipe(state.value.values(), sortByRules(toValue(sort) ?? [])))
+  const count = computed(() => formatCount(state.value.size, list.value.length))
 
   return {
     count,
-    data,
+    state,
     list,
     all,
   }
 }
 
-export function useItem(uuid: MaybeRefOrGetter<string>) {
-  const { data } = useState()
-  const item = computed(() => data.value.get(toValue(uuid)) ?? null)
+export function useDetail(uuid: MaybeRefOrGetter<string>) {
+  const { state } = useState()
+  const detail = computed(() => state.value.get(toValue(uuid)) ?? null)
 
   return {
-    item,
+    detail,
   }
 }
 

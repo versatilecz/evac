@@ -1,4 +1,4 @@
-import type { $Location } from '@evac/locations'
+import type { Location } from '@evac/entities'
 import type { $Room } from '@evac/rooms'
 import { formatCount, intersectFilters, logger, sortByRules, type SortRule } from '@evac/shared'
 import { toRef } from '@vueuse/core'
@@ -16,7 +16,7 @@ type Options = {
   }
   sourceType?: $SourceType
   room?: MaybeRefOrGetter<$Room['uuid'] | undefined>
-  location?: MaybeRefOrGetter<$Location['uuid'] | undefined>
+  location?: MaybeRefOrGetter<Location.Detail['uuid'] | undefined>
 }
 
 export function useDevices(options: Options = {}) {

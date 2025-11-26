@@ -1,5 +1,5 @@
 import type { $ActivityByDevice } from '@evac/activity'
-import type { $Location } from '@evac/locations'
+import type { Location } from '@evac/entities'
 import type { $Room } from '@evac/rooms'
 import type { $Scanner } from '@evac/scanners'
 import * as R from 'remeda'
@@ -11,7 +11,7 @@ type Sources = {
   scanners: Iterable<$Scanner>
 }
 
-export function* collectDevicesByLocation(locationUuid: $Location['uuid'], sources: Sources & { rooms: Iterable<$Room> }): Generator<$DeviceWithActivity> {
+export function* collectDevicesByLocation(locationUuid: Location.Detail['uuid'], sources: Sources & { rooms: Iterable<$Room> }): Generator<$DeviceWithActivity> {
   const roomsByLocation = Map.groupBy(sources.rooms, R.prop('location'))
 
   for (const room of roomsByLocation.get(locationUuid) ?? []) {

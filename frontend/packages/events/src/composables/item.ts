@@ -1,5 +1,5 @@
 import { useDevice } from '@evac/devices'
-import { useLocation } from '@evac/locations'
+import { Location } from '@evac/entities'
 import { useRoom } from '@evac/rooms'
 import { useScanner } from '@evac/scanners'
 import { useAction } from '@evac/ui'
@@ -17,7 +17,7 @@ export function useEvent(uuid: MaybeRefOrGetter<$Event['uuid']>) {
   const { device } = useDevice(() => event.value?.device ?? '')
   const { scanner } = useScanner(() => event.value?.scanner ?? '')
   const { room } = useRoom(() => scanner.value?.room ?? '')
-  const { location } = useLocation(() => room.value?.location ?? '')
+  const { detail: location } = Location.useDetail(() => room.value?.location ?? '')
   const kindLabel = computed(() => (event.value ? t(`event.${event.value.kind}`, '') : ''))
 
   return {

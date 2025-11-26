@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { useAuth } from '@evac/auth'
-import { Badge } from '@evac/ui'
+import { Badge, useDebug } from '@evac/ui'
 import type { Detail } from '../definitions'
 
 defineProps<{ contactGroup: Detail }>()
 defineOptions({ inheritAttrs: false })
-const { isDebug } = useAuth()
+const { enabled: debugEnabled } = useDebug()
 </script>
 
 <template>
@@ -14,6 +13,6 @@ const { isDebug } = useAuth()
       <span class="value" v-text="contactGroup.name" />
       <Badge>{{ contactGroup.contacts.size }}</Badge>
     </span>
-    <Badge v-if="isDebug">{{ contactGroup.uuid }}</Badge>
+    <Badge v-if="debugEnabled">{{ contactGroup.uuid }}</Badge>
   </button>
 </template>

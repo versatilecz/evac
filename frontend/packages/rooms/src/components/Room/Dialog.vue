@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Location } from '@evac/locations'
+import { Location } from '@evac/entities'
 import { ContentHeader, Dialog, DialogActions, Entity, Icon } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useRoomForm } from '@/composables'

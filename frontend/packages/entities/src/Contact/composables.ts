@@ -21,16 +21,16 @@ type Options = {
 }
 
 export function useState({ filter, sort = [def.DEFAULT_SORT] }: Options = {}) {
-  const data = useObservable(state$, { onError: logger.error, initialValue: new Map<string, def.Detail>() })
-  const all = computed(() => pipe([...data.value.values()], sortByRules(toValue(sort) ?? [])))
+  const state = useObservable(state$, { onError: logger.error, initialValue: new Map<string, def.Detail>() })
+  const all = computed(() => pipe([...state.value.values()], sortByRules(toValue(sort) ?? [])))
   const list = computed(() =>
-    pipe(data.value.values(), unionFilters([filterByName(toValue(filter?.name) ?? ''), filterByKind(toValue(filter?.kind) ?? '')]), sortByRules(toValue(sort) ?? []))
+    pipe(state.value.values(), unionFilters([filterByName(toValue(filter?.name) ?? ''), filterByKind(toValue(filter?.kind) ?? '')]), sortByRules(toValue(sort) ?? []))
   )
-  const count = computed(() => formatCount(data.value.size, list.value.length))
+  const count = computed(() => formatCount(state.value.size, list.value.length))
 
   return {
     count,
-    data,
+    state,
     list,
     all,
   }
@@ -52,13 +52,13 @@ function filterByKind(kind: string) {
   }
 }
 
-export function useItem(uuid: MaybeRefOrGetter<string>) {
-  const { data } = useState()
-  const item = computed(() => data.value.get(toValue(uuid)) ?? null)
-  const { kind } = useKind(() => item.value)
+export function useDetail(uuid: MaybeRefOrGetter<string>) {
+  const { state } = useState()
+  const detail = computed(() => state.value.get(toValue(uuid)) ?? null)
+  const { kind } = useKind(() => detail.value)
 
   return {
-    item,
+    detail,
     kind,
   }
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useAuth } from '@evac/auth'
-import { Badge } from '@evac/ui'
+import { Badge, useDebug } from '@evac/ui'
 import type { $Device } from '@/definitions'
 import { useActivityOnDevice } from '@evac/activity'
 
@@ -8,13 +7,13 @@ const props = defineProps<{
   device: $Device
 }>()
 
-const { isDebug } = useAuth()
+const { enabled: debugEnabled } = useDebug()
 const { activity } = useActivityOnDevice(() => props.device.uuid)
 </script>
 
 <template>
   <Badge class="cursor-pointer">
     {{ device.name }}
-    <template v-if="isDebug && activity"> ({{ activity.rssi }}) </template>
+    <template v-if="debugEnabled && activity"> ({{ activity.rssi }}) </template>
   </Badge>
 </template>

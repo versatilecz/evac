@@ -27,7 +27,6 @@
     "@evac/events": "*",
     "@evac/fonts": "*",
     "@evac/icons": "*",
-    "@evac/locations": "*",
     "@evac/rooms": "*",
     "@evac/scanners": "*",
     "@evac/shared": "*",

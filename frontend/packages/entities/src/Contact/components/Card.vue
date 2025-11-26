@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { useAuth } from '@evac/auth'
-import { Badge } from '@evac/ui'
+import { Badge, useDebug } from '@evac/ui'
 import type { Detail } from '../definitions'
 import { isEmailKind, isSmsKind } from '../misc'
 import Label from './Label.vue'
 
 defineProps<{ contact: Detail }>()
 defineOptions({ inheritAttrs: false })
-const { isDebug } = useAuth()
+const { enabled: debugEnabled } = useDebug()
 </script>
 
 <template>
@@ -21,6 +20,6 @@ const { isDebug } = useAuth()
     <template v-else-if="isSmsKind(contact)">
       <span class="text-sm">{{ contact.kind.sms.number }}</span>
     </template>
-    <Badge v-if="isDebug">{{ contact.uuid }}</Badge>
+    <Badge v-if="debugEnabled">{{ contact.uuid }}</Badge>
   </button>
 </template>

@@ -1,5 +1,5 @@
 import { activity$ } from '@evac/activity'
-import type { $Location } from '@evac/locations'
+import type { Location } from '@evac/entities'
 import { rooms$, type $Room } from '@evac/rooms'
 import { scanners$ } from '@evac/scanners'
 import * as Rx from 'rxjs'
@@ -19,7 +19,7 @@ export function mapRoomToDevices() {
 }
 
 export function mapLocationToDevices() {
-  return Rx.pipe<Rx.Observable<$Location['uuid']>, Rx.Observable<Map<$Device['uuid'], $DeviceWithActivity>>>(Rx.switchMap(devicesByLocation))
+  return Rx.pipe<Rx.Observable<Location.Detail['uuid']>, Rx.Observable<Map<$Device['uuid'], $DeviceWithActivity>>>(Rx.switchMap(devicesByLocation))
 }
 
 export function devicesByRoom(roomUuid: $Room['uuid']) {
@@ -29,7 +29,7 @@ export function devicesByRoom(roomUuid: $Room['uuid']) {
   )
 }
 
-export function devicesByLocation(locationUuid: $Location['uuid']) {
+export function devicesByLocation(locationUuid: Location.Detail['uuid']) {
   return Rx.combineLatest([activity$, devices$, scanners$, rooms$]).pipe(
     Rx.map(([activity, devices, scanners, rooms]) =>
       Iterator.from(collectDevicesByLocation(locationUuid, { activity, devices, rooms: new Set(rooms.values()), scanners: new Set(scanners.values()) }))

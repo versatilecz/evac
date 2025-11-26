@@ -3,19 +3,19 @@ import * as def from './definitions'
 
 export const service = defineService({
   name: def.SCOPE,
-  identity: def.$Locations,
+  identity: def.Store,
 })
   .withSources(
     async function* onList(source) {
       for await (const message of source) {
-        const parsed = def.$LocationsMessage.safeParse(message)
+        const parsed = def.ListMessage.safeParse(message)
         if (!parsed.success) continue
         yield parsed.data
       }
     },
     async function* onDetail(source) {
       for await (const message of source) {
-        const parsed = def.$LocationDetailMessage.safeParse(message)
+        const parsed = def.DetailMessage.safeParse(message)
         if (!parsed.success) continue
 
         const state = await this.get()
@@ -26,7 +26,7 @@ export const service = defineService({
     },
     async function* onRemoved(source) {
       for await (const message of source) {
-        const parsed = def.$LocationRemovedMessage.safeParse(message)
+        const parsed = def.RemovedMessage.safeParse(message)
         if (!parsed.success) continue
 
         const state = await this.get()
@@ -38,24 +38,24 @@ export const service = defineService({
     }
   )
   .withActions({
-    create(source, input: def.$LocationFormData) {
+    create(source, input: def.FormData) {
       const location = {
-        ...def.$LocationFormData.parse(input),
+        ...def.FormData.parse(input),
         uuid: self.crypto.randomUUID(),
-      } satisfies def.$Location
+      } satisfies def.Detail
 
-      source.send(def.$LocationSetMessage.encode(location))
+      source.send(def.SetMessage.encode(location))
     },
     remove(source, input: string) {
-      source.send(def.$LocationRemoveMessage.encode(input))
+      source.send(def.RemoveMessage.encode(input))
     },
-    update(source, input: def.$Location) {
-      const location = def.$Location.parse(input)
-      source.send(def.$LocationSetMessage.encode(location))
+    update(source, input: def.Detail) {
+      const location = def.Detail.parse(input)
+      source.send(def.SetMessage.encode(location))
     },
-    seed(): def.$LocationFormData {
+    seed(): def.FormData {
       return {
         name: '',
-      } satisfies def.$LocationFormData
+      } satisfies def.FormData
     },
   })

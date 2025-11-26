@@ -1,4 +1,4 @@
-import { $LocationRemovedMessage } from '@evac/locations'
+import { Location } from '@evac/entities'
 import { defineService, logger } from '@evac/shared'
 import { SCOPE, $Rooms, $RoomsMessage, $RoomDetailMessage, $RoomRemovedMessage, $RoomFormData, $Room, $RoomSetMessage, $RoomRemoveMessage } from './definitions'
 
@@ -39,7 +39,7 @@ export const service = defineService({
     },
     async function* onLocationRemoved(source) {
       for await (const message of source) {
-        const parsed = $LocationRemovedMessage.safeParse(message)
+        const parsed = Location.RemovedMessage.safeParse(message)
         if (!parsed.success) continue
 
         const state = await this.get()

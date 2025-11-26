@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLocations } from '@evac/locations'
+import { Location } from '@evac/entities'
 import { SortDirection } from '@evac/shared'
 import { Badge, ContentHeader } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
@@ -7,7 +7,7 @@ import { Room } from '@/components'
 import { useRooms } from '@/composables'
 
 const { t } = useI18n({ useScope: 'global' })
-const { list } = useLocations({ sort: [{ key: 'name', direction: SortDirection.enum.Ascending }] })
+const { list } = Location.useState({ sort: [{ key: 'name', direction: SortDirection.enum.Ascending }] })
 const { count, byLocation: rooms } = useRooms()
 </script>
 

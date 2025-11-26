@@ -6,12 +6,16 @@ const props = defineProps<{
   sourceType?: $SourceType
   location?: string
   room?: string
+  enabledOnly?: boolean
 }>()
 
 const { list: devices } = useDevices({
   sourceType: props.sourceType,
   location: () => props.location,
   room: () => props.room,
+  filter: {
+    enabledOnly: props.enabledOnly ? true : undefined,
+  },
 })
 </script>
 

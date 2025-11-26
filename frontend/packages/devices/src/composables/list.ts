@@ -1,6 +1,6 @@
 import type { $Location } from '@evac/locations'
 import type { $Room } from '@evac/rooms'
-import { formatCount, logger, sortByRules, type SortRule } from '@evac/shared'
+import { formatCount, intersectFilters, logger, sortByRules, type SortRule } from '@evac/shared'
 import { toRef } from '@vueuse/core'
 import { from, useObservable } from '@vueuse/rxjs'
 import { pipe } from 'remeda'
@@ -11,18 +11,21 @@ import { DEFAULT_SORT, $Device, $SourceType } from '@/definitions'
 
 type Options = {
   sort?: MaybeRefOrGetter<SortRule[] | SortRule>
+  filter?: {
+    enabledOnly?: MaybeRefOrGetter<boolean>
+  }
   sourceType?: $SourceType
   room?: MaybeRefOrGetter<$Room['uuid'] | undefined>
   location?: MaybeRefOrGetter<$Location['uuid'] | undefined>
 }
 
 export function useDevices(options: Options = {}) {
-  const { sort = [DEFAULT_SORT] } = options
+  const { sort = [DEFAULT_SORT], filter: { enabledOnly = false } = {} } = options
   const source$ = resolveSource(options)
 
   const data = useObservable(source$, { onError: logger.error, initialValue: new Map<string, $Device>() })
   const all = computed(() => [...data.value.values()])
-  const list = computed(() => pipe(data.value.values(), sortByRules(toValue(sort))))
+  const list = computed(() => pipe(data.value.values(), intersectFilters([isEnabled(toValue(enabledOnly))]), sortByRules(toValue(sort))))
   const count = computed(() => formatCount(data.value.size, list.value.length))
 
   return {
@@ -30,6 +33,12 @@ export function useDevices(options: Options = {}) {
     data,
     list,
     all,
+  }
+}
+
+function isEnabled(enabled: boolean) {
+  return (device: $Device) => {
+    return enabled ? device.enabled : true
   }
 }
 

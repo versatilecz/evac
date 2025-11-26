@@ -32,7 +32,7 @@ const { byLocation } = useRooms()
 
     <div class="list overflow-y-auto p-2">
       <template v-for="location of locations" :key="location.uuid">
-        <DevicesRoot v-slot="{ count }" source-type="location" :location="location.uuid">
+        <DevicesRoot v-slot="{ count }" source-type="location" :location="location.uuid" enabled-only>
           <header class="flex gap-4 items-center pt-4 pb-2 first:pt-2">
             <h2 class="headline px-0" v-text="location.name" />
             <Badge>{{ count }}</Badge>
@@ -40,7 +40,7 @@ const { byLocation } = useRooms()
         </DevicesRoot>
 
         <template v-for="room of byLocation.get(location.uuid) ?? []" :key="room.uuid">
-          <DevicesRoot v-slot="{ count, devices }" source-type="room" :room="room.uuid">
+          <DevicesRoot v-slot="{ count, devices }" source-type="room" :room="room.uuid" enabled-only>
             <div class="border-t flex gap-4 items-center h-12">
               <h3 class="paragraph font-semibold" v-text="room.name" />
               <Badge>{{ count }}</Badge>
@@ -53,7 +53,7 @@ const { byLocation } = useRooms()
           </DevicesRoot>
         </template>
       </template>
-      <DevicesRoot v-slot="{ count, devices }" source-type="unallocated">
+      <DevicesRoot v-slot="{ count, devices }" source-type="unallocated" enabled-only>
         <div class="list mt-2">
           <header class="flex gap-4 items-center pt-4 pb-2 border-b">
             <h2 class="headline px-0 w-max whitespace-nowrap">{{ t('unlocatedDevices') }}</h2>

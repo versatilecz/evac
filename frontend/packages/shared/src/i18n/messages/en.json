@@ -18,6 +18,8 @@
     "ip": "IP",
     "mac": "MAC",
     "notification": "Notification",
+    "contactGroup": "Contact Group",
+    "contact": "Contact",
     "buzzer": "Buzzer",
     "led": "LED",
     "scan": "Scan",

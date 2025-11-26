@@ -1,6 +1,7 @@
 {
   "contactGroup": {
     "title": "Skupina kontaktů",
+    "placeholder": "Vyberte skupinu kontaktů",
     "dialog": {
       "title": "Detail skupiny kontaktů",
       "description": "",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Notification } from '@evac/entities'
+import { ContactGroup, Notification } from '@evac/entities'
 import { ContentHeader, Dialog, DialogActions, Entity, Icon, Switch } from '@evac/ui'
 import { useI18n } from 'vue-i18n'
 import { useAlarmForm } from '@/composables'
@@ -24,7 +24,6 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
     <Dialog.Portal>
       <Dialog.Overlay class="overlay" />
       <Dialog.Content class="dialog" as="form">
-        <input v-if="hasData" type="text" autofocus tabindex="0" class="sr-only" :aria-label="title" />
         <ContentHeader :icon="ICON">
           <template #title>
             <Dialog.Title class="headline grow">
@@ -45,6 +44,11 @@ const { title, formData, hasData, hasChanges, reset, create, remove, update } = 
           <label class="label" for="alarm-notification">
             <span class="label-text">{{ t('entity.notification') }}</span>
             <Notification.Select id="alarm-notification" v-model="formData.notification" class="input w-full" />
+          </label>
+
+          <label class="label" for="alarm-contact-group">
+            <span class="label-text">{{ t('entity.contactGroup') }}</span>
+            <ContactGroup.Select id="alarm-contact-group" v-model="formData.group" class="w-full" />
           </label>
 
           <div class="flex gap-4 justify-around">

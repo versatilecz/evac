@@ -17,6 +17,7 @@ export const $Alarm = z.object({
   notification: z.string(),
   buzzer: z.boolean(),
   led: z.boolean(),
+  group: z.uuid().describe('Contact group to notify when alarm is triggered'),
 })
 
 export const AlarmInfo = z.object({

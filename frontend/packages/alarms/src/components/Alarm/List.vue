@@ -17,6 +17,7 @@ const { gridStyle, rowStyle, visible } = useListContext(true)
       <List.SortTrigger v-if="visible.name" sort-key="name">{{ t('entity.name') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.uuid" class="justify-self-center" sort-key="uuid">{{ t('entity.uuid') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.notification" class="justify-self-start" sort-key="notification">{{ t('entity.notification') }}</List.SortTrigger>
+      <List.SortTrigger v-if="visible.group" class="justify-self-start" sort-key="group">{{ t('entity.contactGroup') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.buzzer" class="justify-self-center" sort-key="buzzer">{{ t('entity.buzzer') }}</List.SortTrigger>
       <List.SortTrigger v-if="visible.led" class="justify-self-center" sort-key="led">{{ t('entity.led') }}</List.SortTrigger>
     </header>

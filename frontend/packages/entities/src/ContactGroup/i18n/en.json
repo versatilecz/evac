@@ -1,6 +1,7 @@
 {
   "contactGroup": {
     "title": "Contact Group",
+    "placeholder": "Select a contact group",
     "dialog": {
       "title": "Contact Group Detail",
       "description": "",

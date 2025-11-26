@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Notification } from '@evac/entities'
+import { ContactGroup, Notification } from '@evac/entities'
 import { Badge, BooleanIcon, useListContext } from '@evac/ui'
 import type { $Alarm } from '@/definitions'
 import Dialog from './Dialog.vue'
@@ -18,6 +18,11 @@ const { visible } = useListContext(true)
         <Notification.Root v-slot="{ notification }" :uuid="alarm.notification">
           {{ notification?.name || '-' }}
         </Notification.Root>
+      </span>
+      <span v-if="visible.group" class="value text-left font-normal">
+        <ContactGroup.Root v-slot="{ item }" :uuid="alarm.group">
+          {{ item?.name || '-' }}
+        </ContactGroup.Root>
       </span>
       <BooleanIcon v-if="visible.buzzer" class="justify-self-center" :value="alarm.buzzer" />
       <BooleanIcon v-if="visible.led" class="justify-self-center" :value="alarm.led" />

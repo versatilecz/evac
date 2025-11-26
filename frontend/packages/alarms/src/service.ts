@@ -59,6 +59,7 @@ export const service = defineService({
         notification: '',
         buzzer: false,
         led: false,
+        group: '',
       } satisfies def.$AlarmFormData
     },
   })

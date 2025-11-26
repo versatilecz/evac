@@ -18,6 +18,8 @@
     "ip": "IP",
     "mac": "MAC",
     "notification": "Notifikace",
+    "contactGroup": "Skupina kontaktů",
+    "contact": "Kontakt",
     "buzzer": "Bzučák",
     "led": "LED",
     "scan": "Skenovat",

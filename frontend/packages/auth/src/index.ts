@@ -1,4 +1,7 @@
 export * from './definitions'
+export * as i18n from './i18n'
+export * as service from './service'
 export * from './data'
 export * from './composables'
-export * from './service'
+export * from './components'
+export * from './plugin'

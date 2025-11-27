@@ -24,14 +24,13 @@ export function useState(options: Options = {}) {
   const sortFn = computed(() => toValue(options.sort) ?? [def.DEFAULT_SORT])
   const state = useObservable(state$, { onError: logger.error, initialValue: new Map<def.Detail['uuid'], def.Detail>() })
   const all = computed(() => pipe([...state.value.values()], sortByRules(sortFn.value)))
-  const list = computed(() => pipe(
-    state.value.values(),
-    intersectFilters([
-      filter.byName(toValue(options.filter?.name) ?? ''),
-      filter.byReference(toValue(options.filter?.reference) ?? def.ReferenceFilter.enum.all)
-    ]),
-    sortByRules(sortFn.value)
-  ))
+  const list = computed(() =>
+    pipe(
+      state.value.values(),
+      intersectFilters([filter.byName(toValue(options.filter?.name) ?? ''), filter.byReference(toValue(options.filter?.reference) ?? def.ReferenceFilter.enum.all)]),
+      sortByRules(sortFn.value)
+    )
+  )
   const count = computed(() => formatCount(state.value.size, list.value.length))
 
   return {

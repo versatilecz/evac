@@ -107,7 +107,7 @@ export function connectToWebSocket<T>(url: URL | string, options: WebSocketConne
 
     socket.onopen = (event) => {
       retryAttempts = 0 // Reset retry count on successful connection
-      socket.send(JSON.stringify({ Login: { Login: { username: 'admin', password: 'admin' } } }))
+      // socket.send(JSON.stringify({ Login: { Login: { username: 'admin', password: 'admin' } } }))
       service.dispatchEvent(new CustomEvent('open', { detail: event }))
     }
 

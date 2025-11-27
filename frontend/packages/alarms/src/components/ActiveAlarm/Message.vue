@@ -25,7 +25,7 @@ const { alarm } = useAlarm(() => props.alarmInfo.alarm)
       </Entity.Breadcrumbs>
     </Badge>
 
-    <Notification.Root v-if="alarm" :uuid="alarm.notification" v-slot="{ detail }">
+    <Notification.Root v-if="alarm" v-slot="{ detail }" :uuid="alarm.notification">
       <template v-if="detail">
         <h2 class="font-bold text-lg" v-text="detail.subject" />
         <div>{{ detail.long }}</div>

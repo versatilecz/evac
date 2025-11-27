@@ -9,7 +9,6 @@ export function useDebug() {
   const { isAdmin } = Auth.useAuth()
   const enabled = computed(() => state.value && isAdmin.value)
 
-
   return {
     state,
     enabled,

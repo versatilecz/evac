@@ -4,7 +4,7 @@ import type { Storage, StorageValue } from 'unstorage'
 /**
  * Synchronize an Unstorage key with a BehaviorSubject.
  */
-export async function syncStorageWithSubject<T>(storage: Storage<StorageValue>, key: string, subject: BehaviorSubject<T>): Promise<Subscription> {
+export async function syncStorageWithSubject<T>(storage: Storage<StorageValue>, key: string, subject: BehaviorSubject<T | null>): Promise<Subscription> {
   // Initialize BehaviorSubject from storage
   const stored = await storage.getItem<T>(key)
   if (stored !== null && stored !== undefined) {
@@ -16,6 +16,10 @@ export async function syncStorageWithSubject<T>(storage: Storage<StorageValue>, 
 
   // When BehaviorSubject changes, write to storage
   const sub = subject.subscribe(async (value) => {
+    if (value === null) {
+      await storage.removeItem(key)
+      return
+    }
     await storage.setItem(key, value as StorageValue)
   })
 

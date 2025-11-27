@@ -1,5 +1,6 @@
+import { plugin as auth } from '@evac/auth'
 import { determineWebSocketURL } from '@evac/shared'
-import { registerUI } from '@evac/ui'
+import { plugin as ui } from '@evac/ui'
 import { createApp, type App as VueApp } from 'vue'
 
 import App from './App.vue'
@@ -14,7 +15,8 @@ initApp()
 function initApp() {
   let app: VueApp | null = null
   app = createApp(App)
-  app.use(registerUI({ storage: storage.indexedDb }))
+  app.use(auth({ storage: storage.session }))
+  app.use(ui({ storage: storage.indexedDb }))
   app.use(router)
   app.use(i18n)
   app.mount('#app')

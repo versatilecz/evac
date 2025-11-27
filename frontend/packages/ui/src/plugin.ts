@@ -2,11 +2,11 @@ import { syncStorageWithSubject } from '@evac/shared'
 import type { Storage } from 'unstorage'
 import { debugEnabled$$ } from '@/data'
 
-type PluginOptions = {
+type Options = {
   storage: Storage
 }
 
-export function registerUI({ storage }: PluginOptions) {
+export function plugin({ storage }: Options) {
   return function uiPlugin() {
     const subscriptions = [syncStorageWithSubject<boolean>(storage, 'debug', debugEnabled$$)]
 

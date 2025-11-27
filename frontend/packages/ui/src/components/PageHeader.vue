@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Icon from './Icon.vue'
 import { useI18n } from 'vue-i18n'
+import LogoutButton from './LogoutButton.vue'
 
 const { t } = useI18n({ useScope: 'global' })
 </script>
@@ -24,6 +25,7 @@ const { t } = useI18n({ useScope: 'global' })
           <span>{{ t('page.overview') }}</span>
         </button>
       </RouterLink>
+      <LogoutButton />
     </nav>
   </header>
 </template>

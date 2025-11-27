@@ -1,4 +1,5 @@
 import { messages } from '@evac/shared'
+import * as Auth from '@evac/auth'
 import { messages as alarmsMessages } from '@evac/alarms'
 import { messages as configMessages } from '@evac/config'
 import { messages as devicesMessages } from '@evac/devices'
@@ -13,6 +14,7 @@ export default createI18n({
   locale: 'cs',
   fallbackLocale: 'en',
   messages: mergeMessages(
+    Auth.i18n,
     messages,
     eventsMessages,
     configMessages,

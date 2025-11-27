@@ -1,6 +1,6 @@
 import { service as activityService } from '@evac/activity'
 import { service as alarmsService, activeAlarmService } from '@evac/alarms'
-import { service as authService } from '@evac/auth'
+import * as Auth from '@evac/auth'
 import { service as configService, backupService } from '@evac/config'
 import { service as devicesService } from '@evac/devices'
 import { Contact, ContactGroup, Location, Notification, Version } from '@evac/entities'
@@ -11,7 +11,8 @@ import { defineWebSocketServices, orchestrateWebSocketAndServices } from '@evac/
 import { storage } from './storage'
 
 const services = defineWebSocketServices(
-  [authService, storage.memory],
+  [Auth.service.userInfo, storage.memory],
+  [Auth.service.tokenDetail, storage.memory],
   [configService, storage.memory],
   [backupService, storage.memory],
   [Location.service, storage.memory],

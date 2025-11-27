@@ -1,0 +1,8 @@
+{
+  "auth": {
+    "username": "Uživatelské jméno",
+    "password": "Heslo",
+    "login": "Přihlásit se",
+    "logout": "Odhlásit se"
+  }
+}

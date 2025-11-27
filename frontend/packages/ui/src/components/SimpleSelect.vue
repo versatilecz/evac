@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends { uuid: string, name: string }">
+<script setup lang="ts" generic="T extends { uuid: string; name: string }">
 import { Select } from 'reka-ui/namespaced'
 import { useI18n } from 'vue-i18n'
 import { useSelect } from '../composables/select'

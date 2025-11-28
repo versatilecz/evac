@@ -1,4 +1,4 @@
-import { defineService } from '@evac/shared'
+import { defineService, generateUUID } from '@evac/shared'
 import * as def from './definitions'
 
 export const service = defineService({
@@ -41,7 +41,7 @@ export const service = defineService({
     create(source, input: def.FormData) {
       const alarm = {
         ...def.FormData.parse(input),
-        uuid: self.crypto.randomUUID(),
+        uuid: generateUUID(),
       } satisfies def.Detail
 
       source.send(def.SetMessage.encode(alarm))

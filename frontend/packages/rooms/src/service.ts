@@ -1,5 +1,5 @@
 import { Location } from '@evac/entities'
-import { defineService, logger } from '@evac/shared'
+import { defineService, generateUUID, logger } from '@evac/shared'
 import { SCOPE, $Rooms, $RoomsMessage, $RoomDetailMessage, $RoomRemovedMessage, $RoomFormData, $Room, $RoomSetMessage, $RoomRemoveMessage } from './definitions'
 
 export const service = defineService({
@@ -61,7 +61,7 @@ export const service = defineService({
     create(source, input: $RoomFormData) {
       const location = {
         ...$RoomFormData.parse(input),
-        uuid: self.crypto.randomUUID(),
+        uuid: generateUUID(),
       } satisfies $Room
 
       source.send($RoomSetMessage.encode(location))

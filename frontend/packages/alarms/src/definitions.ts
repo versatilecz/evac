@@ -1,4 +1,4 @@
-import { SortDirection, type SortRule } from '@evac/shared'
+import { generateUUID, SortDirection, type SortRule } from '@evac/shared'
 import * as z from 'zod'
 
 export type $Alarm = z.infer<typeof $Alarm>
@@ -29,7 +29,7 @@ export const AlarmInfo = z.object({
   room: z.string(),
 })
 export const AlarmInfoInput = AlarmInfo.extend({
-  uuid: AlarmInfo.shape.uuid.default(() => crypto.randomUUID()),
+  uuid: AlarmInfo.shape.uuid.default(generateUUID),
 })
 
 export const $ActiveAlarmState = z.union([AlarmInfo, z.undefined(), z.null()])

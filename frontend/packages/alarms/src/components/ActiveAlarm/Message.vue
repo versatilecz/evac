@@ -26,10 +26,10 @@ const { alarm } = useAlarm(() => props.alarmInfo.alarm)
     </Badge>
 
     <Notification.Root v-if="alarm" v-slot="{ detail }" :uuid="alarm.notification">
-      <template v-if="detail">
+      <div v-if="detail" class="overflow-y-auto">
         <h2 class="font-bold text-lg" v-text="detail.subject" />
         <div>{{ detail.long }}</div>
-      </template>
+      </div>
     </Notification.Root>
 
     <slot />

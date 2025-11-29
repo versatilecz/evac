@@ -37,7 +37,7 @@ const { highlightedDevice, highlightDevice } = useHighlightedDevice()
         </SimpleDevicesOverview>
 
         <!-- Events Section -->
-        <section v-if="events.length || activeAlarm" class="first:pt-4 flex flex-col gap-4 content-start">
+        <section v-if="events.length || activeAlarm" class="first:pt-4 flex flex-col gap-4 content-start max-w-1/3">
           <h2 class="headline px-2 pt-4">{{ t('events.title') }}</h2>
           <Event.Cards class="grow grid gap-2 grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] overflow-y-auto content-start p-2" :events="events">
             <template #event="{ event }">
@@ -55,7 +55,7 @@ const { highlightedDevice, highlightDevice } = useHighlightedDevice()
           </Event.Cards>
 
           <!-- Actions Section -->
-          <ActiveAlarm.Message v-if="activeAlarm" class="align-self-end" :alarm-info="activeAlarm">
+          <ActiveAlarm.Message v-if="activeAlarm" class="align-self-end max-h-1/2" :alarm-info="activeAlarm">
             <template #actions>
               <ActiveAlarm.Actions :alarm-info="activeAlarm" />
             </template>

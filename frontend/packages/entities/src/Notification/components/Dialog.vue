@@ -47,11 +47,11 @@ const { title, formData, hasData, hasChanges, reset, set, create, remove, update
           </label>
           <label class="label" for="notification-short-text">
             <span class="label-text">{{ t('entity.shortText') }}</span>
-            <textarea id="notification-short-text" v-model="formData.short" rows="5" class="input w-full" type="text" />
+            <textarea id="notification-short-text" v-model="formData.short" rows="5" class="input w-full min-h-24" type="text" />
           </label>
           <label class="label" for="notification-long-text">
             <span class="label-text">{{ t('entity.longText') }}</span>
-            <textarea id="notification-long-text" v-model="formData.long" rows="5" class="input w-full" type="text" />
+            <textarea id="notification-long-text" v-model="formData.long" rows="5" class="input w-full min-h-48" type="text" />
           </label>
         </div>
 

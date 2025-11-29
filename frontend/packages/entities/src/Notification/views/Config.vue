@@ -8,7 +8,7 @@ import * as def from '../definitions'
 const { t } = useI18n({ useScope: 'global' })
 const { enabled: debugEnabled } = useDebug()
 
-const fields = defineListFields({ key: 'name' }, { key: 'uuid', visible: () => debugEnabled.value }, { key: 'subject' }, { key: 'short', fill: true }, { key: 'long', fill: true })
+const fields = defineListFields({ key: 'name' }, { key: 'uuid', visible: () => debugEnabled.value }, { key: 'subject', fill: true })
 const { sort } = useList({ initialSort: def.DEFAULT_SORT, fields })
 const { count, list: notifications } = useState({ sort })
 </script>

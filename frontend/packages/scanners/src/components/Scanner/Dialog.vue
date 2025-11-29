@@ -5,15 +5,15 @@ import { useI18n } from 'vue-i18n'
 import { useScannerForm } from '@/composables'
 import { ICON, $Scanner } from '@/definitions'
 
-const props = defineProps<{ scanner: $Scanner }>()
+defineProps<{ scanner: $Scanner }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
 const formatter = useFormat()
-const { title, formData, hasData, hasChanges, reset, remove, update } = useScannerForm(() => props.scanner)
+const { title, formData, hasData, hasChanges, reset, set, remove, update } = useScannerForm()
 </script>
 
 <template>
-  <Dialog.Root v-slot="{ close }">
+  <Dialog.Root v-slot="{ close }" @update:open="$event && scanner ? set(scanner) : reset()">
     <Dialog.Trigger as-child>
       <slot>
         <button type="button" class="btn" v-bind="$attrs">

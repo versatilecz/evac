@@ -1,6 +1,6 @@
 import { isDeepEqual } from 'remeda'
 import type { ZodType } from 'zod'
-import { computed, reactive, toValue, watch, type ComputedRef, type MaybeRefOrGetter, type Reactive } from 'vue'
+import { computed, reactive, ref, toValue, watch, type ComputedRef, type MaybeRefOrGetter, type Reactive } from 'vue'
 import { useI18n, type ComposerTranslation } from 'vue-i18n'
 
 type DialogFormOptions<Tc extends object, Tu extends object = Tc> = {
@@ -9,7 +9,7 @@ type DialogFormOptions<Tc extends object, Tu extends object = Tc> = {
   type?: {
     create?: ZodType<Tc>
     update?: ZodType<Tu>
-  }
+  },
 }
 
 type DialogFormState = {
@@ -22,20 +22,26 @@ type DialogForm<Tc extends object, Tu extends object = Tc> = DialogFormState & {
   isCreate(input: Tc | Tu | null | undefined): input is Tc
   isUpdate(input: Tc | Tu | null | undefined): input is Tu
   reset(): void
+  set(value: Tc | Tu): void
 }
 
 export function useDialogForm<Tc extends object, Tu extends object = Tc>(options: DialogFormOptions<Tc, Tu>): DialogForm<Tc | Tu> {
+  const dataWereSet = ref(false)
+  const originalData = ref<Tc | Tu | null>(null)
+
   const input = computed(() => toValue(options.data))
   const formData = reactive<Tc | Tu>({} as Tc | Tu)
-  watch(input, async (current) => Object.assign(formData, current ?? (await options.seed?.())), { immediate: true })
+  watch(input, async (current) => {
+    Object.assign(formData, current ?? (await options.seed?.()))
+    originalData.value = { ...current }
+  }, { immediate: true })
 
-  const hasData = computed(() => !!input.value)
+  const hasData = computed(() => !!input.value || dataWereSet.value)
   const hasChanges = computed(() => {
-    const originalData = toValue(options.data)
-    if (!originalData) return false
+    if (!originalData.value) return false
     const currentData = { ...formData } as Tc | Tu
 
-    return !isDeepEqual(currentData, originalData)
+    return !isDeepEqual(currentData, originalData.value)
   })
 
   return {
@@ -50,9 +56,13 @@ export function useDialogForm<Tc extends object, Tu extends object = Tc>(options
         ? computed(() => options.type!.update!.safeParse(formData).success)
         : computed(() => true),
     reset,
+    set,
   } satisfies DialogForm<Tc | Tu>
 
   async function reset() {
+    dataWereSet.value = false
+    originalData.value = null
+
     if (!isUpdate(input.value) && options.seed) {
       const seedData = await options.seed()
       Object.assign(formData, seedData)
@@ -60,6 +70,12 @@ export function useDialogForm<Tc extends object, Tu extends object = Tc>(options
     }
 
     Object.assign(formData, { ...toValue(options.data) } as Tc | Tu)
+  }
+
+  function set(value: Tc | Tu) {
+    Object.assign(formData, value)
+    dataWereSet.value = true
+    originalData.value = { ...value }
   }
 
   function isCreate(input: Tc | Tu | null | undefined): input is Tc {

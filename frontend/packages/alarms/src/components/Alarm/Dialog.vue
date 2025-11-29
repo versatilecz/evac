@@ -5,14 +5,14 @@ import { useI18n } from 'vue-i18n'
 import { useAlarmForm } from '@/composables'
 import { ICON, $Alarm, $AlarmFormData } from '@/definitions'
 
-const props = defineProps<{ alarm?: $Alarm | $AlarmFormData }>()
+defineProps<{ alarm?: $Alarm | $AlarmFormData }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
-const { title, formData, hasData, hasChanges, reset, create, remove, update } = useAlarmForm(() => props.alarm)
+const { title, formData, hasData, hasChanges, reset, set, create, remove, update } = useAlarmForm()
 </script>
 
 <template>
-  <Dialog.Root v-slot="{ close }">
+  <Dialog.Root v-slot="{ close }" @update:open="$event && alarm ? set(alarm) : reset()">
     <Dialog.Trigger as-child>
       <slot>
         <button type="button" class="btn" v-bind="$attrs">

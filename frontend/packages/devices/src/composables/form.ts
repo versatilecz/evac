@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { $Device } from '@/definitions'
 import { service } from '@/service'
 
-export function useDeviceForm(input: MaybeRefOrGetter<$Device>) {
+export function useDeviceForm(input?: MaybeRefOrGetter<$Device>) {
   const { t } = useI18n({ useScope: 'global' })
   const dialogForm = useDialogForm({
     data: input,

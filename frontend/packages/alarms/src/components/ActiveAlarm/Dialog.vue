@@ -76,7 +76,7 @@ function seed() {
 </script>
 
 <template>
-  <Dialog.Root v-slot="{ close }">
+  <Dialog.Root v-slot="{ close }" @update:open="reset()">
     <Dialog.Trigger as-child>
       <slot name="trigger">
         <button type="button" class="btn" v-bind="$attrs">

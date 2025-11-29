@@ -6,14 +6,14 @@ import * as def from '../definitions'
 import { isEmailKind, isSmsKind } from '../misc'
 import SelectKind from './SelectKind.vue'
 
-const props = defineProps<{ contact?: def.FormData }>()
+defineProps<{ contact?: def.FormData }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
-const { title, formData, hasData, hasChanges, reset, create, remove, update, kind } = useForm(() => props.contact)
+const { title, formData, hasData, hasChanges, reset, set, create, remove, update, kind } = useForm()
 </script>
 
 <template>
-  <Dialog.Root v-slot="{ close }" @update:open="reset()">
+  <Dialog.Root v-slot="{ close }" @update:open="$event && contact ? set(contact) : reset()">
     <Dialog.Trigger as-child>
       <slot>
         <button type="button" class="btn" v-bind="$attrs">

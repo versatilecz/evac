@@ -5,14 +5,14 @@ import { useI18n } from 'vue-i18n'
 import { useRoomForm } from '@/composables'
 import { ICON, $Room, $RoomFormData } from '@/definitions'
 
-const props = defineProps<{ room?: $Room | $RoomFormData }>()
+defineProps<{ room?: $Room | $RoomFormData }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
-const { title, formData, hasData, hasChanges, reset, create, remove, update } = useRoomForm(() => props.room)
+const { title, formData, hasData, hasChanges, reset, set, create, remove, update } = useRoomForm()
 </script>
 
 <template>
-  <Dialog.Root v-slot="{ close }">
+  <Dialog.Root v-slot="{ close }" @update:open="$event && room ? set(room) : reset()">
     <Dialog.Trigger as-child>
       <slot>
         <button type="button" class="btn" v-bind="$attrs">

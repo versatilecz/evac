@@ -4,14 +4,14 @@ import { useI18n } from 'vue-i18n'
 import { useForm } from '../composables'
 import * as def from '../definitions'
 
-const props = defineProps<{ notification?: def.FormData }>()
+defineProps<{ notification?: def.FormData }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
-const { title, formData, hasData, hasChanges, reset, create, remove, update } = useForm(() => props.notification)
+const { title, formData, hasData, hasChanges, reset, set, create, remove, update } = useForm()
 </script>
 
 <template>
-  <Dialog.Root v-slot="{ close }">
+  <Dialog.Root v-slot="{ close }" @update:open="$event && notification ? set(notification) : reset()">
     <Dialog.Trigger as-child>
       <slot>
         <button type="button" class="btn" v-bind="$attrs">

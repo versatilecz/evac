@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { $RoomFormData, $Room } from '@/definitions'
 import { service } from '@/service'
 
-export function useRoomForm(input: MaybeRefOrGetter<$Room | $RoomFormData | undefined | null>) {
+export function useRoomForm(input?: MaybeRefOrGetter<$Room | $RoomFormData | undefined | null>) {
   const { t } = useI18n({ useScope: 'global' })
   const dialogForm = useDialogForm({
     data: input,

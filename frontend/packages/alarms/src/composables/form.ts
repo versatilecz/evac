@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { $Alarm, $AlarmFormData } from '@/definitions'
 import { service } from '@/service'
 
-export function useAlarmForm(input: MaybeRefOrGetter<$Alarm | $AlarmFormData | undefined | null>) {
+export function useAlarmForm(input?: MaybeRefOrGetter<$Alarm | $AlarmFormData | undefined | null>) {
   const { t } = useI18n({ useScope: 'global' })
   const dialogForm = useDialogForm({
     data: input,

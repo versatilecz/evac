@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { $Scanner } from '@/definitions'
 import { service } from '@/service'
 
-export function useScannerForm(input: MaybeRefOrGetter<$Scanner>) {
+export function useScannerForm(input?: MaybeRefOrGetter<$Scanner>) {
   const { t } = useI18n({ useScope: 'global' })
   const dialogForm = useDialogForm({
     data: input,

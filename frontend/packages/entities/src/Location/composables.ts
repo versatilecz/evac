@@ -50,7 +50,7 @@ export function useDetail(uuid: MaybeRefOrGetter<def.Detail['uuid']>) {
   }
 }
 
-export function useForm(input: MaybeRefOrGetter<def.FormData | null | undefined>) {
+export function useForm(input?: MaybeRefOrGetter<def.FormData | null | undefined>) {
   const { t } = useI18n({ useScope: 'global' })
   const dialogForm = useDialogForm({
     data: input,

@@ -88,7 +88,7 @@ export function useKind(input?: MaybeRefOrGetter<def.FormData | undefined | null
   }
 }
 
-export function useForm(input: MaybeRefOrGetter<def.FormData | undefined | null>) {
+export function useForm(input?: MaybeRefOrGetter<def.FormData | undefined | null>) {
   const { t } = useI18n({ useScope: 'global' })
   const kind = ref<def.KindIdentifier>(def.DEFAULT_KIND)
   const { options } = useKind()

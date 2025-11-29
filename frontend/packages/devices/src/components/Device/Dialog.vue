@@ -5,15 +5,15 @@ import { useDeviceForm } from '@/composables'
 import { ICON, $Device } from '@/definitions'
 import BatteryBadge from '../BatteryBadge.vue'
 
-const props = defineProps<{ device: $Device }>()
+defineProps<{ device: $Device }>()
 defineOptions({ inheritAttrs: false })
 const { t } = useI18n({ useScope: 'global' })
 const formatter = useFormat()
-const { title, formData, hasData, hasChanges, reset, remove, update } = useDeviceForm(() => props.device)
+const { title, formData, hasData, hasChanges, reset, set, remove, update } = useDeviceForm()
 </script>
 
 <template>
-  <Dialog.Root v-slot="{ close }">
+  <Dialog.Root v-slot="{ close }" @update:open="$event && device ? set(device) : reset()">
     <Dialog.Trigger as-child>
       <slot>
         <button type="button" class="btn" v-bind="$attrs">
